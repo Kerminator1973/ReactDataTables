@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import './App.css'
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -9,12 +8,15 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import DataTable from 'datatables.net-react';
 //import DT from 'datatables.net-dt';
 import DT from 'datatables.net-bs5';
-import 'datatables.net-select-dt';
-import 'datatables.net-responsive-dt';
+import 'datatables.net-select-bs5';
+import 'datatables.net-responsive-bs5';
+
+import './App.css'
+
+
+DataTable.use(DT);
 
 function App() {
-
-  DataTable.use(DT);
 
   const [tableData, setTableData] = useState([
     [ 'Tiger Nixon', 'System Architect' ],
@@ -33,7 +35,7 @@ function App() {
       </div>
 
       <DataTable data={tableData} options={{
-                select: 'single',
+                select: true,
                 responsive: true
             }} className="display">
               <thead>

@@ -138,6 +138,8 @@ import DT from 'datatables.net-bs5';
 
 >Сразу можно заметить, что если мы принимаем решение использовать стилистическое оформление из Bootstrap 5, то можно не устанавливать пакет "datatables.net-dt".
 
+Ключевой пример по стилистическому оформлению доступен на [StackBlitz](https://stackblitz.com/edit/datatables-net-react-extensions?file=src%2FApp.tsx&terminal=dev)
+
 ## Расширения
 
 Для обеспечения привычного поведения таблиц, может потребоваться установка расширений.
@@ -150,6 +152,27 @@ npm install --save datatables.net-select-dt
 import 'datatables.net-select-dt';
 ```
 
-
 >Расширение "datatables.net-responsive-dt" обеспечивает подстройку таблицы под изменение ширины главного окна браузера.
 
+Также нужно загрузить дополнения расширений:
+
+```shell
+npm install --save datatables.net-select-bs5 datatables.net-responsive-bs5
+```
+
+Включить их в импорт:
+
+```ts
+import 'datatables.net-select-bs5';
+import 'datatables.net-responsive-bs5';
+```
+
+А также добавить в стилистический файл (в моем случае - "App.css") в самое начало файла:
+
+```css
+@import 'datatables.net-bs5';
+@import 'datatables.net-responsive-bs5';
+@import 'datatables.net-select-bs5';
+```
+
+ToDO: к сожалению, пока не удалось обеспечить выделение строки в таблице - класса назначается, но стиль не подтягивается.
