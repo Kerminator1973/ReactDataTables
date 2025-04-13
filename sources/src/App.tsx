@@ -9,12 +9,12 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import DataTable from 'datatables.net-react';
 //import DT from 'datatables.net-dt';
 import DT from 'datatables.net-bs5';
+import 'datatables.net-select-dt';
+import 'datatables.net-responsive-dt';
 
 function App() {
 
   DataTable.use(DT);
-
-  const [count, setCount] = useState(0)
 
   const [tableData, setTableData] = useState([
     [ 'Tiger Nixon', 'System Architect' ],
@@ -31,13 +31,11 @@ function App() {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </a>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-        <DataTable data={tableData} className="display">
+
+      <DataTable data={tableData} options={{
+                select: 'single',
+                responsive: true
+            }} className="display">
               <thead>
                   <tr>
                       <th>Name</th>
@@ -45,11 +43,6 @@ function App() {
                   </tr>
               </thead>
           </DataTable>
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
