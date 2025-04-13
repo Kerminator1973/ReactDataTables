@@ -3,8 +3,12 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 import DataTable from 'datatables.net-react';
-import DT from 'datatables.net-dt';
+//import DT from 'datatables.net-dt';
+import DT from 'datatables.net-bs5';
 
 function App() {
 

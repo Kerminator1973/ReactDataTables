@@ -105,3 +105,33 @@ function App() {
     return (
         <DataTable ajax="/data.json" columns={columns} className="display">
 ```
+
+## Стилистическое оформление
+
+Добавить поддержку Bootstrap 5 и соответствующего оформления в DataTables.NET можно установив соответствующие компоненты:
+
+```shell
+npm install bootstrap
+npm install datatables.net-bs5
+```
+
+Добавление включаемых файлов:
+
+```ts
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+```
+
+Также нужно заменить стилистическую библиотеку для DataTables.NET. Было:
+
+```ts
+import DT from 'datatables.net-dt';
+```
+
+Нужно установить:
+
+```ts
+import DT from 'datatables.net-bs5';
+```
+
+Как результат, мы получаем традиционное табличное представление DataTables.NET в React-приложении.
