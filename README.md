@@ -175,4 +175,36 @@ import 'datatables.net-responsive-bs5';
 @import 'datatables.net-select-bs5';
 ```
 
-ToDO: к сожалению, пока не удалось обеспечить выделение строки в таблице - класса назначается, но стиль не подтягивается.
+### Решение проблемы со стилистическим оформлением таблицы
+
+Если указать везде использование стилей -dt, а не -bs5, то таблицы прекрасно отображаются стандартным образом.
+
+```css
+@import 'datatables.net-dt';
+@import 'datatables.net-responsive-dt';
+@import 'datatables.net-select-dt';
+```
+
+```ts
+import DT from 'datatables.net-dt';
+import 'datatables.net-select-dt';
+import 'datatables.net-responsive-dt';
+```
+
+Если в TypeScript сделать импорт для -bs5, а стили оставить -dt, то часть внешнего оформления начнёт использовать стили Bootstrap 5, а часть стандартные стили DataTables.
+
+Эксперименты показывают, что при замене импорта стилей в css:
+
+```css
+@import 'datatables.net-dt';
+```
+
+на:
+
+```css
+@import 'datatables.net-bs5';
+```
+
+Нарушается оформление внутреннего содержимого страниц.
+
+Для дальнейшего изучения было решено использовать страницу загрузки [datatables.net-bs5](https://www.npmjs.com/package/datatables.net-bs5), но это ровным счётом ничего не дало.

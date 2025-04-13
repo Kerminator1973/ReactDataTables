@@ -1,10 +1,23 @@
-@import 'datatables.net-bs5';
+@import 'datatables.net-dt';
 @import 'datatables.net-responsive-bs5';
 @import 'datatables.net-select-bs5';
+
 
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+/* Стили Ивана для обозначения границ ячеек таблицы */
+.display {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.display th, .display td {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  text-align: left;
 }
