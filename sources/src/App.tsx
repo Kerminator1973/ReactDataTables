@@ -3,8 +3,13 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+import DataTable from 'datatables.net-react';
+import DT from 'datatables.net-dt';
+
 function App() {
   const [count, setCount] = useState(0)
+
+  DataTable.use(DT);
 
   return (
     <>
@@ -22,7 +27,14 @@ function App() {
           count is {count}
         </button>
         <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+        <DataTable>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Location</th>
+            </tr>
+          </thead>
+        </DataTable>
         </p>
       </div>
       <p className="read-the-docs">
