@@ -7,9 +7,15 @@ import DataTable from 'datatables.net-react';
 import DT from 'datatables.net-dt';
 
 function App() {
-  const [count, setCount] = useState(0)
 
   DataTable.use(DT);
+
+  const [count, setCount] = useState(0)
+
+  const [tableData, setTableData] = useState([
+    [ 'Tiger Nixon', 'System Architect' ],
+    [ 'Garrett Winters', 'Accountant' ]
+  ]);
 
   return (
     <>
@@ -27,14 +33,14 @@ function App() {
           count is {count}
         </button>
         <p>
-        <DataTable>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Location</th>
-            </tr>
-          </thead>
-        </DataTable>
+        <DataTable data={tableData} className="display">
+              <thead>
+                  <tr>
+                      <th>Name</th>
+                      <th>Position</th>
+                  </tr>
+              </thead>
+          </DataTable>
         </p>
       </div>
       <p className="read-the-docs">

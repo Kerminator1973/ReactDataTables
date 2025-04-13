@@ -52,7 +52,7 @@ function App() {
 
 После этого мы можем определить таблицу непосредственно в верстке:
 
-```html
+```ts
 <DataTable>
     <thead>
     <tr>
@@ -64,3 +64,44 @@ function App() {
 ```
 
 Однако это не даст нам данных и стилистического оформления.
+
+Чтобы добавить статические данные, их нужно определить в коде и передать в компонент через параметр:
+
+```ts
+function App() {
+
+  DataTable.use(DT);
+
+  const [tableData, setTableData] = useState([
+    [ 'Tiger Nixon', 'System Architect' ],
+    [ 'Garrett Winters', 'Accountant' ]
+  ]);
+```
+
+```ts
+<DataTable data={tableData} className="display">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+        </tr>
+    </thead>
+</DataTable>
+```
+
+Для загрузки через AJSX-запрос, следует использовать параметр `ajax`:
+
+```ts
+function App() {
+    const columns = [
+        { data: 'name' },
+        { data: 'position' },
+        { data: 'office' },
+        { data: 'extn' },
+        { data: 'start_date' },
+        { data: 'salary' },
+    ];
+ 
+    return (
+        <DataTable ajax="/data.json" columns={columns} className="display">
+```
