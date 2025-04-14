@@ -6,7 +6,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import DataTable from 'datatables.net-react';
-//import DT from 'datatables.net-dt';
 import DT from 'datatables.net-bs5';
 import 'datatables.net-select-bs5';
 import 'datatables.net-responsive-bs5';
@@ -14,13 +13,17 @@ import 'datatables.net-responsive-bs5';
 import './App.css'
 
 
-DataTable.use(DT);
-
 function App() {
 
-  const [tableData, setTableData] = useState([
+  DataTable.use(DT);
+
+  const [tableData] = useState([
     [ 'Tiger Nixon', 'System Architect' ],
-    [ 'Garrett Winters', 'Accountant' ]
+    [ 'Garrett Winters', 'Accountant' ],
+    [ 'Maxim Rozhkov', 'Head of a departament' ],
+    [ 'Ivan Ivanov', 'Software Developer' ],
+    [ 'Angela Kapranove', 'Front-End Developer' ],
+    [ 'Michail Novikov', 'Leading Developer' ],
   ]);
 
   return (
