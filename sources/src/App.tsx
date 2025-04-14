@@ -22,7 +22,7 @@ function App() {
     [ 'Garrett Winters', 'Accountant' ],
     [ 'Maxim Rozhkov', 'Head of a departament' ],
     [ 'Ivan Ivanov', 'Software Developer' ],
-    [ 'Angela Kapranove', 'Front-End Developer' ],
+    [ 'Angela Kapranova', 'Front-End Developer' ],
     [ 'Michail Novikov', 'Leading Developer' ],
   ]);
 
@@ -40,7 +40,7 @@ function App() {
       <DataTable data={tableData} options={{
                 select: true,
                 responsive: true
-            }} className="display">
+            }} className="table table-sm table-striped table-hover table-bordered">
               <thead>
                   <tr>
                       <th>Name</th>
