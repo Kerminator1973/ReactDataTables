@@ -221,6 +221,13 @@ import 'datatables.net-responsive-dt';
 const [tableData] = useState([...]);
 ```
 
+Мы можем собрать дополнительную информацию с помощью React Developer Tools - см. закладки "Components" и "Profiler" в Developer Console (F12).
+
+Мы можем попробовать следующие идеи:
+
+- сравнить, чем отличаются 'datatables.net-bs5' и 'datatables.net-dt'
+- можно попробовать выкачать все зависимости в одном файле, через конфигуратор загрузки в DataTables.NET
+
 ## Дополнительные цели
 
 Вот, что необходимо сделать:
