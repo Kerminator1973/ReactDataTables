@@ -246,3 +246,29 @@ const [tableData] = useState([...]);
 - изменять содержимое ячейки перед началом рендеринга
 - advanced: управлять режимом загрузки данных: частичный, либо полный
 - добавить модульный диалог, использующий Bootstrap 5
+
+### Динамическое изменение содержимого ячейки
+
+Достаточно легко изменять данные, на основании которых изменяются данные, используя приблизительно такой код:
+
+```shell
+const [tableData, setDataTable] = useState([
+[ 'Tiger Nixon', 'System Architect' ],
+[ 'Garrett Winters', 'Accountant' ],
+[ 'Ivan Ivanov', 'Software Developer' ],
+[ 'Michail Novikov', 'Leading Developer' ],
+]);
+
+const handleClick = () => {
+
+// Заменяем второй элемент таблицы на другую запись
+const nextHistory = [
+    ...tableData.slice(0, 1),
+    ...tableData.slice(2),
+    ['Roman Rusakov', 'Blazor Developer']];
+
+setDataTable(nextHistory);
+};
+```
+
+Однако это приводит к ре-рендерингу таблицы, т.е. применению сортировки и потере текущей страницы в pagination. К тому же в этом примере никак не используется текущий selection в таблице.

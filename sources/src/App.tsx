@@ -17,7 +17,7 @@ function App() {
 
   DataTable.use(DT);
 
-  const [tableData] = useState([
+  const [tableData, setDataTable] = useState([
     [ 'Tiger Nixon', 'System Architect' ],
     [ 'Garrett Winters', 'Accountant' ],
     [ 'Maxim Rozhkov', 'Head of a departament' ],
@@ -25,6 +25,17 @@ function App() {
     [ 'Angela Kapranova', 'Front-End Developer' ],
     [ 'Michail Novikov', 'Leading Developer' ],
   ]);
+
+  const handleClick = () => {
+
+    // Заменяем второй элемент таблицы на другую запись
+    const nextHistory = [
+      ...tableData.slice(0, 1),
+      ...tableData.slice(2),
+       ['Roman Rusakov', 'Blazor Developer']];
+
+    setDataTable(nextHistory);
+  };
 
   return (
     <>
@@ -41,13 +52,23 @@ function App() {
                 select: true,
                 responsive: true
             }} className="table table-sm table-striped table-hover table-bordered">
-              <thead>
-                  <tr>
-                      <th>Name</th>
-                      <th>Position</th>
-                  </tr>
-              </thead>
-          </DataTable>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+      </DataTable>
+
+      <div className="container mt-3">
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={handleClick}
+        >
+        Change a person
+        </button>
+      </div>          
     </>
   )
 }
