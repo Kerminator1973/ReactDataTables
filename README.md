@@ -272,3 +272,35 @@ setDataTable(nextHistory);
 ```
 
 Однако это приводит к ре-рендерингу таблицы, т.е. применению сортировки и потере текущей страницы в pagination. К тому же в этом примере никак не используется текущий selection в таблице.
+
+Более правильный подход - использование ref и доступ к таблице через API.
+
+Чтобы получить ссылку на таблицу, следует использовать **useRef**:
+
+```ts
+import { useState, useRef } from 'react';
+
+// ...
+const table = useRef<DataTableRef>(null);
+
+// ...
+<DataTable data={tableData} ref={table} options={{
+```
+
+Соответственно, в обработчике нажатия экранной кнопки мы можем получить актуальную информацию из таблицы, например, список выбранных элементов таблицы:
+
+```js
+const api = table.current!.dt();
+const selected = api?.rows({ selected: true });
+
+if ( selected?.any() ) {
+    selected?.each(function (this: any) {
+    let _d = this.data();
+    console.log(_d[0]);
+    });
+}
+```
+
+TODO: необходимо переписать код в парадигме TypeScript, с использованием строгой типизации.
+
+TODO: пока не получилось установить элементы таблицы посредством функции data() и перерисовать элемент.

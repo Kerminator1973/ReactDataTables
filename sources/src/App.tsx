@@ -1,21 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useState, useRef } from 'react';
+import reactLogo from './assets/react.svg';
+import viteLogo from '/vite.svg';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-import DataTable from 'datatables.net-react';
+import DataTable, { DataTableRef } from 'datatables.net-react';
 import DT from 'datatables.net-bs5';
 import 'datatables.net-select-bs5';
 import 'datatables.net-responsive-bs5';
 
-import './App.css'
+import './App.css';
 
 
 function App() {
 
   DataTable.use(DT);
+
+  const table = useRef<DataTableRef>(null);
 
   const [tableData, setDataTable] = useState([
     [ 'Tiger Nixon', 'System Architect' ],
@@ -28,6 +30,24 @@ function App() {
 
   const handleClick = () => {
 
+    const api = table.current!.dt();
+    const selected = api?.rows({ selected: true });
+
+    if ( selected?.any() ) {
+      selected?.each(function (this: any) {
+        let _d = this.data();
+        console.log(_d[0]);
+/*        
+        _d[0] = 'Roman Rusakov';
+        _d[1] = 'Blazor Developer';
+        this.data(_d);
+*/
+      });
+    }
+
+    //api?.draw();
+
+/*    
     // Заменяем второй элемент таблицы на другую запись
     const nextHistory = [
       ...tableData.slice(0, 1),
@@ -35,6 +55,7 @@ function App() {
        ['Roman Rusakov', 'Blazor Developer']];
 
     setDataTable(nextHistory);
+*/
   };
 
   return (
@@ -48,7 +69,7 @@ function App() {
         </a>
       </div>
 
-      <DataTable data={tableData} options={{
+      <DataTable data={tableData} ref={table} options={{
                 select: true,
                 responsive: true
             }} className="table table-sm table-striped table-hover table-bordered">
