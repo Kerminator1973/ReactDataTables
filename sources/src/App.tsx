@@ -6,11 +6,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 import DataTable, { DataTableRef } from 'datatables.net-react';
-import DT from 'datatables.net-bs5';
+import DT, { Api, ApiRowsMethods } from 'datatables.net-bs5';
 import 'datatables.net-select-bs5';
 import 'datatables.net-responsive-bs5';
 
 import './App.css';
+
+// Определяем тип для описания данных строки таблицы
+type TableRow = [number, string, string];
 
 
 function App() {
@@ -19,43 +22,37 @@ function App() {
 
   const table = useRef<DataTableRef>(null);
 
-  const [tableData, setDataTable] = useState([
-    [ 'Tiger Nixon', 'System Architect' ],
-    [ 'Garrett Winters', 'Accountant' ],
-    [ 'Maxim Rozhkov', 'Head of a departament' ],
-    [ 'Ivan Ivanov', 'Software Developer' ],
-    [ 'Angela Kapranova', 'Front-End Developer' ],
-    [ 'Michail Novikov', 'Leading Developer' ],
+  const [tableData, setDataTable] = useState<TableRow[]>([
+    [ 1, 'Tiger Nixon', 'System Architect' ],
+    [ 2, 'Garrett Winters', 'Accountant' ],
+    [ 3, 'Maxim Rozhkov', 'Head of a departament' ],
+    [ 4, 'Ivan Ivanov', 'Software Developer' ],
+    [ 5, 'Angela Kapranova', 'Front-End Developer' ],
+    [ 6, 'Michail Novikov', 'Leading Developer' ],
   ]);
+
 
   const handleClick = () => {
 
-    const api = table.current!.dt();
-    const selected = api?.rows({ selected: true });
+    const api : Api | null = table.current!.dt();
+    const selected : ApiRowsMethods<TableRow> = api!.rows({ selected: true });
+    const id = selected.data()[0][0];
 
-    if ( selected?.any() ) {
-      selected?.each(function (this: any) {
-        let _d = this.data();
-        console.log(_d[0]);
-/*        
-        _d[0] = 'Roman Rusakov';
-        _d[1] = 'Blazor Developer';
-        this.data(_d);
-*/
-      });
-    }
+    // Находим индекс элемента с выбранным id
+    const index = tableData.findIndex(row => row[0] === id);
+    console.log(index);
 
-    //api?.draw();
+    // Заменяем строку таблицы на другую
+    const updatedTable : TableRow[] = [
+      ...tableData.slice(0, index),
+      ...tableData.slice(index + 1),
+       [id, 'Roman Rusakov', 'Blazor Developer']];
 
-/*    
-    // Заменяем второй элемент таблицы на другую запись
-    const nextHistory = [
-      ...tableData.slice(0, 1),
-      ...tableData.slice(2),
-       ['Roman Rusakov', 'Blazor Developer']];
+    // Обновляем контент таблицы
+    setDataTable(updatedTable);
 
-    setDataTable(nextHistory);
-*/
+    // Почитать статью, которая решает схожую с моей задачу:
+    // https://datatables.net/forums/discussion/66731/react-best-way-to-render-rows-based-on-state
   };
 
   return (
@@ -75,6 +72,7 @@ function App() {
             }} className="table table-sm table-striped table-hover table-bordered">
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Name</th>
                     <th>Position</th>
                 </tr>
