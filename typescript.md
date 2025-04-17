@@ -16,5 +16,5 @@
 - переменные членов классов (поля)
 - обобщённые типы
 - перечисления
-- ключевые слова: public, protected. private
+- ключевые слова: public, protected, private
 - async/await

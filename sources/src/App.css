@@ -1,7 +1,3 @@
-@import 'datatables.net-bs5';
-@import 'datatables.net-responsive-bs5';
-@import 'datatables.net-select-bs5';
-
 #root {
   max-width: 1280px;
   margin: 0 auto;
