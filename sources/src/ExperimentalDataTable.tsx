@@ -17,6 +17,8 @@ function ExperimentalDataTable() {
 
     DataTable.use(DT);
 
+    // Ссылка на DOM-элемент, реализующий функционал таблицы. Используется
+    // в обработчиках событий, внешних по отношению к компоненту "таблица"
     const table = useRef<DataTableRef>(null);
   
     const [tableData, setDataTable] = useState<TableRow[]>([
@@ -63,7 +65,9 @@ function ExperimentalDataTable() {
     return (
         <>
           <DataTable data={tableData} ref={table} options={{
-                    select: true,
+                    select: {
+                      style: 'single'
+                    },
                     responsive: true
                 }} className="table table-sm table-striped table-hover table-bordered">
                 <thead>
