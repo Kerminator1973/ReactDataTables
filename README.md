@@ -320,3 +320,19 @@ if ( selected?.any() ) {
             style: 'single'
         },
 ```
+
+## Изменить цвет фона строки при перемещении над ней курсора мыши
+
+Для выполнения задачи необходимо добавить в стиль компонента следующую строку:
+
+```css
+table.table.dataTable.table-hover > tbody > tr:hover > * {
+    box-shadow: inset 0 0 0 9999px rgba(42, 216, 26, 0.675) !important;
+}
+```
+
+Селектор был скопировать из файла "\node_modules\datatables.net-bs5\css\dataTables.bootstrap5.css".
+
+Стиль не применяется без использования модификатора `!important`
+
+TODO: необходимо понять, как можно повысить селективность без использования `!important`
