@@ -70,7 +70,15 @@ function ExperimentalDataTable() {
 
     return (
         <>
-          <DataTable data={tableData} ref={table} columns={columns} options={{
+          <DataTable data={tableData} ref={table} columns={columns} 
+                slots={{
+                  1: (data: string) => {
+                    return (
+                      <a href="https://rbc.ru">{data}</a>
+                    )
+                  }
+                }}          
+                options={{
                     select: {
                       style: 'single'
                     },
