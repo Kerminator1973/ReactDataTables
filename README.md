@@ -336,3 +336,37 @@ table.table.dataTable.table-hover > tbody > tr:hover > * {
 Стиль не применяется без использования модификатора `!important`
 
 TODO: необходимо понять, как можно повысить селективность без использования `!important`
+
+## Настройка отображения колонок, а также установка их идентификаторов в ajax-режиме
+
+Если мы не используем AJAX-режим, то через свойство "columns" компонента таблицы мы можем настроить свойства отображения колонок. Например:
+
+```ts
+const columns = [
+    { searchable: false },          // Не ищем данные в этой колонке
+    { className: "dt-body-center" },  // Выравнивание по центру
+    { className: "dt-body-left" }     // Выравнивание по левой границе
+];
+
+return (
+    <>
+        <DataTable data={tableData} columns={columns}
+```
+
+В AJAX-режиме мы также можем задать идентификаторы колонок, например:
+
+```ts
+const columns = [
+    {
+        data: "id",
+        className: "dt-body-center",
+        searchable: false
+    },
+    { data: "type" },
+    { data: "user" },
+    { data: "date", className: "dt-body-center" },
+    { data: "addr", className: "dt-body-center" },
+    { data: "msg" },
+    { data: "l", className: "dt-body-center" }
+];
+```

@@ -37,7 +37,13 @@ function ExperimentalDataTable() {
       [ 13, 'Sergei Ivanenko', 'System Analyst' ],
       [ 14, 'Olesya Bolshova', 'Communication Manager' ],
     ]);
-  
+
+    // Настройка отображения колонок и их идентификаторов в ajax-режиме
+    const columns = [
+      { searchable: false },          // Не ищем данные в этой колонке
+      { className: "dt-body-center" },  // Выравнивание по центру
+      { className: "dt-body-left" }     // Выравнивание по левой границе
+    ];
   
     const handleClick = () => {
   
@@ -64,7 +70,7 @@ function ExperimentalDataTable() {
 
     return (
         <>
-          <DataTable data={tableData} ref={table} options={{
+          <DataTable data={tableData} ref={table} columns={columns} options={{
                     select: {
                       style: 'single'
                     },
