@@ -107,6 +107,68 @@ if (typeof padding === "string") {
 }
 ```
 
+## Определение типов и классов
+
+Определить псевдоним типа можно так:
+
+```ts
+type Foot = number;
+```
+
+Определить тип можно следующим образом:
+
+```ts
+type Patient = {
+    name: string;
+    height: Foot;
+    age?: number;
+}
+```
+
+Поле age в примере выше является не обязательным. Создать экземпляр можно так:
+
+```ts
+let patient: Patient = {
+    name: 'Joe Smith',
+    height: 5
+}
+```
+
+Типовое определение класса и его инициализация:
+
+```ts
+class Person {
+    firtsName: string;
+    lastName: string;
+    age: number;
+}
+
+const p = new Person();
+p.firstName = "John";
+p.secondName = "Smith";
+p.age = 25;
+```
+
+Используя конструктор мы можем задачать члены класса, а также использовать модификаторы доступа:
+
+```ts
+class Block {
+    readonly nonce: number;
+    readonly hash: string;
+
+    constructor (
+        readonly index: number;
+        readonly previousHash: string;
+        readonly timestamp: number;
+        readonly data: string
+    ) {
+        const { nonce, hash } = this.mine();    // Используем destructuring
+        this.nonce = nonce;
+        this.hash = hash;
+    }
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
