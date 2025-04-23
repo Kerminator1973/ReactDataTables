@@ -199,6 +199,54 @@ const p : Person {
 
 TypeScript использует структурную систему типов, т.е. два класса считаются одинаковыми, если у них одинаковая структура, даже если у них разное имя. Классы с одинаковой структурой можно присваивать друг другу.
 
+## Пользовательские объединения типов
+
+Распространенный подход - объединять несколько типов через перечисление, как возвращаемое значение и возвращать один из этих типов в зависимости от результатов выполнения операции. Предположим, что у нас есть вот такой код:
+
+```ts
+export class SearchAction {
+    actionType = "SEARCH";
+
+    constructor (readonly payload: {searchQuery: string}) {}
+}
+
+export class SearchSuccessAction {
+    actionType = "SEARCH_SUCCESS";
+
+    constructor (readonly payload: {searchResults: string[]}) {}
+}
+
+export class SearchFailedAction {
+    actionType = "SEARCH_FAILED";
+}
+
+export type SearchActions = SearchAction | SearchSuccessAction | SearchFailedAction;
+```
+
+Определение `type SearchActions` и есть объединение типа.
+
+Ещё один интересный термин - **размеченное объединение**. Подобные объединения имеют общее свойство - _дискриминант_. В зависимости от значения дискриминанта, вы можете выбрать выполнение разных действий. В приведённом выше примере, дискриминант - это actionType.
+
+## Проверка наличия конкретного свойства в интерфейсе
+
+Предположим, что у нас есть два интерфейса:
+
+```ts
+interface A { a: number };
+interface B { b: string };
+```
+
+Мы моем проверить наличие поля в переданном значении:
+
+```ts
+function foo (x: A|B) {
+    if ("a" in x) {
+        return x.a;
+    }
+    return x.b;
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
