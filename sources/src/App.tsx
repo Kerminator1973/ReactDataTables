@@ -1,79 +1,38 @@
 import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
+import Button from 'react-bootstrap/Button';
+import Modal from 'react-bootstrap/Modal';
 import ExperimentalDataTable from './ExperimentalDataTable';
 import './App.css';
 
 
 function App() {
 
-  const [showModal, setShowModal] = useState(false);
-
-  // Функция создаёт модальное окно динамически
-  const openModal = () => {
-    setShowModal(true);
-  };
-
-  // Функция изменяет верстку, исключая из него модальное окно
-  const closeModal = () => {
-    setShowModal(false);
-  };
-
-  // Блокирует закрытие модального окна при щелчке на нём
-  const preventPropagation = (event) => {
-    event.stopPropagation();
-  };    
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-
       <ExperimentalDataTable />
 
-      <div className="container mt-5">
-        <button className="btn btn-primary" onClick={openModal}>
-          Open Modal
-        </button>
+      <Button variant="primary" onClick={handleShow}>
+        Запуск модального окна
+      </Button>
 
-        {showModal && (
-          // Описываем модельное окно, а также кнопку для его отображения
-          <div 
-            className="modal fade show" 
-            style={{ display: 'block', backgroundColor: 'rgba(0,0,0,0.5)' }}
-            onClick={closeModal}
-          >
-            <div 
-              className="modal-dialog"
-              onClick={preventPropagation}
-            >
-              <div className="modal-content">
-                <div className="modal-header">
-                  <h5 className="modal-title">Modal Title</h5>
-                  <button type="button" className="btn-close" onClick={closeModal}></button>
-                </div>
-                <div className="modal-body">
-                  <p>This is an example modal built with React and Bootstrap 5.3.</p>
-                </div>
-                <div className="modal-footer">
-                  <button type="button" className="btn btn-secondary" onClick={closeModal}>
-                    Close
-                  </button>
-                  <button type="button" className="btn btn-primary">
-                    Save Changes
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}      
-      </div>
+      <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <Modal.Header closeButton>
+          <Modal.Title>Заголовок модального окна</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>В этой области можно размещать различный контент окна...</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Закрыть
+          </Button>
+          <Button variant="primary" onClick={handleClose}>
+            Сохранить изменения
+          </Button>
+        </Modal.Footer>
+      </Modal>    
     </>
   )
 }
