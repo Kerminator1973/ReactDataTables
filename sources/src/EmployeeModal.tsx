@@ -1,16 +1,17 @@
-
 import { useState } from 'react';
-import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
-function EmployeeModal() {
 
-  // Определяем состояние "активатор модального окна"
-  const [show, setShow] = useState(false);
+type ModalComponentProps = {
+    isOpen: boolean;
+    setModalShow: (state: boolean) => void;
+  };
+
+const EmployeeModal: React.FC<ModalComponentProps> = ({ isOpen, setModalShow }) => {
 
   // Функции, позволяющие отобразить, или скрыть модальное окно
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setModalShow(false);
 
   // Определяем состояния полей для ввода ФИО и должности
   const [surnameField, setSurnameField] = useState<string>('');
@@ -30,18 +31,13 @@ function EmployeeModal() {
     setPositionField('');
 
     // Закрываем модальное окно
-    setShow(false);
+    setModalShow(false);
   };
 
   return (
     <>
-        {/* Кнопка для добавления модального окна */}
-        <Button variant="primary" onClick={handleShow}>
-            Запуск модального окна
-        </Button>
-
         {/* Модальный диалог для добавления нового сотрудника */}
-        <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
+        <Modal show={isOpen} onHide={handleClose} backdrop="static" keyboard={false}>
             <Modal.Header closeButton>
             <Modal.Title>Новый сотрудник</Modal.Title>
             </Modal.Header>
