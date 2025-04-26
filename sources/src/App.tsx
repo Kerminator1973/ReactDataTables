@@ -1,11 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
-import ExperimentalDataTable from './ExperimentalDataTable';
+import ExperimentalDataTable, { ExperimentalDataTableRef } from './ExperimentalDataTable';
 import EmployeeModal from './EmployeeModal';
 import './App.css';
 
 
 function App() {
+
+  // Определяем ссылку на экспортируемые функции компонента,
+  // с интерфейсом ExperimentalDataTableRef
+  const childRef = useRef<ExperimentalDataTableRef>(null);
 
     // Определяем состояние "активатор модального окна"
   const [isModalOpen, setModalShow] = useState(false);
@@ -13,15 +17,28 @@ function App() {
   // Функция-обработчик нажатия кнопки добавления нового сотрудника
   const handleShow = () => setModalShow(true);
 
+  const handleClick = () => {
+    if (childRef.current) {
+      // Вызываем функцию конкретного экземпляра дочернего компонента
+      childRef.current.replaceEmpoyee("1", "2");
+    }    
+  };
+
   return (
     <>
-      {/* Кнопка для активации модального окна */}
-      <Button variant="primary" onClick={handleShow}>
+      <div className="container mt-3">
+        {/* Кнопка для активации модального окна */}
+        <Button variant="primary" onClick={handleShow}>
           Добавить нового сотрудника
-      </Button>
+        </Button>
+
+        <Button variant="primary" onClick={handleClick}>
+          Заменить сотрудника
+        </Button>
+      </div>          
 
       {/* Таблица с сотрудниками компании */}
-      <ExperimentalDataTable />
+      <ExperimentalDataTable ref={childRef} />
 
       {/* Модальный диалог для добавления нового сотрудника */}
       <EmployeeModal isOpen={isModalOpen} setModalShow={setModalShow} />
