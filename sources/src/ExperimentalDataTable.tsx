@@ -1,13 +1,10 @@
 import { useState, forwardRef, useImperativeHandle, Ref, useRef } from "react";
-
-import "bootstrap/dist/css/bootstrap.min.css";
-import "bootstrap/dist/js/bootstrap.bundle.min.js";
-
 import DataTable, { DataTableRef } from "datatables.net-react";
 import DT, { Api, ApiRowsMethods } from "datatables.net-bs5";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 import "datatables.net-select-bs5";
 import "datatables.net-responsive-bs5";
-
 import "./ExperimentalDataTable.css";
 
 // Определяем тип, который компонент будет предоставлять внешнему коду
@@ -16,9 +13,7 @@ export type ExperimentalDataTableRef = {
 };
 
 // Определяем список props данного компонента
-interface ExperimentalDataTableProps {
-  // Здесь могли бы быть какие-то полезные свойства...
-}
+interface ExperimentalDataTableProps extends Record<string, unknown> {}
 
 // Определяем тип для описания данных строки таблицы
 type TableRow = [number, string, string];
