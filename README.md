@@ -404,3 +404,71 @@ slots={{
 
 Рекомендуется ознакомиться с примером приложения на [StackBlitz](
 https://stackblitz.com/edit/datatables-net-react-components?file=src%2FApp.tsx,src%2FApp.css&terminal=dev)
+
+## Обеспечить вызов функции (метода) из родительского компонента
+
+Предположим, что на уровне родительского компонента в приложении реализован модальный диалог, в котором вводится информация о новом сотруднике компании. Нам требуется вызвать функцию дочернего компонента, посредством которой дочерний компонент добавит информацию об этом сотруднике в свою таблицу (DataTables.NET). 
+
+Чтобы сделать это, в родительском компоненте необходимо получить описание типа экспортируемых функций и связать его с конкретным дочерним элементом:
+
+```ts
+import { useRef } from 'react';
+import { ExperimentalDataTableRef } from './ExperimentalDataTable';
+
+function ParentComponent() {
+
+  // Определяем ссылку на экспортируемые функции компонента,
+  // с интерфейсом ExperimentalDataTableRef
+  const childRef = useRef<ExperimentalDataTableRef>(null);
+
+  const handleClick = () => {
+    if (childRef.current) {
+      // Вызываем функцию конкретного экземпляра дочернего компонента
+      childRef.current.replaceEmpoyee("Surname", "Position");
+    }    
+  };
+
+  return (
+    <>
+      {/* Таблица с сотрудниками компании */}
+      <ExperimentalDataTable ref={childRef} />
+    </>
+  )
+}
+```
+
+В дочернем компоненте от нас требуется определить тип с экспортируемы функциями и сделать его доступным для родителей (expose to parent). Сделать это можно следующим образом:
+
+```ts
+import { forwardRef, useImperativeHandle, Ref } from "react";
+
+// Определяем тип, который компонент будет предоставлять внешнему коду
+export type ExperimentalDataTableRef = {
+  replaceEmpoyee: (name: string, position: string) => void;
+};
+
+// Определяем список props данного компонента
+interface ExperimentalDataTableProps extends Record<string, unknown> {}
+
+const ExperimentalDataTable = forwardRef(
+  (props: ExperimentalDataTableProps, ref: Ref<ExperimentalDataTableRef>) => {
+
+    // Определяем реализацию метода, доступного родительскому элементу
+    const replaceEmpoyee = () => {
+      console.log("Обрабатываем вызов функции из родительского элемента");
+    };
+
+    // Используем useImperativeHandle, чтобы предоставить родительскому элементу
+    // доступ к методам дочерних элементов
+    useImperativeHandle(ref, () => ({
+      replaceEmpoyee,
+    }));
+```
+
+Поскольку в конкретном примере, у дочернего компонента отсуствуют props, то приходится определять пустой список свойств:
+
+```ts
+interface ExperimentalDataTableProps extends Record<string, unknown> {}
+```
+
+Этот пустой список вполне успешно скомпилируется, но Linter будет сообщать о наличии ошибке в коде.
