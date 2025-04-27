@@ -191,6 +191,8 @@ const p : Person {
 };
 ```
 
+На практике, interface часто используется для того, чтобы передать несколько полей в качестве результата выполнения функции.
+
 Заметим, что для интерфейса нельзя использовать ключевое слово **new** и мы не может получить тип интерфейса, используя **instanceof**.
 
 На первый взгляд ключевые слова type и interface очень похожи.
@@ -248,6 +250,33 @@ function foo (x: A|B) {
     return x.b;
 }
 ```
+
+## Зачем нужно ключевое слово unknown
+
+Ключевое слово `unknown` имеет, приблизительно, такой же смысл, как и `any`, но требует проверки типа перед использованием переменной.
+
+Ниже приведён пример, сгенерированный ChatGPT:
+
+```ts
+function processValue(value: unknown) {
+    // You cannot directly use `value` without type checking
+    // console.log(value.toFixed(2)); // Error: Object is of type 'unknown'
+
+    if (typeof value === "number") {
+        console.log(value.toFixed(2)); // This is safe
+    } else if (typeof value === "string") {
+        console.log(value.toUpperCase()); // This is also safe
+    } else {
+        console.log("Value is neither a number nor a string.");
+    }
+}
+
+processValue(42);        // Outputs: "42.00"
+processValue("hello");   // Outputs: "HELLO"
+processValue(true);      // Outputs: "Value is neither a number nor a string."
+```
+
+При использовании `any` никаких проверок не требуется и такой код более опасный.
 
 ## Лучшие Plug-Ins для Visual Studio Code
 
