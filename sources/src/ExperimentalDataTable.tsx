@@ -12,14 +12,11 @@ export type ExperimentalDataTableRef = {
   replaceEmpoyee: (name: string, position: string) => void;
 };
 
-// Определяем список props данного компонента
-interface ExperimentalDataTableProps extends Record<string, unknown> {}
-
 // Определяем тип для описания данных строки таблицы
 type TableRow = [number, string, string];
 
 const ExperimentalDataTable = forwardRef(
-  (props: ExperimentalDataTableProps, ref: Ref<ExperimentalDataTableRef>) => {
+  (_props, ref: Ref<ExperimentalDataTableRef>) => {
 
     // Определяем реализацию метода, доступного родительскому элементу
     const replaceEmpoyee = () => {

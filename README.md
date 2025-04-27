@@ -471,4 +471,12 @@ const ExperimentalDataTable = forwardRef(
 interface ExperimentalDataTableProps extends Record<string, unknown> {}
 ```
 
-Этот пустой список вполне успешно скомпилируется, но Linter будет сообщать о наличии ошибке в коде.
+Этот пустой список вполне успешно скомпилируется, но Linter будет сообщать о наличии ошибке в коде. Чтобы избежать сообщений об ошибках мы можем вообще убрать определением ExperimentalDataTableProps, а в параметрах forwardRef() указать _props первым параметров, что означает - "никаких props-ов нет":
+
+```ts
+const ExperimentalDataTable = forwardRef(
+  (_props, ref: Ref<ExperimentalDataTableRef>) => {
+    //...
+  }
+)
+```
