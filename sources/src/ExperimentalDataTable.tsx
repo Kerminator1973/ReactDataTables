@@ -7,13 +7,12 @@ import "datatables.net-select-bs5";
 import "datatables.net-responsive-bs5";
 import "./ExperimentalDataTable.css";
 
+import { employeesData, TableRow } from './tableData.ts';
+
 // Определяем тип, который компонент будет предоставлять внешнему коду
 export type ExperimentalDataTableRef = {
   replaceEmpoyee: (name: string, position: string) => void;
 };
-
-// Определяем тип для описания данных строки таблицы
-type TableRow = [number, string, string];
 
 const ExperimentalDataTable = forwardRef(
   (_props, ref: Ref<ExperimentalDataTableRef>) => {
@@ -37,22 +36,8 @@ const ExperimentalDataTable = forwardRef(
     // в обработчиках событий, внешних по отношению к компоненту "таблица"
     const table = useRef<DataTableRef>(null);
 
-    const [tableData, setDataTable] = useState<TableRow[]>([
-      [1, "Tiger Nixon", "System Architect"],
-      [2, "Garrett Winters", "Accountant"],
-      [3, "Maxim Rozhkov", "Head of a departament"],
-      [4, "Ivan Ivanov", "Software Developer"],
-      [5, "Angela Kapranova", "Front-End Developer"],
-      [6, "Alexey Buhteev", "Quality Assurance Engineer"],
-      [7, "Igor Golubev", "Hardware Expert"],
-      [8, "Natasha Mityaeva", "Leading Quality Assurance Engineer"],
-      [9, "Svetlana Kolganova", "Linux Expert"],
-      [10, "Konstantin Bobrov", "Backend Developer"],
-      [11, "Ekaterina Svekolnikova", "Frontend Developer"],
-      [12, "Sergei Volobuev", "Crypto-expert"],
-      [13, "Sergei Ivanenko", "System Analyst"],
-      [14, "Olesya Bolshova", "Communication Manager"],
-    ]);
+    // Данные для таблицы находятся в отдельном файле - "tableData.ts"
+    const [tableData, setDataTable] = useState<TableRow[]>(employeesData);
 
     // Настройка отображения колонок и их идентификаторов в ajax-режиме
     const columns = [
