@@ -41,9 +41,9 @@ const EmployeeDataTable = forwardRef(
 
     // Настройка отображения колонок и их идентификаторов в ajax-режиме
     const columns = [
-      { data: 'id', searchable: false },                // Не ищем данные в этой колонке
-      { data: 'name', className: "dt-body-center" },    // Выравнивание по центру
-      { data: 'position', className: "dt-body-left" },  // Выравнивание по левой границе
+      { title: '№', data: 'id', searchable: false },                        // Не ищем данные в этой колонке
+      { title: 'ФИО', data: 'name', className: "dt-body-center" },          // Выравнивание по центру
+      { title: 'Должность', data: 'position', className: "dt-body-left" },  // Выравнивание по левой границе
     ];
 
     const handleClick = () => {
