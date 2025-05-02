@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 
@@ -6,16 +5,18 @@ import Button from 'react-bootstrap/Button';
 type ModalComponentProps = {
     isOpen: boolean;
     setModalShow: (state: boolean) => void;
-  };
+    surnameField: string;
+    setSurnameField: React.Dispatch<React.SetStateAction<string>>;
+    positionField: string;
+    setPositionField: React.Dispatch<React.SetStateAction<string>>;    
+};
 
-const EmployeeModal: React.FC<ModalComponentProps> = ({ isOpen, setModalShow }) => {
+const EmployeeModal: React.FC<ModalComponentProps> = ({ 
+    isOpen, setModalShow, surnameField, setSurnameField, positionField,setPositionField
+}) => {
 
   // Функции, позволяющие отобразить, или скрыть модальное окно
   const handleClose = () => setModalShow(false);
-
-  // Определяем состояния полей для ввода ФИО и должности
-  const [surnameField, setSurnameField] = useState<string>('');
-  const [positionField, setPositionField] = useState<string>('');
 
   // Обработчик нажатия кнопки "Submit"
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

@@ -14,6 +14,10 @@ function App() {
     // Определяем состояние "активатор модального окна"
   const [isModalOpen, setModalShow] = useState(false);
 
+  // Определяем состояния полей для ввода ФИО и должности
+  const [surname, setSurname] = useState<string>('');
+  const [position, setPosition] = useState<string>('');
+
   // Функция-обработчик нажатия кнопки добавления нового сотрудника
   const handleShow = () => {
 
@@ -21,7 +25,8 @@ function App() {
       // Вызываем функцию конкретного экземпляра дочернего компонента
       const currentEmployee = childRef.current.getCurrentEmployee();
       if (currentEmployee !== null) {
-        console.dir(currentEmployee);
+        setSurname(currentEmployee.name);
+        setPosition(currentEmployee.position);
         setModalShow(true);
       }
     }    
@@ -29,8 +34,9 @@ function App() {
 
   const handleClick = () => {
     if (childRef.current) {
-      // Вызываем функцию конкретного экземпляра дочернего компонента
-      childRef.current.replaceEmployee("1", "2");
+      // Вызываем функцию таблицы, указывая новые ФИО и должность сотрудника
+      // в текущем выбранном элементе
+      childRef.current.replaceEmployee(surname, position);
     }    
   };
 
@@ -51,7 +57,13 @@ function App() {
       <EmployeeDataTable ref={childRef} />
 
       {/* Модальный диалог для добавления нового сотрудника */}
-      <EmployeeModal isOpen={isModalOpen} setModalShow={setModalShow} />
+      <EmployeeModal 
+        isOpen={isModalOpen}
+        setModalShow={setModalShow}
+        surnameField={surname} 
+        setSurnameField={setSurname} 
+        positionField={position} 
+        setPositionField={setPosition} />
     </>
   )
 }
