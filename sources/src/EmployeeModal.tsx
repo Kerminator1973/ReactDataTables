@@ -44,7 +44,7 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
         {/* Модальный диалог для добавления нового сотрудника */}
         <Modal show={isOpen} onHide={handleClose} backdrop="static" keyboard={false}>
             <Modal.Header closeButton>
-            <Modal.Title>Новый сотрудник</Modal.Title>
+            <Modal.Title>Данные сотрудника</Modal.Title>
             </Modal.Header>
             <form onSubmit={handleSubmit}>
             <Modal.Body>
