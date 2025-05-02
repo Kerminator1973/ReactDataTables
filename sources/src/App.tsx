@@ -1,6 +1,6 @@
 import { useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
-import ExperimentalDataTable, { ExperimentalDataTableRef } from './ExperimentalDataTable';
+import EmployeeDataTable, { EmployeeDataTableRef } from './EmployeeDataTable';
 import EmployeeModal from './EmployeeModal';
 import './App.css';
 
@@ -8,8 +8,8 @@ import './App.css';
 function App() {
 
   // Определяем ссылку на экспортируемые функции компонента,
-  // с интерфейсом ExperimentalDataTableRef
-  const childRef = useRef<ExperimentalDataTableRef>(null);
+  // с интерфейсом EmployeeDataTableRef
+  const childRef = useRef<EmployeeDataTableRef>(null);
 
     // Определяем состояние "активатор модального окна"
   const [isModalOpen, setModalShow] = useState(false);
@@ -38,7 +38,7 @@ function App() {
       </div>          
 
       {/* Таблица с сотрудниками компании */}
-      <ExperimentalDataTable ref={childRef} />
+      <EmployeeDataTable ref={childRef} />
 
       {/* Модальный диалог для добавления нового сотрудника */}
       <EmployeeModal isOpen={isModalOpen} setModalShow={setModalShow} />

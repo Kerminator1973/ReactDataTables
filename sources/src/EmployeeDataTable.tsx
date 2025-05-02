@@ -5,17 +5,17 @@ import DT, { Api, ApiRowsMethods } from "datatables.net-bs5";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "datatables.net-select-bs5";
 import "datatables.net-responsive-bs5";
-import "./ExperimentalDataTable.css";
+import "./EmployeeDataTable.css";
 
 import { employeesData, TableRow } from './tableData.ts';
 
 // Определяем тип, который компонент будет предоставлять внешнему коду
-export type ExperimentalDataTableRef = {
+export type EmployeeDataTableRef = {
   replaceEmpoyee: (name: string, position: string) => void;
 };
 
-const ExperimentalDataTable = forwardRef(
-  (_props, ref: Ref<ExperimentalDataTableRef>) => {
+const EmployeeDataTable = forwardRef(
+  (_props, ref: Ref<EmployeeDataTableRef>) => {
 
     // Определяем реализацию метода, доступного родительскому элементу
     const replaceEmpoyee = () => {
@@ -105,4 +105,4 @@ const ExperimentalDataTable = forwardRef(
   }
 );
 
-export default ExperimentalDataTable;
+export default EmployeeDataTable;
