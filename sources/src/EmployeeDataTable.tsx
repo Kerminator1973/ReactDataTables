@@ -20,9 +20,30 @@ const EmployeeDataTable = forwardRef(
   (_props, ref: Ref<EmployeeDataTableRef>) => {
 
     // Определяем реализацию метода, доступного родительскому элементу
-    const replaceEmployee = () => {
-      console.log("Child component submission logic executed");
-      handleClick();
+    const replaceEmployee = (name: string, position: string) => {
+
+      // Ищем текущего выбранного сотрудника компании
+      const currentEmployee: TableRow | null = getCurrentEmployee();
+      if (currentEmployee === null) {
+        return;
+      }
+
+      // Находим в таблице строку, которая связана с выбранным сотрудником
+      const data: TableRow = currentEmployee;
+      const index = tableData.findIndex((row: TableRow) => row.id === data.id);
+
+      // Заменяем строку таблицы на другую
+      const updatedTable: TableRow[] = [
+        ...tableData.slice(0, index),
+        ...tableData.slice(index + 1),
+        {id: data.id, name: name, position: position},
+      ];
+
+      // Обновляем контент таблицы
+      setDataTable(updatedTable);
+
+      // Почитать статью, которая решает схожую с моей задачу:
+      // https://datatables.net/forums/discussion/66731/react-best-way-to-render-rows-based-on-state
     };
 
     // Определяем реализацию метода, который возвращает текущего выбранного сотрудника
@@ -63,32 +84,6 @@ const EmployeeDataTable = forwardRef(
       { title: 'ФИО', data: 'name', className: "dt-body-center" },          // Выравнивание по центру
       { title: 'Должность', data: 'position', className: "dt-body-left" },  // Выравнивание по левой границе
     ];
-
-    const handleClick = () => {
-
-      // Ищем текущего выбранного сотрудника компании
-      const currentEmployee: TableRow | null = getCurrentEmployee();
-      if (currentEmployee === null) {
-        return;
-      }
-
-      // Находим в таблице строку, которая связана с выбранным сотрудником
-      const data: TableRow = currentEmployee;
-      const index = tableData.findIndex((row: TableRow) => row.id === data.id);
-
-      // Заменяем строку таблицы на другую
-      const updatedTable: TableRow[] = [
-        ...tableData.slice(0, index),
-        ...tableData.slice(index + 1),
-        {id: data.id, name: "Roman Rusakov", position: "Blazor Developer"},
-      ];
-
-      // Обновляем контент таблицы
-      setDataTable(updatedTable);
-
-      // Почитать статью, которая решает схожую с моей задачу:
-      // https://datatables.net/forums/discussion/66731/react-best-way-to-render-rows-based-on-state
-    };
 
     return (
       <>

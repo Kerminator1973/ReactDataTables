@@ -32,7 +32,7 @@ function App() {
     }    
   };
 
-  const handleClick = () => {
+  const handleSubmit = () => {
     if (childRef.current) {
       // Вызываем функцию таблицы, указывая новые ФИО и должность сотрудника
       // в текущем выбранном элементе
@@ -45,11 +45,7 @@ function App() {
       <div className="container mt-3">
         {/* Кнопка для активации модального окна */}
         <Button variant="primary" onClick={handleShow}>
-          Добавить нового сотрудника
-        </Button>
-
-        <Button variant="primary" onClick={handleClick}>
-          Заменить сотрудника
+          Изменить инфу сотрудника
         </Button>
       </div>          
 
@@ -63,7 +59,9 @@ function App() {
         surnameField={surname} 
         setSurnameField={setSurname} 
         positionField={position} 
-        setPositionField={setPosition} />
+        setPositionField={setPosition}
+        onSubmit={handleSubmit}
+      />
     </>
   )
 }

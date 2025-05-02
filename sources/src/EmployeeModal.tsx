@@ -8,11 +8,12 @@ type ModalComponentProps = {
     surnameField: string;
     setSurnameField: React.Dispatch<React.SetStateAction<string>>;
     positionField: string;
-    setPositionField: React.Dispatch<React.SetStateAction<string>>;    
+    setPositionField: React.Dispatch<React.SetStateAction<string>>;
+    onSubmit: () => void;
 };
 
 const EmployeeModal: React.FC<ModalComponentProps> = ({ 
-    isOpen, setModalShow, surnameField, setSurnameField, positionField,setPositionField
+    isOpen, setModalShow, surnameField, setSurnameField, positionField, setPositionField, onSubmit,
 }) => {
 
   // Функции, позволяющие отобразить, или скрыть модальное окно
@@ -20,6 +21,7 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
 
   // Обработчик нажатия кнопки "Submit"
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+
     // Предотвращаем попытку отправки данных на сервер
     event.preventDefault();
 
@@ -33,6 +35,8 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
 
     // Закрываем модальное окно
     setModalShow(false);
+
+    onSubmit();
   };
 
   return (
