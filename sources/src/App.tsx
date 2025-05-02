@@ -15,12 +15,22 @@ function App() {
   const [isModalOpen, setModalShow] = useState(false);
 
   // Функция-обработчик нажатия кнопки добавления нового сотрудника
-  const handleShow = () => setModalShow(true);
+  const handleShow = () => {
+
+    if (childRef.current) {
+      // Вызываем функцию конкретного экземпляра дочернего компонента
+      const currentEmployee = childRef.current.getCurrentEmployee();
+      if (currentEmployee !== null) {
+        console.dir(currentEmployee);
+        setModalShow(true);
+      }
+    }    
+  };
 
   const handleClick = () => {
     if (childRef.current) {
       // Вызываем функцию конкретного экземпляра дочернего компонента
-      childRef.current.replaceEmpoyee("1", "2");
+      childRef.current.replaceEmployee("1", "2");
     }    
   };
 

@@ -9,24 +9,42 @@ import "./EmployeeDataTable.css";
 
 import { employeesData, TableRow } from './tableData.ts';
 
-// Определяем тип, который компонент будет предоставлять внешнему коду
+// Определяем тип, содержащий публичные метода компонента, которые может
+// использовать внешний код
 export type EmployeeDataTableRef = {
-  replaceEmpoyee: (name: string, position: string) => void;
+  replaceEmployee: (name: string, position: string) => void;
+  getCurrentEmployee: () => TableRow | null;
 };
 
 const EmployeeDataTable = forwardRef(
   (_props, ref: Ref<EmployeeDataTableRef>) => {
 
     // Определяем реализацию метода, доступного родительскому элементу
-    const replaceEmpoyee = () => {
+    const replaceEmployee = () => {
       console.log("Child component submission logic executed");
       handleClick();
+    };
+
+    // Определяем реализацию метода, который возвращает текущего выбранного сотрудника
+    const getCurrentEmployee = () => {
+
+      const api: Api | null = table.current!.dt();
+      const selected: ApiRowsMethods<TableRow> = api!.rows({ selected: true });
+
+      // Если не было выбрано ни одного элемента, то возвращаем null
+      if (selected.data().length == 0) {
+        return null;
+      }
+
+      // Возвращаем текущий выбранный элемент
+      return selected.data()[0];
     };
 
     // Используем useImperativeHandle, чтобы предоставить родительскому элементу
     // доступ к методам дочерних элементов
     useImperativeHandle(ref, () => ({
-      replaceEmpoyee,
+      replaceEmployee,
+      getCurrentEmployee,
     }));
 
     // Выполняем настройку таблицы DataTables.NET
@@ -47,16 +65,15 @@ const EmployeeDataTable = forwardRef(
     ];
 
     const handleClick = () => {
-      const api: Api | null = table.current!.dt();
-      const selected: ApiRowsMethods<TableRow> = api!.rows({ selected: true });
 
-      // Если не было выбрано ни одного элемента, то ничего не делаем
-      if (selected.data().length == 0) {
+      // Ищем текущего выбранного сотрудника компании
+      const currentEmployee: TableRow | null = getCurrentEmployee();
+      if (currentEmployee === null) {
         return;
       }
 
-      // Находим индекс элемента с выбранным id
-      const data: TableRow = selected.data()[0]
+      // Находим в таблице строку, которая связана с выбранным сотрудником
+      const data: TableRow = currentEmployee;
       const index = tableData.findIndex((row: TableRow) => row.id === data.id);
 
       // Заменяем строку таблицы на другую
