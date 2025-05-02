@@ -41,25 +41,29 @@ const ExperimentalDataTable = forwardRef(
 
     // Настройка отображения колонок и их идентификаторов в ajax-режиме
     const columns = [
-      { searchable: false }, // Не ищем данные в этой колонке
-      { className: "dt-body-center" }, // Выравнивание по центру
-      { className: "dt-body-left" }, // Выравнивание по левой границе
+      { data: 'id', searchable: false },                // Не ищем данные в этой колонке
+      { data: 'name', className: "dt-body-center" },    // Выравнивание по центру
+      { data: 'position', className: "dt-body-left" },  // Выравнивание по левой границе
     ];
 
     const handleClick = () => {
       const api: Api | null = table.current!.dt();
       const selected: ApiRowsMethods<TableRow> = api!.rows({ selected: true });
-      const id = selected.data()[0][0];
+
+      // Если не было выбрано ни одного элемента, то ничего не делаем
+      if (selected.data().length == 0) {
+        return;
+      }
 
       // Находим индекс элемента с выбранным id
-      const index = tableData.findIndex((row) => row[0] === id);
-      console.log(index);
+      const data: TableRow = selected.data()[0]
+      const index = tableData.findIndex((row: TableRow) => row.id === data.id);
 
       // Заменяем строку таблицы на другую
       const updatedTable: TableRow[] = [
         ...tableData.slice(0, index),
         ...tableData.slice(index + 1),
-        [id, "Roman Rusakov", "Blazor Developer"],
+        {id: data.id, name: "Roman Rusakov", position: "Blazor Developer"},
       ];
 
       // Обновляем контент таблицы

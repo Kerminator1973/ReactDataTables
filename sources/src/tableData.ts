@@ -1,19 +1,23 @@
 // Определяем тип для описания данных строки таблицы
-export type TableRow = [number, string, string];
+export type TableRow = {
+  id: number, 
+  name: string, 
+  position: string;
+};
 
 export const employeesData: TableRow[] = [
-  [1, "Tiger Nixon", "System Architect"],
-  [2, "Garrett Winters", "Accountant"],
-  [3, "Maxim Rozhkov", "Head of a department"],
-  [4, "Ivan Ivanov", "Software Developer"],
-  [5, "Angela Kapranova", "Front-End Developer"],
-  [6, "Alexey Buhteev", "Quality Assurance Engineer"],
-  [7, "Igor Golubev", "Hardware Expert"],
-  [8, "Natasha Mityaeva", "Leading Quality Assurance Engineer"],
-  [9, "Svetlana Kolganova", "Linux Expert"],
-  [10, "Konstantin Bobrov", "Backend Developer"],
-  [11, "Ekaterina Svekolnikova", "Frontend Developer"],
-  [12, "Sergei Volobuev", "Crypto-expert"],
-  [13, "Sergei Ivanenko", "System Analyst"],
-  [14, "Olesya Bolshova", "Communication Manager"],
+  { id: 1, name: "Tiger Nixon", position: "System Architect"},
+  { id: 2, name: "Garrett Winters", position: "Accountant"},
+  { id: 3, name: "Maxim Rozhkov", position: "Head of a department"},
+  { id: 4, name: "Ivan Ivanov", position: "Software Developer"},
+  { id: 5, name: "Angela Kapranova", position: "Front-End Developer"},
+  { id: 6, name: "Alexey Buhteev", position: "Quality Assurance Engineer"},
+  { id: 7, name: "Igor Golubev", position: "Hardware Expert"},
+  { id: 8, name: "Natasha Mityaeva", position: "Leading Quality Assurance Engineer"},
+  { id: 9, name: "Svetlana Kolganova", position: "Linux Expert"},
+  { id: 10, name: "Konstantin Bobrov", position: "Backend Developer"},
+  { id: 11, name: "Ekaterina Svekolnikova", position: "Frontend Developer"},
+  { id: 12, name: "Sergei Volobuev", position: "Crypto-expert"},
+  { id: 13, name: "Sergei Ivanenko", position: "System Analyst"},
+  { id: 14, name: "Olesya Bolshova", position: "Communication Manager"},
 ];
