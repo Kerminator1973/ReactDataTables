@@ -581,3 +581,51 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
     </div>
 </Modal.Body>
 ```
+
+Соответственно, при обработке нажатия на кнопку "Submit", нужно вызывать callback-функция родительского элемента:
+
+```tsx
+<form onSubmit={handleSubmit}>
+```
+
+```ts
+const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // ...
+    onSubmit();
+};
+```
+
+В родительском компоненте необходимо создать состояния для значимых полей дочернего элемента, а также callback-функцию для обработки нажатия кнопки Submit:
+
+```ts
+// Определяем состояние "активатор модального окна"
+const [isModalOpen, setModalShow] = useState(false);
+
+// Определяем состояния полей для ввода ФИО и должности
+const [surname, setSurname] = useState<string>('');
+const [position, setPosition] = useState<string>('');
+
+// ...
+
+const handleSubmit = () => {
+  if (childRef.current) {
+    // Вызываем функцию таблицы, указывая новые ФИО и должность сотрудника
+    // в текущем выбранном элементе
+    childRef.current.replaceEmployee(surname, position);
+  }    
+};
+```
+
+Также мы должны передать все эти значения через props в модальное окно:
+
+```tsx
+<EmployeeModal 
+  isOpen={isModalOpen}
+  setModalShow={setModalShow}
+  surnameField={surname} 
+  setSurnameField={setSurname} 
+  positionField={position} 
+  setPositionField={setPosition}
+  onSubmit={handleSubmit}
+/>
+```

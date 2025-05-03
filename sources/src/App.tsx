@@ -11,7 +11,7 @@ function App() {
   // с интерфейсом EmployeeDataTableRef
   const childRef = useRef<EmployeeDataTableRef>(null);
 
-    // Определяем состояние "активатор модального окна"
+  // Определяем состояние "активатор модального окна"
   const [isModalOpen, setModalShow] = useState(false);
 
   // Определяем состояния полей для ввода ФИО и должности
