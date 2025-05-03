@@ -306,6 +306,38 @@ class Eployee extends Person {
 }
 ```
 
+## static
+
+В TypeScript может быть использовано ключевое слово **static**:
+
+```ts
+class Gangsta {
+    static totalBullets = 100;
+```
+
+## Ограничение области видимости
+
+В TypeScript используются директивы ограничения области видимости в стиле C\#.
+
+Ниже приведена реализация singeton-а на TypeScript:
+
+```ts
+class AppState {
+    counter = 0;
+    private static instanceRef: AppState;
+        
+    private constructor() {}
+
+    static getInstance: AppState {
+        if (AppState.instanceRef === undefined) {
+            AppState.instanceRef = new AppState();
+        }
+
+        return AppState.instanceRef;
+    }
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
