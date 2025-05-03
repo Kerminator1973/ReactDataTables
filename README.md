@@ -434,7 +434,15 @@ slots={{
 }}
 ```       
 
-Крайне желательно определить тип row и указать его в вызове.
+В случае использования JSON для заполнения таблицы, указать тип параметра row можно следующим образом:
+
+```ts
+slots={{
+  1: (data: string, row: TableRow) => {
+    return <a href="https://rbc.ru">{row.name}</a>;
+  },
+}}
+```
 
 Рекомендуется ознакомиться с примером приложения на [StackBlitz](
 https://stackblitz.com/edit/datatables-net-react-components?file=src%2FApp.tsx,src%2FApp.css&terminal=dev)
@@ -515,3 +523,43 @@ const ExperimentalDataTable = forwardRef(
 )
 ```
 
+## Установка полей модального диалога
+
+Наиболее простой способ взаимодействия между основной формой и модальным диалогом - вынести свойства, связанные со значениями полей из модального окна в родительскую форму.
+
+В модальном окне определяем свойства (props):
+
+```tsx
+type ModalComponentProps = {
+    isOpen: boolean;
+    setModalShow: (state: boolean) => void;
+    surnameField: string;
+    setSurnameField: React.Dispatch<React.SetStateAction<string>>;
+    positionField: string;
+    setPositionField: React.Dispatch<React.SetStateAction<string>>;
+    onSubmit: () => void;
+};
+
+const EmployeeModal: React.FC<ModalComponentProps> = ({ 
+    isOpen, setModalShow, surnameField, setSurnameField, positionField, setPositionField, onSubmit,
+}) => {
+```
+
+В верстке используем имеено эти свойства:
+
+```tsx
+<Modal.Body>
+    <div className="mb-3">
+    <label htmlFor="surnameField" className="form-label">Имя сотрудника:</label>
+    <input type="text" id="surnameField" className="form-control"
+        value={surnameField} onChange={(e) => setSurnameField(e.target.value)}
+    />
+    </div>
+    <div className="mb-3">
+    <label htmlFor="positionField" className="form-label">Должность:</label>
+    <input type="text" id="positionField" className="form-control"
+        value={positionField} onChange={(e) => setPositionField(e.target.value)}
+    />
+    </div>
+</Modal.Body>
+```

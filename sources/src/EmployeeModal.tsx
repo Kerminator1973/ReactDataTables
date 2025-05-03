@@ -16,7 +16,7 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
     isOpen, setModalShow, surnameField, setSurnameField, positionField, setPositionField, onSubmit,
 }) => {
 
-  // Функции, позволяющие отобразить, или скрыть модальное окно
+  // Функция, позволяющая скрыть/закрыть модальное окно
   const handleClose = () => setModalShow(false);
 
   // Обработчик нажатия кнопки "Submit"
