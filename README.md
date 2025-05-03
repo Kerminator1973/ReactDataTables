@@ -523,6 +523,24 @@ const ExperimentalDataTable = forwardRef(
 )
 ```
 
+## Блокировка дальнейшей обработки событий
+
+Для этих целей используются функции stopPropagation() и preventDefault():
+
+```ts
+const handleClose = (event: React.MouseEvent<HTMLButtonElement> | void) => {
+
+	// Блокируем дальнейшую обработку события
+	event?.stopPropagation();
+	event?.preventDefault();
+
+	setModalShow(false);
+}
+```
+
+- stopPropagation() - останавливает дальнейшее движение свойства по DOM-дереву
+- preventDefault() - блокирует базовое поведение органа управления, например, блокирует отправку http-запроса при нажатии кнопки "Submit"
+
 ## Установка полей модального диалога
 
 Наиболее простой способ взаимодействия между основной формой и модальным диалогом - вынести свойства, связанные со значениями полей из модального окна в родительскую форму.
@@ -545,7 +563,7 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
 }) => {
 ```
 
-В верстке используем имеено эти свойства:
+В верстке используем именно эти свойства:
 
 ```tsx
 <Modal.Body>
