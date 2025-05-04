@@ -101,6 +101,23 @@ const EmployeeDataTable = forwardRef(
               style: "single",
             },
             responsive: true,
+            language: {
+              lengthMenu: "Выводить по _MENU_ записей",
+              zeroRecords: "Данные не найдены",
+              info: "Отображается страница _PAGE_ из _PAGES_",
+              infoEmpty: "Записи отсутствуют",
+              infoFiltered: "(всего имеется _MAX_ записей)",
+              emptyTable: "Данные в таблице отсутствуют",
+              loadingRecords: "Загрузка...",
+              processing: "Обработка...",
+              search: "Поиск:",
+              paginate: {
+                  first: "Первая",
+                  last: "Последняя",
+                  next: ">>",
+                  previous: "<<"
+              },
+            },
           }}
           className="table table-sm table-striped table-hover table-bordered"
         >
