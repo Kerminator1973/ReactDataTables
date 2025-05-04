@@ -64,7 +64,7 @@ function App() {
         </Button>
 
         {/* Кнопка редактирования существующего сотрудника */}
-        <Button variant="primary" onClick={handleEditEmployee}>
+        <Button variant="primary" onClick={handleEditEmployee} className='ms-2'>
           Изменить инфу сотрудника
         </Button>
       </div>          
