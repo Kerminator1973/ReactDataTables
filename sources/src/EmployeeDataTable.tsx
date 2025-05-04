@@ -22,8 +22,12 @@ const EmployeeDataTable = forwardRef(
 
     // Функция добавления нового сотрудника в таблицу
     const addNewEmployee = (name: string, position: string) => {
+
+      // Добавляем в таблицу новую запись, идентификатор которой
+      // больше максимального id в таблице
+      const maxId = Math.max(...tableData.map(employee => employee.id));
       const updatedTable: TableRow[] = [...tableData, 
-        {id: 16, name: name, position: position}];
+        {id: maxId + 1, name: name, position: position}];
 
       // Обновляем контент таблицы
       setDataTable(updatedTable);
