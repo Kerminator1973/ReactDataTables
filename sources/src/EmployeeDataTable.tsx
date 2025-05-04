@@ -12,6 +12,7 @@ import { employeesData, TableRow } from './tableData.ts';
 // Определяем тип, содержащий публичные метода компонента, которые может
 // использовать внешний код
 export type EmployeeDataTableRef = {
+  addNewEmployee: (name: string, position: string) => void;
   replaceEmployee: (name: string, position: string) => void;
   getCurrentEmployee: () => TableRow | null;
 };
@@ -19,28 +20,35 @@ export type EmployeeDataTableRef = {
 const EmployeeDataTable = forwardRef(
   (_props, ref: Ref<EmployeeDataTableRef>) => {
 
-    // Определяем реализацию метода, доступного родительскому элементу
+    // Функция добавления нового сотрудника в таблицу
+    const addNewEmployee = (name: string, position: string) => {
+      const updatedTable: TableRow[] = [...tableData, 
+        {id: 16, name: name, position: position}];
+
+      // Обновляем контент таблицы
+      setDataTable(updatedTable);
+    };
+
+    // Функция изменения параметров текущей записи таблицы
     const replaceEmployee = (name: string, position: string) => {
 
       // Ищем текущего выбранного сотрудника компании
       const currentEmployee: TableRow | null = getCurrentEmployee();
-      if (currentEmployee === null) {
-        return;
+      if (currentEmployee !== null) {
+
+        // Находим в таблице строку, которая связана с выбранным сотрудником
+        const data: TableRow = currentEmployee;
+        const index = tableData.findIndex((row: TableRow) => row.id === data.id);
+
+        // Заменяем строку таблицы на другую
+        const updatedTable: TableRow[] = [
+          ...tableData.slice(0, index),
+          ...tableData.slice(index + 1),
+          {id: data.id, name: name, position: position},
+        ];
+
+        setDataTable(updatedTable); // Обновляем контент таблицы
       }
-
-      // Находим в таблице строку, которая связана с выбранным сотрудником
-      const data: TableRow = currentEmployee;
-      const index = tableData.findIndex((row: TableRow) => row.id === data.id);
-
-      // Заменяем строку таблицы на другую
-      const updatedTable: TableRow[] = [
-        ...tableData.slice(0, index),
-        ...tableData.slice(index + 1),
-        {id: data.id, name: name, position: position},
-      ];
-
-      // Обновляем контент таблицы
-      setDataTable(updatedTable);
 
       // Почитать статью, которая решает схожую с моей задачу:
       // https://datatables.net/forums/discussion/66731/react-best-way-to-render-rows-based-on-state
@@ -64,6 +72,7 @@ const EmployeeDataTable = forwardRef(
     // Используем useImperativeHandle, чтобы предоставить родительскому элементу
     // доступ к методам дочерних элементов
     useImperativeHandle(ref, () => ({
+      addNewEmployee,
       replaceEmployee,
       getCurrentEmployee,
     }));

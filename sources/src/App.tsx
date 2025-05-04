@@ -44,10 +44,10 @@ function App() {
   };
 
   const handleSubmit = () => {
-    if (isEditMode === false) {
-      // TODO: добавляем нового сотрудника в список
-    } else {
-      if (childRef.current) {
+    if (childRef.current) {
+      if (isEditMode === false) {
+        childRef.current.addNewEmployee(surname, position);
+      } else {
         // Вызываем функцию таблицы, указывая новые ФИО и должность сотрудника
         // в текущем выбранном элементе
         childRef.current.replaceEmployee(surname, position);
