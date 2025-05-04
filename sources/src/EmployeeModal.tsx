@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 
 type ModalComponentProps = {
     isOpen: boolean;
+    isEditMode: boolean;
     setModalShow: (state: boolean) => void;
     surnameField: string;
     setSurnameField: React.Dispatch<React.SetStateAction<string>>;
@@ -13,7 +14,7 @@ type ModalComponentProps = {
 };
 
 const EmployeeModal: React.FC<ModalComponentProps> = ({ 
-    isOpen, setModalShow, surnameField, setSurnameField, positionField, setPositionField, onSubmit,
+    isOpen, isEditMode, setModalShow, surnameField, setSurnameField, positionField, setPositionField, onSubmit,
 }) => {
 
   // Функция, позволяющая скрыть/закрыть модальное окно
@@ -25,10 +26,6 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
     // Предотвращаем попытку отправки данных на сервер
     event.preventDefault();
 
-    // Фиксируем результаты ввода в консоли
-    console.log('Surname:', surnameField);
-    console.log('Position:', positionField);
-
     // Сбрасываем поля для повторного использования
     setSurnameField('');
     setPositionField('');
@@ -36,15 +33,23 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
     // Закрываем модальное окно
     setModalShow(false);
 
+    // Информируем родительский компонент о завершении ввода
     onSubmit();
   };
 
   return (
     <>
-        {/* Модальный диалог для добавления нового сотрудника */}
+        {/* Модальный диалог для редактирования данных сотрудника */}
         <Modal show={isOpen} onHide={handleClose} backdrop="static" keyboard={false}>
             <Modal.Header closeButton>
-            <Modal.Title>Данные сотрудника</Modal.Title>
+            <Modal.Title>
+                {isEditMode === false && (
+                    <>Добавление нового сотрудника</>
+                )}
+                {isEditMode === true && (
+                    <>Редактирование сотрудника</>
+                )}
+            </Modal.Title>
             </Modal.Header>
             <form onSubmit={handleSubmit}>
             <Modal.Body>
@@ -64,7 +69,12 @@ const EmployeeModal: React.FC<ModalComponentProps> = ({
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Закрыть</Button>
                 <Button type="submit" variant="primary" onClick={handleClose}>
-                Сохранить изменения
+                {isEditMode === false && (
+                    <>Добавить сотрудника</>
+                )}
+                {isEditMode === true && (
+                    <>Сохранить изменения</>
+                )}
                 </Button>
             </Modal.Footer>
             </form>
