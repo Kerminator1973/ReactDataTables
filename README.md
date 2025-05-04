@@ -444,6 +444,8 @@ slots={{
 }}
 ```
 
+>Следует заметить, что для полей, к которым было применено свойство slots не может быть применён механизм поиска по содержимому поля. Т.е. вся колонка перестаёт использоваться в операциях быстрого поиска. Это ограничение DataTables.NET
+
 Рекомендуется ознакомиться с примером приложения на [StackBlitz](
 https://stackblitz.com/edit/datatables-net-react-components?file=src%2FApp.tsx,src%2FApp.css&terminal=dev)
 
@@ -628,4 +630,32 @@ const handleSubmit = () => {
   setPositionField={setPosition}
   onSubmit={handleSubmit}
 />
+```
+
+## Локализация пользовательского интерфейса
+
+Перевести системные сообщения таблицы на русский язык можно используя свойства "options" и "languages":
+
+```tsx
+<DataTable
+  data={tableData}
+  options={{
+    language: {
+      lengthMenu: "Выводить по _MENU_ записей",
+      zeroRecords: "Данные не найдены",
+      info: "Отображается страница _PAGE_ из _PAGES_",
+      infoEmpty: "Записи отсутствуют",
+      infoFiltered: "(всего имеется _MAX_ записей)",
+      emptyTable: "Данные в таблице отсутствуют",
+      loadingRecords: "Загрузка...",
+      processing: "Обработка...",
+      search: "Поиск:",
+      paginate: {
+          first: "Первая",
+          last: "Последняя",
+          next: ">>",
+          previous: "<<"
+      },
+    },
+  }}
 ```
