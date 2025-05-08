@@ -344,6 +344,40 @@ class AppState {
 
 Ключевое слово super используется для вызова метода базового класса из метода производного класса. Потребность в этом возникает в случае наличия одноменного метода в базовом и производных классах.
 
+## Абстрактные классы
+
+TypeScript допускает создание абстрактных классов с частичной реализацией методов.
+
+Допустим, мы хотим определить абстрактный класс Person:
+
+```ts
+abstract class Person {
+    constructor(public name: string) {};
+
+    changeAddress(newAddress: string) {
+        console.log(`Changing address to ${new Address}`);
+    }
+
+    abstract increasePay(percent: number): void;
+}
+```
+
+В приведённом выше примере, у класса Person есть реализованный конструктор и реализованный метод changeAddress(), но мы не сможем создать экземпляр этого класса, поскольку отсутствует реализация абстрактого метода increasePay().
+
+Для того, чтобы создать объект, мы должны определить производный класс и определить у него метод increasePay():
+
+```ts
+class Employee extends Person {
+    increasePay(percent: number) {
+        console.log(`Increasing the salary of ${this.name} by ${percent}%`);
+    }
+}
+```
+
+Терминологически, про класс Person можно сказать, что он более **обобщён**, а о классе Employee, что он более **конкретен**.
+
+Теперь мы можем создать экземпляр класса Employee.
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
