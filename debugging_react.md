@@ -5,5 +5,40 @@
 - Отладка только на одном мониторе, т.е. нельзя приложение открыть на первом мониторе, а код - на втором
 - Отладчик не показывает типы TypeScript, т.к. он выполняет JavaScript-приложение
 
-В качестве IDE для работы над React-приложением, в моём случае, используется Visual Studio Code.
+## Отладка кода в Visual Studio Code
 
+Для начала отладки необходимо создать файл "launch.json". Этот файл можно сгенерировать из закладку "DEBUG". Однако, в моём случае, в файл пришлось внести несколько изменений.
+
+Моя финальная работающая конфигурация:
+
+```json
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Chrome",
+            "request": "launch",
+            "type": "chrome",
+            "url": "http://localhost:5173",
+            "webRoot": "${workspaceFolder}/sources",
+            "sourceMaps": true,
+        }
+    ]
+}
+```
+
+Потребовалось:
+
+- указать корректный порт, по которому запускается приложение (см. url)
+- изменить "webroot", добавив папку "/sources"
+- добавить пункт `"sourceMaps": true,`, который изначально отсутствовал
+
+В моём проекте путь к конфигурации запуска отладчика был таким: `\ReactDataTables\.vscode\launch.json`.
+
+Последовательность запуска:
+
+- запускаем проект из командной строки: `npm run dev`
+- из VSCode запускаем отладчик по F5, или альтернативными способами
