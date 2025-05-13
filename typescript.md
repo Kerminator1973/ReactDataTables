@@ -384,6 +384,24 @@ class Employee extends Person {
 
 В целом, в приложениях на TypeScript довольно редко используется перегрузка методов.
 
+Если мы хотим, что IntelliSense корректно показывал перегруженные методы класса, рекомендуется определять их в TypeScript с избыточностью. Например:
+
+```ts
+class ProductService {
+    getProducts(): void;
+    getProducts(id:number) void;
+    getProducts(id?:number) {
+        if (typeof id === 'number') {
+            // ...
+        }
+        else
+        {
+            // ...
+        }
+    }
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
