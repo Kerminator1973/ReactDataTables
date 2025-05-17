@@ -31,3 +31,63 @@ dotnet new blazorwasm -o blazorapp
 dotnet run
 ```
 
+## Заменяем Bootstrap на MudBlazor
+
+[Официальный сайт](https://mudblazor.com/) MudBlazor содержит, в том числе, инструкцию по установке библиотеки.
+
+Добавить библиотеку можно командой:
+
+```shell
+dotnet add package MudBlazor
+```
+
+В файле "Program.cs" необходимо подключить сервис AddMudServices():
+
+```csharp
+builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
+
+// Добавляем сервисы MudBlazor
+builder.Services.AddMudServices();
+
+await builder.Build().RunAsync();
+```
+
+Из файла "index.html" в папке "wwwroot" удаляем стиль Bootstrap и добавляем MudBlazor. Было:
+
+```html
+<link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />
+<link rel="stylesheet" href="css/app.css" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link href="blazorapp.styles.css" rel="stylesheet" />
+```
+
+Стало:
+
+```html
+<link href="_content/MudBlazor/MudBlazor.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="css/app.css" />
+<link rel="icon" type="image/png" href="favicon.png" />
+<link href="blazorapp.styles.css" rel="stylesheet" />
+```
+
+Важно заметить, что ссылка "_content/MudBlazor" является виртуальной - это не папка на физическом диске, а запрос к сервису, для предоставления контента сервиса.
+
+После этого можно начинать использовать стили MudBlazor, например, заменить кнопку на следующий вариант:
+
+```csharp
+<MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
+```
+
+### Более прямой путь - сразу сгенерировать приложение с поддержкой MudBlazor
+
+Установить шаблон можно следующим образом:
+
+```shell
+dotnet new install MudBlazor.Templates
+```
+
+Сгенерировать проект с поддержкой Blazor WebAssembly можно командой:
+
+```shell
+dotnet new mudblazor --interactivity WebAssembly --name MyApplication --all-interactive
+```
