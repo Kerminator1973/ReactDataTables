@@ -1,2 +1,4 @@
-blazorapp/bin/
-blazorapp/obj/
+MudBlazorApp/MudBlazorApp/obj
+MudBlazorApp/MudBlazorApp/bin
+MudBlazorApp/MudBlazorApp.Client/obj 
+MudBlazorApp/MudBlazorApp.Client/bin
