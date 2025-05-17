@@ -65,3 +65,7 @@ await builder.Build().RunAsync();
 ```csharp
 <MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
 ```
+
+## Ограничения MudBlazor
+
+Библиотека не хранит свои файлы с описанием стилем на локальном жёстком диске в человеко-читаемом виде. Т.е. для исследования MudBlazor потребуется скачать исходные файлы из репозитария на GitHub и изучать исходники. Это сложнее, чем например, исследовать стили Bootstrap 5 в приложении на React 19.
