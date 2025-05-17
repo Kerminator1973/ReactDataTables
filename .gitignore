@@ -2,3 +2,5 @@ MudBlazorApp/MudBlazorApp/obj
 MudBlazorApp/MudBlazorApp/bin
 MudBlazorApp/MudBlazorApp.Client/obj 
 MudBlazorApp/MudBlazorApp.Client/bin
+MudBlazorApp/.vs
+MudBlazorApp/MudBlazorApp/MudBlazorApp.csproj.user

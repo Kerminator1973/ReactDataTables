@@ -31,7 +31,7 @@ dotnet new blazorwasm -o blazorapp
 dotnet run
 ```
 
-## Заменяем Bootstrap на MudBlazor
+## Заменяем Bootstrap на MudBlazor (устаревшие материалы)
 
 [Официальный сайт](https://mudblazor.com/) MudBlazor содержит, в том числе, инструкцию по установке библиотеки.
 
@@ -78,7 +78,7 @@ await builder.Build().RunAsync();
 <MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
 ```
 
-### Более прямой путь - сразу сгенерировать приложение с поддержкой MudBlazor
+## Более прямой путь - сразу сгенерировать приложение с поддержкой MudBlazor
 
 Установить шаблон можно следующим образом:
 
