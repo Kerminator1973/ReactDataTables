@@ -402,6 +402,39 @@ class ProductService {
 }
 ```
 
+## Интерфейсы
+
+"Если вам нужен пользовательский тип, включающий конструктор, используйте класс; в противном случае используйте интерфейс".
+
+Пример определения интерфейсов:
+
+```ts
+interface Flyable {
+    fly (howHigh: number);
+    land();
+}
+
+interface Swimmable {
+    swim(howFar: number);
+}
+```
+
+Пример использования:
+
+```ts
+class Car implements MotorVehicle, Flyable, Swimmable {
+    // Реализация функций всех интерфейсов
+}
+```
+
+Обычно, однако, происходит расширение класса с использованием новых интерфейсов. Например:
+
+```ts
+class SecretServiceCar extends Car implements Flyable, Swimmable {
+    // Реализация функций интерфейсов Flyable, Swimmable
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
