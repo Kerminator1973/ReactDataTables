@@ -11,8 +11,8 @@
 }
 else
 {
-  <MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false"
-              @bind-SelectedItem="selectedItem">
+    <MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false"
+    @bind-SelectedItem="selectedItem">
         <HeaderContent>
             <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<WeatherForecast, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.TemperatureC)">Temp. (C)</MudTableSortLabel></MudTh>
@@ -31,7 +31,7 @@ else
     </MudTable>
     <MudSpacer />
     <MudText Class="align-self-center d-inline">Selected: @selectedItem?.Summary</MudText>
-    <MudButton Variant="Variant.Filled">Get List Selection</MudButton>
+    <MudButton Variant="Variant.Filled" onclick="OpenModal">Get List Selection</MudButton>
 }
 
 @code {
@@ -39,6 +39,11 @@ else
 
     // Через привязку создаём ссылку на текущий выбранных элемент таблицы
     private WeatherForecast? selectedItem = null;
+
+    private void OpenModal()
+    {
+        // Здесь должна быть логика, связанная с открытием модального диалога
+    }
 
     protected override async Task OnInitializedAsync()
     {
