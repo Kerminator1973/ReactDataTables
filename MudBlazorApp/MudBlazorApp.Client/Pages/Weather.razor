@@ -1,4 +1,7 @@
 ﻿@page "/weather"
+@using MudBlazorApp.Client.Components
+@inject IDialogService DialogService
+
 
 <PageTitle>Weather</PageTitle>
 
@@ -31,7 +34,10 @@ else
     </MudTable>
     <MudSpacer />
     <MudText Class="align-self-center d-inline">Selected: @selectedItem?.Summary</MudText>
-    <MudButton Variant="Variant.Filled" onclick="OpenModal">Get List Selection</MudButton>
+    <MudSpacer />
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary"
+               @onclick="OpenModalAsync">Get List Selection</MudButton>
 }
 
 @code {
@@ -40,9 +46,10 @@ else
     // Через привязку создаём ссылку на текущий выбранных элемент таблицы
     private WeatherForecast? selectedItem = null;
 
-    private void OpenModal()
+    private Task OpenModalAsync()
     {
-        // Здесь должна быть логика, связанная с открытием модального диалога
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        return DialogService.ShowAsync<WeatherInfo>("Simple Dialog", options);
     }
 
     protected override async Task OnInitializedAsync()

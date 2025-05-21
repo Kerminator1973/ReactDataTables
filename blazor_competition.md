@@ -91,6 +91,58 @@ Table поддерживает возможность выбора строки 
 
 В приведённом выше примере, мы выводим информацию из поля "Summary" текущего выбранного элемента.
 
+## Модальные диалоги - MudBlazor
+
+Предположим, что нам необходимо добавить в приложение модальный диалог. Для этого мы создаём файл "WeatherInfo.Razor" и реализуем в нём диалог:
+
+```csharp
+<MudDialog>
+    <TitleContent>
+        Dialog Title
+    </TitleContent>
+    <DialogContent>
+        Dialog Content
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+
+    private void Cancel() => MudDialog.Cancel();
+}
+```
+
+Далее на форме, которая должна содержать диалог добавляет сервис DialogService, кнопку для активации диалога и функцию для его отображения:
+
+```csharp
+@inject IDialogService DialogService
+
+<MudButton @onclick="OpenDialogAsync" Variant="Variant.Filled" Color="Color.Primary">
+    Open Simple Dialog
+</MudButton>
+@code {
+
+    private Task OpenDialogAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        return DialogService.ShowAsync<DialogUsageExample_Dialog>("Simple Dialog", options);
+    }
+}
+```
+
+Если компонент размещён в отдельной папке (например, "Components"), то может потребоваться добавить директиву `@using`:
+
+```csharp
+@using MudBlazorApp.Client.Components
+```
+
 ## Ограничения MudBlazor
 
 Библиотека не хранит свои файлы с описанием стилей на локальном жёстком диске в человеко-читаемом виде. Т.е. для исследования MudBlazor потребуется скачать исходные файлы из репозитария на GitHub и изучать исходники. Это сложнее, чем например, исследовать стили Bootstrap 5 в приложении на React 19.
