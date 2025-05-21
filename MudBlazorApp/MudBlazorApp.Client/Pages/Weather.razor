@@ -20,10 +20,10 @@ else
             <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.Summary!)">Summary</MudTableSortLabel></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd DataLabel="Date">@context.Date</MudTd>
-            <MudTd DataLabel="Temp. (C)">@context.TemperatureC</MudTd>
-            <MudTd DataLabel="Temp. (F)">@context.TemperatureF</MudTd>
-            <MudTd DataLabel="Summary">@context.Summary</MudTd>
+            <MudTd DataLabel="Date">@context?.Date</MudTd>
+            <MudTd DataLabel="Temp. (C)">@context?.TemperatureC</MudTd>
+            <MudTd DataLabel="Temp. (F)">@context?.TemperatureF</MudTd>
+            <MudTd DataLabel="Summary">@context?.Summary</MudTd>
         </RowTemplate>
         <PagerContent>
             <MudTablePager PageSizeOptions="new int[]{50, 100}" />
@@ -37,12 +37,13 @@ else
 @code {
     private WeatherForecast[]? forecasts;
 
-    private WeatherForecast selectedItem = null;
+    // Через привязку создаём ссылку на текущий выбранных элемент таблицы
+    private WeatherForecast? selectedItem = null;
 
     protected override async Task OnInitializedAsync()
     {
         // Simulate asynchronous loading to demonstrate a loading indicator
-        await Task.Delay(500);
+        //await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };

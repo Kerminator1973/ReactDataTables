@@ -83,7 +83,7 @@ Table поддерживает возможность выбора строки 
 <MudText Class="align-self-center d-inline">Selected: @selectedItem?.Summary</MudText>
 
 @code {
-    private WeatherForecast selectedItem = null;
+    private WeatherForecast? selectedItem = null;
 }
 ```
 
