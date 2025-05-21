@@ -435,6 +435,17 @@ class SecretServiceCar extends Car implements Flyable, Swimmable {
 }
 ```
 
+Также мы можем расширить один интерфейс другим:
+
+```ts
+interface Flyable extends MotorVehicle {
+    fly (howHigh: number);
+    land();
+}
+```
+
+Разработчики, практикующие объектно-ориентированный подход: "_Программируйсте через интерфейсы, а не через реализации_".
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
