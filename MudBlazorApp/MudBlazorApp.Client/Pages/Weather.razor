@@ -1,7 +1,5 @@
 ﻿@page "/weather"
 
-
-
 <PageTitle>Weather</PageTitle>
 
 <MudText Typo="Typo.h3" GutterBottom="true">Weather forecast</MudText>
@@ -13,7 +11,8 @@
 }
 else
 {
-  <MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false">
+  <MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false"
+              @bind-SelectedItem="selectedItem">
         <HeaderContent>
             <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<WeatherForecast, object>(x=>x.Date)">Date</MudTableSortLabel></MudTh>
             <MudTh><MudTableSortLabel SortBy="new Func<WeatherForecast, object>(x=>x.TemperatureC)">Temp. (C)</MudTableSortLabel></MudTh>
@@ -30,10 +29,15 @@ else
             <MudTablePager PageSizeOptions="new int[]{50, 100}" />
         </PagerContent>
     </MudTable>
+    <MudSpacer />
+    <MudText Class="align-self-center d-inline">Selected: @selectedItem?.Summary</MudText>
+    <MudButton Variant="Variant.Filled">Get List Selection</MudButton>
 }
 
 @code {
     private WeatherForecast[]? forecasts;
+
+    private WeatherForecast selectedItem = null;
 
     protected override async Task OnInitializedAsync()
     {

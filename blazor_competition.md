@@ -66,6 +66,29 @@ await builder.Build().RunAsync();
 <MudButton Color="Color.Primary" Variant="Variant.Filled">Submit</MudButton>
 ```
 
+## MudTable и DataGrid
+
+В MudBlazor есть два разных органа управления, используемых для представления табличных данных: DataGrid и MudTable.
+
+В DataGrid можно добавлять слева отдельное поле для выбора конкретной строки таблицы. Соответственно, инструмент предоставляет возможность выполнения групповых операций.
+
+Table поддерживает возможность выбора строки таблицы для выполнения дальнейших операций с ней. Для этого необходимо создать ссылку на выбранный элемент (приватный член-класса) и осуществить связывание с ним:
+
+```csharp
+<MudTable Items="forecasts" Hover="true" SortLabel="Sort By" Elevation="0" AllowUnsorted="false"
+            @bind-SelectedItem="selectedItem">
+    ...
+</MudTable>
+<MudSpacer />
+<MudText Class="align-self-center d-inline">Selected: @selectedItem?.Summary</MudText>
+
+@code {
+    private WeatherForecast selectedItem = null;
+}
+```
+
+В приведённом выше примере, мы выводим информацию из поля "Summary" текущего выбранного элемента.
+
 ## Ограничения MudBlazor
 
 Библиотека не хранит свои файлы с описанием стилем на локальном жёстком диске в человеко-читаемом виде. Т.е. для исследования MudBlazor потребуется скачать исходные файлы из репозитария на GitHub и изучать исходники. Это сложнее, чем например, исследовать стили Bootstrap 5 в приложении на React 19.
