@@ -143,6 +143,65 @@ Table поддерживает возможность выбора строки 
 @using MudBlazorApp.Client.Components
 ```
 
+## Добавление в модальный диалог полей
+
+Достаточно добавить описание поля в верстку, создать атрибуты в компоненте и добавить Binding.
+
+Верстка с Binding-ом:
+
+```csharp
+<DialogContent>
+    <MudContainer Style="max-height: 300px; overflow-y: scroll">
+        <MudTextField @bind-Value="Field1Value"
+                        Label="Field 1"
+                        Variant="Variant.Outlined"
+                        Margin="Margin.Dense" />
+        <MudTextField @bind-Value="Field2Value"
+                        Label="Field 2"
+                        Variant="Variant.Outlined"
+                        Margin="Margin.Dense" />
+    </MudContainer>
+</DialogContent>
+```
+
+Определяем дополнительные поля, а также, при выполнении Submit, возвращаем введённые значения посредством вспомогательной модели `DialogResultModel`:
+
+```csharp
+@code {
+    [CascadingParameter]
+    private IMudDialogInstance MudDialog { get; set; }
+
+    [Parameter]
+    public string Field1Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Field2Value { get; set; } = string.Empty;
+
+    private void Submit()
+    {
+        var result = new DialogResultModel
+        {
+            Field1 = Field1Value,
+            Field2 = Field2Value
+        };
+
+        MudDialog.Close(DialogResult.Ok(result));
+    }
+
+    private void Cancel() => MudDialog.Cancel();
+}
+```
+
+Модель может быть определена, например, в классе DialogResultModel:
+
+```csharp
+public class DialogResultModel
+{
+    public string Field1 { get; set; } = string.Empty;
+    public string Field2 { get; set; } = string.Empty;
+}
+```
+
 ## Ограничения MudBlazor
 
 Библиотека не хранит свои файлы с описанием стилей на локальном жёстком диске в человеко-читаемом виде. Т.е. для исследования MudBlazor потребуется скачать исходные файлы из репозитария на GitHub и изучать исходники. Это сложнее, чем например, исследовать стили Bootstrap 5 в приложении на React 19.

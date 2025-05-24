@@ -38,6 +38,10 @@ else
 
     <MudButton Variant="Variant.Filled" Color="Color.Primary"
                @onclick="OpenModalAsync">Get List Selection</MudButton>
+
+    <MudSpacer />
+    <MudText Typo="Typo.body1">Field 1 Result: @field1Result</MudText>
+    <MudText Typo="Typo.body1">Field 2 Result: @field2Result</MudText>
 }
 
 @code {
@@ -46,10 +50,31 @@ else
     // Через привязку создаём ссылку на текущий выбранных элемент таблицы
     private WeatherForecast? selectedItem = null;
 
-    private Task OpenModalAsync()
+    // Поля для отображения на экране введённых параметров
+    private string field1Result = string.Empty;
+    private string field2Result = string.Empty;
+
+    private async Task OpenModalAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
-        return DialogService.ShowAsync<WeatherInfo>("Simple Dialog", options);
+
+        var parameters = new DialogParameters
+        {
+            ["Field1Value"] = "Initial Value 1",
+            ["Field2Value"] = "Initial Value 2"
+        };
+
+        //return DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
+
+        var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
+        var result = await dialog.Result;
+
+        if (!result.Canceled && result.Data is DialogResultModel data)
+        {
+            field1Result = data.Field1;
+            field2Result = data.Field2;
+            StateHasChanged();
+        }
     }
 
     protected override async Task OnInitializedAsync()

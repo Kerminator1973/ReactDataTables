@@ -3,7 +3,16 @@
         Dialog Title
     </TitleContent>
     <DialogContent>
-        Dialog Content
+        <MudContainer Style="max-height: 300px; overflow-y: scroll">
+            <MudTextField @bind-Value="Field1Value"
+                          Label="Field 1"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense" />
+            <MudTextField @bind-Value="Field2Value"
+                          Label="Field 2"
+                          Variant="Variant.Outlined"
+                          Margin="Margin.Dense" />
+        </MudContainer>
     </DialogContent>
     <DialogActions>
         <MudButton OnClick="Cancel">Cancel</MudButton>
@@ -14,7 +23,22 @@
     [CascadingParameter]
     private IMudDialogInstance MudDialog { get; set; }
 
-    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    [Parameter]
+    public string Field1Value { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Field2Value { get; set; } = string.Empty;
+
+    private void Submit()
+    {
+        var result = new DialogResultModel
+        {
+            Field1 = Field1Value,
+            Field2 = Field2Value
+        };
+
+        MudDialog.Close(DialogResult.Ok(result));
+    }
 
     private void Cancel() => MudDialog.Cancel();
 }
