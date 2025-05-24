@@ -202,6 +202,71 @@ public class DialogResultModel
 }
 ```
 
+### Вызов диалога из родительского класса
+
+Для целей отладки, можно добавить в родительский элемент два поля для отображения результатов работы модельного диалога. Это временная мера.
+
+Добавляем поля в верстку:
+
+```csharp
+<MudSpacer />
+<MudText Typo="Typo.body1">Field 1 Result: @field1Result</MudText>
+<MudText Typo="Typo.body1">Field 2 Result: @field2Result</MudText>
+```
+
+Также добавляет атрибуты в код:
+
+```csharp
+@code {
+    // Поля для отображения на экране введённых параметров
+    private string field1Result = string.Empty;
+    private string field2Result = string.Empty;
+```
+
+Если нам нужно передать данные в модельный диалог при его открытии, то нам нужно использовать контейнер `DialogParameters`.
+
+Предыдущий код выглядел так:
+
+```csharp
+private Task OpenDialogAsync()
+{
+    var options = new DialogOptions { CloseOnEscapeKey = true };
+
+    return DialogService.ShowAsync<DialogUsageExample_Dialog>("Simple Dialog", options);
+}
+```
+
+Код с передачей параметров и обработкой результатов выглядит так:
+
+```csharp
+private async Task OpenModalAsync()
+{
+    var options = new DialogOptions { CloseOnEscapeKey = true };
+
+    var parameters = new DialogParameters
+    {
+        ["Field1Value"] = "Initial Value 1",
+        ["Field2Value"] = "Initial Value 2"
+    };
+
+    // Отображаем диалог
+    var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
+    var result = await dialog.Result;
+
+    // В случае, если пользователь подтвердил введённые значения, сохраняем их
+    if (!result.Canceled && result.Data is DialogResultModel data)
+    {
+        field1Result = data.Field1;
+        field2Result = data.Field2;
+
+        // Выполняем Re-rendering экрана
+        StateHasChanged();
+    }
+}
+```
+
+## Чем модель Blazor лучше модели React
+
 ## Ограничения MudBlazor
 
 Библиотека не хранит свои файлы с описанием стилей на локальном жёстком диске в человеко-читаемом виде. Т.е. для исследования MudBlazor потребуется скачать исходные файлы из репозитария на GitHub и изучать исходники. Это сложнее, чем например, исследовать стили Bootstrap 5 в приложении на React 19.

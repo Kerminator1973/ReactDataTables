@@ -58,29 +58,33 @@ else
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
+        // Устанавливаем значения полей диалога
         var parameters = new DialogParameters
         {
             ["Field1Value"] = "Initial Value 1",
             ["Field2Value"] = "Initial Value 2"
         };
 
-        //return DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
-
+        // Отображаем диалог
         var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
         var result = await dialog.Result;
 
+        // В случае, если пользователь подтвердил введённые значения, сохраняем их
         if (!result.Canceled && result.Data is DialogResultModel data)
         {
             field1Result = data.Field1;
             field2Result = data.Field2;
+
+            // Выполняем Re-rendering экрана
             StateHasChanged();
         }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        // Simulate asynchronous loading to demonstrate a loading indicator
-        //await Task.Delay(500);
+        // Имитируем асинхронную загрузку, чтобы продемонстрировать индикатор загрузки.
+        // В промышленном решении мы будет загружать данные с сервера через API
+        await Task.Delay(500);
 
         var startDate = DateOnly.FromDateTime(DateTime.Now);
         var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
