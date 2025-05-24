@@ -38,45 +38,48 @@ else
 
     <MudButton Variant="Variant.Filled" Color="Color.Primary"
                @onclick="OpenModalAsync">Get List Selection</MudButton>
-
-    <MudSpacer />
-    <MudText Typo="Typo.body1">Field 1 Result: @field1Result</MudText>
-    <MudText Typo="Typo.body1">Field 2 Result: @field2Result</MudText>
 }
 
 @code {
+    // Данные таблицы с указанием температоры (заполяем случайными данными)
     private WeatherForecast[]? forecasts;
 
     // Через привязку создаём ссылку на текущий выбранных элемент таблицы
     private WeatherForecast? selectedItem = null;
 
-    // Поля для отображения на экране введённых параметров
-    private string field1Result = string.Empty;
-    private string field2Result = string.Empty;
-
     private async Task OpenModalAsync()
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true };
-
-        // Устанавливаем значения полей диалога
-        var parameters = new DialogParameters
+        // Модальный диалог показываем только в том случае, если была выбрана
+        // строка таблицы
+        if (selectedItem != null)
         {
-            ["Field1Value"] = "Initial Value 1",
-            ["Field2Value"] = "Initial Value 2"
-        };
+            var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        // Отображаем диалог
-        var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
-        var result = await dialog.Result;
+            // Устанавливаем значения полей диалога
+            var parameters = new DialogParameters
+                {
+                    ["Field1Value"] = selectedItem.TemperatureC.ToString(),
+                    ["Field2Value"] = selectedItem.Summary
+                };
 
-        // В случае, если пользователь подтвердил введённые значения, сохраняем их
-        if (!result.Canceled && result.Data is DialogResultModel data)
-        {
-            field1Result = data.Field1;
-            field2Result = data.Field2;
+            // Отображаем диалог
+            var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
+            var result = await dialog.Result;
 
-            // Выполняем Re-rendering экрана
-            StateHasChanged();
+            // В случае, если пользователь подтвердил введённые значения, сохраняем их
+            if (!result.Canceled && result.Data is DialogResultModel data)
+            {
+                // Сохраняем данные в таблице через ссылку на элемент (selectedItem)
+                if( Int32.TryParse(data.Field1, out var value))
+                {
+                    selectedItem.TemperatureC = value;
+                }
+
+                selectedItem.Summary = data.Field2;
+
+                // Выполняем Re-rendering экрана
+                StateHasChanged();
+            }
         }
     }
 
