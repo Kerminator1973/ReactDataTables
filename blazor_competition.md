@@ -265,6 +265,34 @@ private async Task OpenModalAsync()
 }
 ```
 
+### Что можно было бы сделать по другому?
+
+Мы могли бы не создавать модель DialogResultModel, а определить её динамически. Т.е. при выполнении функции Submit мы могли бы просто вернуть анонимный объект:
+
+```csharp
+private void Submit()
+{
+    var result = new { Field1 = Field1Value, Field2 = Field2Value };
+    MudDialog.Close(DialogResult.Ok(result));
+}
+```
+
+Соответственно, мы может обработать динамический объект в родительском компоненте, вручную:
+
+```csharp
+var result = await dialog.Result;
+
+if (!result.Canceled && result.Data != null)
+{
+    dynamic data = result.Data;
+    field1Result = data.Field1;
+    field2Result = data.Field2;
+    StateHasChanged();
+}
+```
+
+Приведённая выше альтернатива уменьшает количество кода, но делает код более хрупким - не рекомендуется к использованию.
+
 ## Чем модель Blazor лучше модели React
 
 Работа с модальными диалогами гораздо более очевидная и простая, чем в React.
@@ -273,7 +301,7 @@ private async Task OpenModalAsync()
 
 В Blazor вызывающий код и MudDialog обмениваются объектами (моделями) и этот код никак на верстке не сказывается. Этот подход больше похож на императивный, более понятный и не создаёт жёсткую связь верстки двух компонентов.
 
-Однако, следует обратить внимание, что Blazor требует выполнения Re-rendering-а вручную, см.: `StateHasChanged()`.
+Однако, следует обратить внимание, что Blazor требует выполнения Re-rendering-а вручную, см.: `StateHasChanged()`. Вызов StateHasChanged() форсирует перерисовку пользовательского интерфейса.
 
 ## Ограничения MudBlazor
 
