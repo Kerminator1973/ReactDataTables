@@ -37,17 +37,56 @@ else
     <MudSpacer />
 
     <MudButton Variant="Variant.Filled" Color="Color.Primary"
-               @onclick="OpenModalAsync">Get List Selection</MudButton>
+               @onclick="CreateNewModalAsync">Create New</MudButton>
+
+    <MudButton Variant="Variant.Filled" Color="Color.Primary" Class="ml-2"
+               @onclick="EditSelectedModalAsync">Get List Selection</MudButton>
 }
 
 @code {
     // Данные таблицы с указанием температоры (заполяем случайными данными)
-    private WeatherForecast[]? forecasts;
+    private List<WeatherForecast> forecasts = new();
 
     // Через привязку создаём ссылку на текущий выбранных элемент таблицы
     private WeatherForecast? selectedItem = null;
 
-    private async Task OpenModalAsync()
+    private async Task CreateNewModalAsync()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+
+        // Устанавливаем значения полей диалога
+        var parameters = new DialogParameters
+        {
+            ["Field1Value"] = "50",
+            ["Field2Value"] = "Тепло"
+        };
+
+        // Отображаем диалог
+        var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
+        var result = await dialog.Result;
+
+        // В случае, если пользователь подтвердил введённые значения, сохраняем их
+        if (!result.Canceled && result.Data is DialogResultModel data)
+        {
+            if (!Int32.TryParse(data.Field1, out var tempearature))
+            {
+                return;
+            }
+
+            // Добавляем новый элемент в таблицу
+            forecasts.Add(new WeatherForecast
+            {
+                Date = DateOnly.FromDateTime(DateTime.Now),
+                TemperatureC = tempearature,
+                Summary = data.Field2
+            });
+
+            // Выполняем Re-rendering экрана
+            StateHasChanged();
+        }
+    }
+
+    private async Task EditSelectedModalAsync()
     {
         // Модальный диалог показываем только в том случае, если была выбрана
         // строка таблицы
@@ -96,7 +135,7 @@ else
             Date = startDate.AddDays(index),
             TemperatureC = Random.Shared.Next(-20, 55),
             Summary = summaries[Random.Shared.Next(summaries.Length)]
-        }).ToArray();
+        }).ToList();
     }
 
     private class WeatherForecast
