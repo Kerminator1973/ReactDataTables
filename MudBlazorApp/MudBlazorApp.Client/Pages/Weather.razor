@@ -77,36 +77,54 @@ else
         }).ToList();
     }
 
+    // Вспомогательный статический метод используется для настройки значений по умолчанию
+    // при создании модального диалога в режиме "Добавить новую строку"
+    private static DialogParameters GetDefaultDialogParameters()
+    {
+        return new DialogParameters {
+            ["Field1Value"] = "50",
+            ["Field2Value"] = "Тепло"
+        };
+    }
+
+    // Вспомогательный статический метод создаёт объект WeatherForecast, интерпретируя
+    // данные, введённые пользователем в модальном диалоге
+    private static WeatherForecast CreateWeatherForecast(DialogResultModel data)
+    {
+        return new WeatherForecast
+        {
+            Date = DateOnly.FromDateTime(DateTime.Now),
+            TemperatureC = ParseTemperature(data.Field1),
+            Summary = data.Field2
+        };
+    }
+
+    // Вспомогательный статический метод модифицирует поля объекта WeatherForecast, интерпретируя
+    // данные, введённые пользователем в модальном диалоге
+    private static void UpdateWeatherForecast(WeatherForecast forecast, DialogResultModel data)
+    {
+        forecast.TemperatureC = ParseTemperature(data.Field1);
+        forecast.Summary = data.Field2;
+    }
+
+    private static int ParseTemperature(string temperatureString)
+    {
+        return int.TryParse(temperatureString, out var temperature) ? temperature : 0;
+    }
+
     private async Task CreateNewModalAsync()
     {
         var options = new DialogOptions { CloseOnEscapeKey = true };
 
-        // Устанавливаем значения полей диалога
-        var parameters = new DialogParameters
-        {
-            ["Field1Value"] = "50",
-            ["Field2Value"] = "Тепло"
-        };
-
         // Отображаем диалог
-        var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", parameters, options);
+        var dialog = await DialogService.ShowAsync<WeatherInfo>("Simple Dialog", 
+        GetDefaultDialogParameters(), options);
         var result = await dialog.Result;
 
-        // В случае, если пользователь подтвердил введённые значения, сохраняем их
         if (!result.Canceled && result.Data is DialogResultModel data)
         {
-            if (!Int32.TryParse(data.Field1, out var tempearature))
-            {
-                return;
-            }
-
-            // Добавляем новый элемент в таблицу
-            forecasts.Add(new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now),
-                TemperatureC = tempearature,
-                Summary = data.Field2
-            });
+            // В случае, если пользователь подтвердил введённые значения, сохраняем их
+            forecasts.Add(CreateWeatherForecast(data));
 
             // Выполняем Re-rendering экрана
             StateHasChanged();
@@ -135,13 +153,7 @@ else
             // В случае, если пользователь подтвердил введённые значения, сохраняем их
             if (!result.Canceled && result.Data is DialogResultModel data)
             {
-                // Сохраняем данные в таблице через ссылку на элемент (selectedItem)
-                if( Int32.TryParse(data.Field1, out var value))
-                {
-                    selectedItem.TemperatureC = value;
-                }
-
-                selectedItem.Summary = data.Field2;
+                UpdateWeatherForecast(selectedItem, data);
 
                 // Выполняем Re-rendering экрана
                 StateHasChanged();
