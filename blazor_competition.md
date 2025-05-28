@@ -342,6 +342,12 @@ forecasts.Add(new WeatherForecast
 StateHasChanged();
 ```
 
+Следует заметить, что при вызове StateHasChanged() из асинхронного кода, или отдельного потока, необходимо оборачивать его в InvokeAsync():
+
+```csharp
+await InvokeAsync(StateHasChanged);
+```
+
 ## Чем модель Blazor лучше модели React
 
 Работа с модальными диалогами гораздо более очевидная и простая, чем в React.
