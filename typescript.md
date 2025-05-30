@@ -481,6 +481,8 @@ type Direction = 'Up' | 'Down' | 'Left' | 'Right';
 let lotteryNumbers: Array<number>;
 ```
 
+Рекомендуется к прочтению [статья о структурной подтипизации](https://www.typescriptlang.org/docs/handbook/type-compatibility.html) в JavaScript. Это важно для понимания совместимости типов, которые могут быть использовании в обобщённых контейнерах данных. 
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
