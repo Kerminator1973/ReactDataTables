@@ -419,7 +419,9 @@ dotnet add package Microsoft.AspNetCore.Components.QuickGrid
 }
 ```
 
-В приложении, сгенерированном с использованием MudBlazor, потребуется разрешить коллизии:
+Замечу, что в приведённом выше примере, тип Person определён буквально одной строкой. В приложении, сгенерированном MudBlazor используется отдельный приватный класс, но это сделано потому, что там используется вычисляемое свойство класса.
+
+В приложении, сгенерированном с использованием MudBlazor, потребуется разрешить коллизии между ним и QuickGrid:
 
 ```csharp
 @using Microsoft.AspNetCore.Components.QuickGrid
@@ -431,6 +433,20 @@ dotnet add package Microsoft.AspNetCore.Components.QuickGrid
     <Microsoft.AspNetCore.Components.QuickGrid.PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
 </QuickGrid>
 ```
+
+Гипотетически, код можно было бы упростить используя alias:
+
+```csharp
+@using QuickGridColumn = Microsoft.AspNetCore.Components.QuickGrid.PropertyColumn
+
+<QuickGrid Items="@people">
+    <QuickGridColumn Property="@(p => p.PersonId)" Sortable="true" />
+    <QuickGridColumn Property="@(p => p.Name)" Sortable="true" />
+    <QuickGridColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+</QuickGrid>
+```
+
+К сожалению, PropertyColumn - является шаблоном и для этого случая приведённая выше конструкция не будет синтаксически корректной.
 
 ## Профилирование приложений Blazor
 
