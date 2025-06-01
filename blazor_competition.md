@@ -389,6 +389,49 @@ setDataTable(updatedTable);
 
 Для работы с таблицами, без использования FluentUI и MudBlazor, Microsoft предлагает open-source библиотеку [QuickGrid](https://aspnet.github.io/quickgridsamples/). Библиотека является высокопроизводительной, простой в использовании и хорошо кастомизируемой. В частности, в библиотеке есть поддержка режима виртуализации данных, в котором данные представляется бесконечным списком, но с реальным рендерингом только тех данных, которые попали окно на экране.
 
+Создать таблицу, используя QuickGrid можно добавив в проект Package `Microsoft.AspNetCore.Components.QuickGrid`. Это можно сделать командой:
+
+```shell
+dotnet add package Microsoft.AspNetCore.Components.QuickGrid
+```
+
+В официальном примере достаточно определить колонки таблицы, а в коде создать источник данных (`IQueryable<Person>`):
+
+```csharp
+<QuickGrid Items="@people">
+    <PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+    <PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+</QuickGrid>
+
+@code {
+    record Person(int PersonId, string Name, DateOnly BirthDate);
+
+    IQueryable<Person> people = new[]
+    {
+        new Person(10895, "Jean Martin", new DateOnly(1985, 3, 16)),
+        new Person(10944, "António Langa", new DateOnly(1991, 12, 1)),
+        new Person(11203, "Julie Smith", new DateOnly(1958, 10, 10)),
+        new Person(11205, "Nur Sari", new DateOnly(1922, 4, 27)),
+        new Person(11898, "Jose Hernandez", new DateOnly(2011, 5, 3)),
+        new Person(12130, "Kenji Sato", new DateOnly(2004, 1, 9)),
+    }.AsQueryable();
+}
+```
+
+В приложении, сгенерированном с использованием MudBlazor, потребуется разрешить коллизии:
+
+```csharp
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+<!-- Названия компонентов MudBlazor и QuickGrid совпадают -->
+<QuickGrid Items="@people">
+    <Microsoft.AspNetCore.Components.QuickGrid.PropertyColumn Property="@(p => p.PersonId)" Sortable="true" />
+    <Microsoft.AspNetCore.Components.QuickGrid.PropertyColumn Property="@(p => p.Name)" Sortable="true" />
+    <Microsoft.AspNetCore.Components.QuickGrid.PropertyColumn Property="@(p => p.BirthDate)" Format="yyyy-MM-dd" Sortable="true" />
+</QuickGrid>
+```
+
 ## Профилирование приложений Blazor
 
 На начало лета 2025 года, для профилирования Blazor приложения рекомендуется либо использовать System.Diagnostics.Stopwatch для вычисления времени рендеринга компонента вручную, либо использовать профилировщик, встроенный в браузер.
