@@ -483,6 +483,36 @@ let lotteryNumbers: Array<number>;
 
 Рекомендуется к прочтению [статья о структурной подтипизации](https://www.typescriptlang.org/docs/handbook/type-compatibility.html) в JavaScript. Это важно для понимания совместимости типов, которые могут быть использовании в обобщённых контейнерах данных. 
 
+В качестве специализации мы можем указывать несколько разных типов, например:
+
+```ts
+const values: Array<string | number> = ["Joe", 123, 456];
+```
+
+Определить интерфейс с указанием специализации можно так:
+
+```ts
+interface Comparator<T> {
+    compareTo(value: T): number;
+}
+```
+
+Использование приведённого выше интерфейса:
+
+```ts
+class Rectangle implements Comparator<Rectangle> {
+    compareTo(value: Rectangle): number {
+        // Реализация алгоритма сравнения прямоугольников
+    }
+}
+
+class Triangle implements Comparator<Triangle> {
+    compareTo(value: Triangle): number {
+        // Реализация алгоритма сравнения треугольников
+    }
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
