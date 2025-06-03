@@ -513,6 +513,32 @@ class Triangle implements Comparator<Triangle> {
 }
 ```
 
+Можно выполнять наследование от обобщённого класса:
+
+```ts
+class A<T = any> {
+    value: T;
+}
+
+class B extends A {
+    // Никаких ошибок компилятора - всё легально
+}
+```
+
+Альтернатива:
+
+```ts
+class A<T> {
+    value: T;
+}
+
+class B extends A<any> {
+    // Компилируется
+}
+```
+
+В приведённом выше коде всё же лучше указывать на any, а конкретные типы, применимые в реализации конкретного производного класса.
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
