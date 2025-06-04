@@ -539,6 +539,44 @@ class B extends A<any> {
 
 В приведённом выше коде всё же лучше указывать на any, а конкретные типы, применимые в реализации конкретного производного класса.
 
+Можно использовать обобщённые типы в стрелочных функциях:
+
+```ts
+const printMe = <T>(content: T) : T => {
+    console.log(content);
+    return content;
+}
+
+const a = printMe<string>("Hello");
+const b = printMe<Person>(new Person("Joe"));
+```
+
+Однако типовой пример обощённой функции:
+
+```ts
+function printMe<T>(content: T) T {
+    console.log(content);
+    return content;
+}
+
+const a = printMe("Hello");
+
+class Person {
+    constructor(public name: string) {}
+}
+
+const b = printMe(new Person("Joe"));
+```
+
+Если нам нужно использовать несколько параметров с разными типами, то это можно сделать так:
+
+```ts
+class Pair<K,V> {
+    key: K;
+    value: V;
+}
+```
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
