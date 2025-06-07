@@ -1,86 +1,115 @@
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
+import { EmployeeData } from './types';
 
 
-type ModalComponentProps = {
-    isOpen: boolean;
+// Определяем список свойств (props), которые передаются в модальный диалог
+type EmployeeModalProps = {
+    // Состояние модального окна
+    show: boolean;
+    // Добавляется ли новый сотрудник, или редактируются параметры существующего
     isEditMode: boolean;
-    setModalShow: (state: boolean) => void;
-    surnameField: string;
-    setSurnameField: React.Dispatch<React.SetStateAction<string>>;
-    positionField: string;
-    setPositionField: React.Dispatch<React.SetStateAction<string>>;
-    onSubmit: () => void;
+    // Объект с данными пользователя является опциональным и передаётся только в режиме редактирования
+    initialData?: EmployeeData;
+    // При закрытии окна, обрабатывать это событие может родительный элемент
+    onClose: () => void;
+    // При нажатии кнопки "Submit" вызывается callback-функция родительского компонента
+    onSubmit: (data: EmployeeData) => void;
 };
 
-const EmployeeModal: React.FC<ModalComponentProps> = ({ 
-    isOpen, isEditMode, setModalShow, surnameField, setSurnameField, positionField, setPositionField, onSubmit,
+const EmployeeModal: React.FC<EmployeeModalProps> = ({
+    show, isEditMode, initialData, onClose, onSubmit,
 }) => {
 
-  // Функция, позволяющая скрыть/закрыть модальное окно
-  const handleClose = () => setModalShow(false);
+    // Состояние текущего объекта - это не отдельное поле, а объект, который
+    // инициализируется пустым значением
+    const [formData, setFormData] = useState<EmployeeData>({
+        surname: '',
+        position: '',
+    });
 
-  // Обработчик нажатия кнопки "Submit"
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    // Хук useEffect() используется для того, чтобы проинициализировать данные
+    // когда модальный диалог открывается в режиме редактирования
+    useEffect(() => {
+        if (isEditMode && initialData && show) {
+            setFormData(initialData);
+        } else {
+            // Сбрасываем данные в фореме, если она открывается в режиме добавления
+            // нового сотрудника, или модальное окно закрывается
+            setFormData({ surname: '', position: '' });
+        }
+    }, [isEditMode, initialData, show]);
 
-    // Предотвращаем попытку отправки данных на сервер
-    event.preventDefault();
+    // При каждом изменении полей ввода, обновляется состояние модального диалога (formData)
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { id, value } = event.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [id]: value,
+        }));
+    };
 
-    // Сбрасываем поля для повторного использования
-    setSurnameField('');
-    setPositionField('');
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    
+        // Передаём собранные данные родительскому компоненту
+        onSubmit(formData);
 
-    // Закрываем модальное окно
-    setModalShow(false);
+        // Решение о закрытии модального окна делегируем родительскому компоненту. Он может
+        // принять решение о том, что форму закрывать нельзя, если, например, валидация данные
+        // не была успешной
+        onClose();
+    };
 
-    // Информируем родительский компонент о завершении ввода
-    onSubmit();
-  };
+    const handleClose = () => {
+        onClose();
+    };
 
-  return (
-    <>
-        {/* Модальный диалог для редактирования данных сотрудника */}
-        <Modal show={isOpen} onHide={handleClose} backdrop="static" keyboard={false}>
+    // Модальный диалог для редактирования данных сотрудника
+    return (
+        <Modal show={show} onHide={handleClose} backdrop="static" keyboard={false}>
             <Modal.Header closeButton>
-            <Modal.Title>
-                {isEditMode === false && (
-                    <>Добавление нового сотрудника</>
-                )}
-                {isEditMode === true && (
-                    <>Редактирование сотрудника</>
-                )}
-            </Modal.Title>
+                <Modal.Title>
+                {isEditMode ? 'Редактирование сотрудника' : 'Добавление нового сотрудника'}
+                </Modal.Title>
             </Modal.Header>
             <form onSubmit={handleSubmit}>
-            <Modal.Body>
-                <div className="mb-3">
-                <label htmlFor="surnameField" className="form-label">Имя сотрудника:</label>
-                <input type="text" id="surnameField" className="form-control"
-                    value={surnameField} onChange={(e) => setSurnameField(e.target.value)}
-                />
-                </div>
-                <div className="mb-3">
-                <label htmlFor="positionField" className="form-label">Должность:</label>
-                <input type="text" id="positionField" className="form-control"
-                    value={positionField} onChange={(e) => setPositionField(e.target.value)}
-                />
-                </div>
-            </Modal.Body>
-            <Modal.Footer>
-                <Button variant="secondary" onClick={handleClose}>Закрыть</Button>
-                <Button type="submit" variant="primary" onClick={handleClose}>
-                {isEditMode === false && (
-                    <>Добавить сотрудника</>
-                )}
-                {isEditMode === true && (
-                    <>Сохранить изменения</>
-                )}
-                </Button>
-            </Modal.Footer>
+                <Modal.Body>
+                    <div className="mb-3">
+                        <label htmlFor="surname" className="form-label">Имя сотрудника:</label>
+                        <input
+                        type="text"
+                        id="surname" // Идентификатор соответствует имени ключа в объекте состояния
+                        className="form-control"
+                        value={formData.surname}
+                        onChange={handleInputChange}
+                        required // Данные должны быть введены
+                        />
+                    </div>
+                    <div className="mb-3">
+                        <label htmlFor="position" className="form-label">Должность:</label>
+                        <input
+                        type="text"
+                        id="position"
+                        className="form-control"
+                        value={formData.position}
+                        onChange={handleInputChange}
+                        required
+                        />
+                    </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={handleClose}>
+                        Закрыть
+                    </Button>
+                    <Button type="submit" variant="primary">
+                        {isEditMode ? 'Сохранить изменения' : 'Добавить сотрудника'}
+                    </Button>
+                </Modal.Footer>
             </form>
-        </Modal>    
-    </>
-    )
-}
+        </Modal>
+    );
+};
 
 export default EmployeeModal

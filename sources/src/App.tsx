@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import Button from 'react-bootstrap/Button';
 import EmployeeDataTable, { EmployeeDataTableRef } from './EmployeeDataTable';
 import EmployeeModal from './EmployeeModal';
+import { EmployeeData } from './types';
 import './App.css';
 
 
@@ -18,13 +19,11 @@ function App() {
   const [isEditMode, setEditMode] = useState(false);
 
   // Определяем состояния полей для ввода ФИО и должности
-  const [surname, setSurname] = useState<string>('');
-  const [position, setPosition] = useState<string>('');
+  const [editingEmployee, setEditingEmployee] = useState<EmployeeData | undefined>(undefined);
 
   // Функция-обработчик нажатия кнопки добавления нового сотрудника
   const handleAddNewEmployee = () => {
-    setSurname('');
-    setPosition('');
+    setEditingEmployee(undefined); // Явно указываем, что при добавлении никаких входных данных нет
     setEditMode(false)    // Активируем режим добавления нового сотрудника
     setModalShow(true);
   };
@@ -35,26 +34,37 @@ function App() {
       // Вызываем функцию конкретного экземпляра дочернего компонента
       const currentEmployee = childRef.current.getCurrentEmployee();
       if (currentEmployee !== null) {
-        setSurname(currentEmployee.name);
-        setPosition(currentEmployee.position);
+
+        // Передаём в компонент не отдельное поле, а объект
+        setEditingEmployee({
+          surname: currentEmployee.name, 
+          position: currentEmployee.position
+        });
+
         setEditMode(true);  // Активируем режим редактирования
         setModalShow(true);
       }
     }    
   };
-
-  const handleSubmit = () => {
+ 
+  const handleSubmit = (data: EmployeeData) => {
     if (childRef.current) {
       if (isEditMode === false) {
-        childRef.current.addNewEmployee(surname, position);
+        childRef.current.addNewEmployee(data.surname, data.position);
       } else {
         // Вызываем функцию таблицы, указывая новые ФИО и должность сотрудника
         // в текущем выбранном элементе
-        childRef.current.replaceEmployee(surname, position);
+        childRef.current.replaceEmployee(data.surname, data.position);
       }
     }
   };
 
+  // Решение о закрытии модального компонента принимает родительский компонент.
+  // Это позволяет, например, не закрывать модальное окно, если данные не прошли валидацию
+  const handleModalClose = () => {
+    setModalShow(false);
+  };
+  
   return (
     <>
       <div className="container mt-3">
@@ -74,13 +84,10 @@ function App() {
 
       {/* Модальный диалог для добавления нового сотрудника */}
       <EmployeeModal 
-        isOpen={isModalOpen}
+        show={isModalOpen}
         isEditMode={isEditMode}
-        setModalShow={setModalShow}
-        surnameField={surname} 
-        setSurnameField={setSurname} 
-        positionField={position} 
-        setPositionField={setPosition}
+        initialData={editingEmployee}
+        onClose={handleModalClose}
         onSubmit={handleSubmit}
       />
     </>
