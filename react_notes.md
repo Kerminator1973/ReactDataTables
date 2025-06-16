@@ -358,3 +358,32 @@ const visibleUsers = useMemo (() => users.filter(({ visible }) => visible), [use
 внимательно анализировать код компонента.
 >
 >Также критичным может быть создание стандартизированной структуры папок проекта и общих подходов к разработке решения. Например, при разработке формы - описание данных оформлять как тип в отдельном файле, с тем, чтобы иметь возможность использовать его и в родительском, и в дочернем компонентах. Если пустить разработку на самотёк, она очень быстро захламиться и её сопровождение будет критически усложнено.
+
+## Способы упростить разработку на React
+
+В статье [Быстрый Frontend в 2025: почему RTK Query, Tailwind и Vite убивают классические подходы](https://habr.com/ru/articles/918558/) рассматривается возможность использования RTK Query, Tailwind и Vite для ускорения разработки front-end на React.
+
+Tailwind должен упростить работу с таблицами стилей.
+
+RTK Query позволяет заменить разработки Action-ов/Reducer-ов (State Management) в случае использования Redux Thunk. Типовой код на Redux + Axios:
+
+```js
+const fetchPosts = () => async (dispatch) => {
+    dispatch({ type: 'FETCH_POSTS_REQUEST' });
+
+    try {
+        const res = await axios.get('/api/posts');
+        dispatch({ type: 'FETCH_POSTS_SUCCESS', payload: res.data });
+    } catch (err) {
+        dispatch({ type: 'FETCH_POSTS_FAILURE', error: err.message });
+    }
+};
+```
+
+Тоже самое "из коробки" от [RTK Query](https://redux-toolkit.js.org/rtk-query/overview) (Redux Toolkit):
+
+```js
+const { data, error, isLoading } = useGetPostsQuery();
+```
+
+Vite, как Package Manager гораздо более быстрый и менее сложный, чем WebPack.
