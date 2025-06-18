@@ -387,3 +387,37 @@ const { data, error, isLoading } = useGetPostsQuery();
 ```
 
 Vite, как Package Manager гораздо более быстрый и менее сложный, чем WebPack.
+
+## Терминология React
+
+Определяются неконтролируемые компоненты и компоненты контролируе React.
+
+Неконтролируемые компоненты (_uncontroller components_) - это элементы обычной HTML-верстки, например:
+
+```jsx
+const Form = () => {
+    return (
+        <form>
+            <input type="text" />
+            <button type="submit">Submit</button>
+        </form>
+    );
+};
+```
+
+Пример контролируемого компонента (_controller component_):
+
+```jsx
+const Form = () => {
+    const [value, setValue] = useState("");
+    return (
+        <form>
+            <input type="text" 
+                value={value} onChange={(e) =>
+                    setValue(e.target.value)
+                } />
+            <button type="submit">Submit</button>
+        </form>
+    );
+};
+```
