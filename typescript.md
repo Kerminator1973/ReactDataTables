@@ -616,6 +616,28 @@ function createAdder(base: number): (addend: number) => number {
 }
 ```
 
+## Декораторы
+
+Пример использования декоратора в TypeScript:
+
+```ts
+@Injectable() class A {}
+```
+
+Часто декораторы применяют в фреймворках. Например, они очень часто используются в Angular. Пример кода:
+
+```ts
+@Component({
+    selector: 'order-processing',
+    template: `Buying {{quantity}} items`
+})
+export class OrderComponent {
+    @Input() qiantity: number;
+}
+```
+
+В Angular декоратор @Component() модет применяться только к классу, а декоратор @Input() только к свойствам класса.
+
 ## Лучшие Plug-Ins для Visual Studio Code
 
 - ESLint
