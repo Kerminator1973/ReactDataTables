@@ -421,3 +421,77 @@ const Form = () => {
     );
 };
 ```
+
+## Hook useContext
+
+Контекст в React это способность передачи данных через дерево компонентов, минуя прокидывание данных через _props_ от одного компонента к другому.
+
+До создания State Management (Redux и Mobx) данные передавались от самого верхнего компонента к нижним через props, иногда минуя огромные цепочки связанных компонентов. Этот подход избыточен и отличается низкой эффективностью. Для решения проблемы в React был введён **Context API**.
+
+Создать контекст можно используя функцию React.createContext(), которая имеет единственный параметр - значение по умолчанию, или объект для передачи дочерним компонентам через контекст.
+
+```js
+const context = React.createContext('value');
+```
+
+Другой пример:
+
+```js
+const AccordionContext = createContext({
+    activeItemIndex: 0,
+    setActiveItemIndex: () => 0,
+});
+```
+
+Результат вызова createContext() может быть использован в JSX-верстке, например:
+
+```js
+export const Accordion = ({items}) = > {
+    const [activeItemIndex, setActiveItemIndex] = useState(0);
+
+    return (
+        <AccordionContext.Provider value={{ activeItemIndex, setActiveItemIndex }}>
+            <ul>{children}</ul>
+        </AccordionContext.Provider>
+    );
+};
+```
+
+В приведённом выше коде мы создали контекст, в котором определена переменная состояния и функция для изменения состояния.
+
+Далее мы можем определить дочерний компонент, экземпляры которого будут использовать этот контекст для re-rendering-а. Заметим, что родительский компонент создал состояние (state), а дочерние элементы используют контекст.
+
+Вот как может выглядеть дочерниий компонент:
+
+```js
+export const AccordionItem = ({item, index}) => {
+    const { activeItemIndex, setActiveItemIndex } = useContext(AccordionContext);
+
+    return (
+        <li onClick={() => setActiveItemIndex(index)} key={item.id}>
+            <strong>{item.label}</strong>
+            {index === activeItemIndex && i.content}
+        </li>
+    );
+}
+```
+
+В приведённом выше коде мы определяем элемент списка, который вызывает метод изменения контекста при щелчке на элемент, что приведёт к установке конкретного дочернего элемента в активное состояние, а так же, поскольку состояние контекста измениться, то выполнит ре-рендеринг родительского компонента.
+
+Использовать компонент Accordion мы можем, например, таким образом:
+
+```js
+const items = {[
+    {label: "One", content: "lorem ipsum for more, see http://one.com"},
+    {label: "Two", content: "lorem ipsum for more, see http://two.com"},
+    {label: "Threee", content: "lorem ipsum for more, see http://three.com"},
+]};
+
+<Accordion>
+    {items.map((item, index) => (
+        <AccordionItem key={item.id} item={item} index={index} />
+    ))} 
+</Accordion>
+```
+
+Чем хорош данный подход: рендерингом управляем родительский элемент, тогда как дочерние элементы имеют информацию о текущем состоянии родительского элемента.
