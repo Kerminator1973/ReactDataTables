@@ -94,13 +94,15 @@ const EmployeeDataTable = forwardRef(
     // Данные для таблицы находятся в отдельном файле - "tableData.ts"
     const [tableData, setDataTable] = useState<TableRow[]>(employeesData);
 
-    // Настройка отображения колонок и их идентификаторов в ajax-режиме
+    // Настройка отображения колонок и их идентификаторов в ajax-режиме.
+    // TODO: Может вынести за пределы компонента, или сделать константными
     const columns = [
       { title: '№', data: 'id', searchable: false },                        // Не ищем данные в этой колонке
       { title: 'ФИО', data: 'name', className: "dt-body-center" },          // Выравнивание по центру
       { title: 'Должность', data: 'position', className: "dt-body-left" },  // Выравнивание по левой границе
     ];
 
+    // TODO: портировать на TypeScript. Может вынести за пределы компонента, или сделать константными
     const items = [
       {label: "One", content: "lorem ipsum for more, see http://one.com"},
       {label: "Two", content: "lorem ipsum for more, see http://two.com"},
@@ -152,6 +154,7 @@ const EmployeeDataTable = forwardRef(
           </thead>
         </DataTable>
 
+        {/* TODO: портировать на TypeScript */}
         <Accordion>
             {items.map((item, index) => (
                 <AccordionItem key={index} item={item} index={index} />
