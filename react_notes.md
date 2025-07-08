@@ -460,7 +460,7 @@ const AccordionContext = createContext({
 Результат вызова createContext() может быть использован в JSX-верстке, например:
 
 ```js
-export const Accordion = ({items}) = > {
+export const Accordion = ({items}) => {
     const [activeItemIndex, setActiveItemIndex] = useState(0);
 
     return (
@@ -495,11 +495,11 @@ export const AccordionItem = ({item, index}) => {
 Использовать компонент Accordion мы можем, например, таким образом:
 
 ```js
-const items = {[
+const items = [
     {label: "One", content: "lorem ipsum for more, see http://one.com"},
     {label: "Two", content: "lorem ipsum for more, see http://two.com"},
     {label: "Threee", content: "lorem ipsum for more, see http://three.com"},
-]};
+];
 
 <Accordion>
     {items.map((item, index) => (
