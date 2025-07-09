@@ -3,22 +3,28 @@ import { createContext, useContext, useState } from 'react';
 // Определяем интерфейс элемента массива, данные которого используются при
 // формировании списка (Accordion)
 export interface AccordionItemType {
-  label: string;
-  content: string;
-  id?: string | number;
+  label: string;        // Заголовок элемента
+  content: string;      // Информационная часть, связанная с элементом
+  id?: string | number; // Идентификатор элемента
 }
 
+// Определяем интерфейс контекста Accordion. Заметим, что это целочисленный state
 interface AccordionContextType {
   activeItemIndex: number;
   setActiveItemIndex: (index: number) => void;
 }
 
+// Создаём элемент AccordionContext.Provider и общий контекст для Accordion и AccordionItem
 const AccordionContext = createContext<AccordionContextType>({
     activeItemIndex: 0,
     setActiveItemIndex: () => 0,
 });
 
-export const Accordion = ({ children }: { children: React.ReactNode }) => {
+// Определяем родительский элемент. children - особенное зарезервированное свойство,
+// JSX-верстка дочерних элементов.
+// Следует обратить внимание, что для Accordion и AccordionItem не создавались
+// отдельные интерфейсы - описание типов было включено непосредственно в их определение
+export const Accordion = ({ children } : { children: React.ReactNode }) => {
     const [activeItemIndex, setActiveItemIndex] = useState(0);
 
     return (
@@ -28,12 +34,7 @@ export const Accordion = ({ children }: { children: React.ReactNode }) => {
     );
 };
 
-interface AccordionItemProps {
-  item: AccordionItemType;
-  index: number;
-}
-
-export const AccordionItem : React.FC<AccordionItemProps> = ({item, index}) => {
+export const AccordionItem = ({ item, index } : { item: AccordionItemType, index: number }) => {
     const { activeItemIndex, setActiveItemIndex } = useContext(AccordionContext);
 
     return (
