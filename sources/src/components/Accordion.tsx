@@ -9,7 +9,7 @@ export interface AccordionItemType {
 }
 
 // Определяем интерфейс контекста Accordion. Заметим, что это целочисленный state
-interface AccordionContextType {
+type AccordionContextType = {
   activeItemIndex: number;
   setActiveItemIndex: (index: number) => void;
 }
@@ -38,9 +38,11 @@ export const AccordionItem = ({ item, index } : { item: AccordionItemType, index
     const { activeItemIndex, setActiveItemIndex } = useContext(AccordionContext);
 
     return (
-        <li onClick={() => setActiveItemIndex(index)} key={item.id || index}>
+        <li onClick={() => setActiveItemIndex(index)} key={item.id ?? index}>
             <strong>{item.label}</strong>&nbsp;
-            {index === activeItemIndex && item.content}
+            {activeItemIndex === index && (
+                <div>{item.content}</div>
+            )}
         </li>
     );
 };
