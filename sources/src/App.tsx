@@ -3,8 +3,15 @@ import Button from 'react-bootstrap/Button';
 import EmployeeDataTable, { EmployeeDataTableRef } from './EmployeeDataTable';
 import EmployeeModal from './EmployeeModal';
 import { EmployeeData } from './types';
+import { Accordion, AccordionItem, AccordionItemType } from "./components/Accordion";
 import './App.css';
 
+// TODO: может вынести за пределы компонента, или сделать константными
+const items : AccordionItemType[] = [
+  {label: "One", content: "lorem ipsum for more, see http://one.com"},
+  {label: "Two", content: "lorem ipsum for more, see http://two.com"},
+  {label: "Three", content: "lorem ipsum for more, see http://three.com"}
+];
 
 function App() {
 
@@ -81,6 +88,13 @@ function App() {
 
       {/* Таблица с сотрудниками компании */}
       <EmployeeDataTable ref={childRef} />
+
+      {/* Аккордион, иллюстрирующий использованием Context API */}
+      <Accordion>
+          {items.map((item, index) => (
+              <AccordionItem key={index} item={item} index={index} />
+          ))} 
+      </Accordion>
 
       {/* Модальный диалог для добавления нового сотрудника */}
       <EmployeeModal 

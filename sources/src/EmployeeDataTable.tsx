@@ -9,8 +9,6 @@ import "./EmployeeDataTable.css";
 
 import { employeesData, TableRow } from './tableData.ts';
 
-// TODO: Перенести в отдельный элемент
-import { Accordion, AccordionItem, AccordionItemType } from "./components/Accordion";
 
 // Определяем тип, содержащий публичные метода компонента, которые может
 // использовать внешний код
@@ -102,13 +100,6 @@ const EmployeeDataTable = forwardRef(
       { title: 'Должность', data: 'position', className: "dt-body-left" },  // Выравнивание по левой границе
     ];
 
-    // TODO: может вынести за пределы компонента, или сделать константными
-    const items : AccordionItemType[] = [
-      {label: "One", content: "lorem ipsum for more, see http://one.com"},
-      {label: "Two", content: "lorem ipsum for more, see http://two.com"},
-      {label: "Three", content: "lorem ipsum for more, see http://three.com"}
-    ];
-
     return (
       <>
         <DataTable
@@ -153,14 +144,6 @@ const EmployeeDataTable = forwardRef(
             </tr>
           </thead>
         </DataTable>
-
-        {/* TODO: перенести в отдельный элемент */}
-        <Accordion>
-            {items.map((item, index) => (
-                <AccordionItem key={index} item={item} index={index} />
-            ))} 
-        </Accordion>
-
       </>
     );
   }
