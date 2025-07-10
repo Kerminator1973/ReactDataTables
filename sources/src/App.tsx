@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import Button from 'react-bootstrap/Button';
 import EmployeeDataTable, { EmployeeDataTableRef } from './EmployeeDataTable';
 import EmployeeModal from './EmployeeModal';
@@ -6,14 +6,21 @@ import { EmployeeData } from './types';
 import { Accordion, AccordionItem, AccordionItemType } from "./components/Accordion";
 import './App.css';
 
-// TODO: может вынести за пределы компонента, или сделать константными
-const items : AccordionItemType[] = [
+// Исходные данные для списка Accordion
+const ACCORDION_ITEMS  : AccordionItemType[] = [
   {label: "One", content: "lorem ipsum for more, see http://one.com"},
   {label: "Two", content: "lorem ipsum for more, see http://two.com"},
   {label: "Three", content: "lorem ipsum for more, see http://three.com"}
 ];
 
 function App() {
+
+  // Выполняется мемоизация данные Accordion. TODO: проверить эффективность
+  const memoizedAccordionItems = useMemo(() => 
+    ACCORDION_ITEMS .map((item: AccordionItemType, index: number) => (
+      <AccordionItem key={index} item={item} index={index} />
+    )), []
+  );
 
   // Определяем ссылку на экспортируемые функции компонента,
   // с интерфейсом EmployeeDataTableRef
@@ -89,11 +96,9 @@ function App() {
       {/* Таблица с сотрудниками компании */}
       <EmployeeDataTable ref={childRef} />
 
-      {/* Аккордион, иллюстрирующий использованием Context API */}
+      {/* Аккордион, иллюстрирующий использование Context API */}
       <Accordion>
-          {items.map((item, index) => (
-              <AccordionItem key={index} item={item} index={index} />
-          ))} 
+        {memoizedAccordionItems}
       </Accordion>
 
       {/* Модальный диалог для добавления нового сотрудника */}
