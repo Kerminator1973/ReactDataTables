@@ -519,3 +519,59 @@ const items = [
 Заметим также, что контекст доступен для вложенных на большую глубину элементов, а верстка может содержать различные дополнительные элементы, такие, например, как разделительная линия элементов.
 
 По всей видимости, близким "родственником" в Blazor является _CascadingParameter_.
+
+
+## Шаблон проектирования - разделение на презентационный и контейнерный компоненты
+
+Рекомендуется разделять код, в котором есть верстка и получение данных через API на два компонента, с разными зонами ответсвенностями:
+
+```js
+// Компонент отвечает за представление данных (Presentation)
+function UserList({ users }) {
+    return (
+        <ul>
+        {users.map(user => <li key={user.id}>{user.name}</li>)}
+        </ul>
+    )
+}
+
+// Компонент отвечает за получение данных через API
+function UserListContainer() {
+    const [users, setUsers] = React,useState([]);
+
+    React.useEffect(() => {
+        fetch('/api/users')
+            .then(res => res.json())
+            .then(data => setUsers(data));
+    }, []);
+
+    return <UserList users={users} />;
+}
+```
+
+## Шаблон проектирования - использование Custom Hooks
+
+Чтобы уменьшить дублирование кода, некоторые типовые действия, например, загрузку JSON с сайта, рекомендуется оформлять как отдельный пользовательский hook. Например:
+
+```js
+// Компонент осуществляет загрузку данных через API. Это пользовательский Hook
+function useFetch(url) {
+    const [data, setData] = React.useState(null);
+
+    React.useEffect(() => {
+        fetch(url)
+            .then(res => res.json())
+            .then(setData);
+    }, [url]);
+
+    return data;
+}
+
+// Компонент загружает данные через пользовательский Hook и формирует верстку
+function Profile() {
+    const user = useFetch('/api/user');
+
+    if (!user) return <p>Loading...</p>;
+    return <h1>{user.name}</h1>;
+}
+```
