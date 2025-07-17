@@ -595,3 +595,44 @@ function Profile() {
     return <h1>{user.name}</h1>;
 }
 ```
+
+## Загрузка картинок
+
+Поскольку React выполняет _bundling_ компонентов, включая изображения, необходимо использовать относительный путь к картинкам в приложении. Например:
+
+```js
+import React from 'react';
+import logoImage from '../assets/logo.png'; // Относительный путь к изображению
+
+const MyComponent: React.FC = () => {
+  return (
+    <div>
+      <img 
+        src={logoImage} 
+        alt="Company Logo" 
+        className="logo" 
+      />
+    </div>
+  );
+};
+
+export default MyComponent;
+```
+
+## Синтаксический сахар при передаче props
+
+Предположим, что у нас есть массив объектов, в которых хранятся повторяющаяся информация: картинка (image), заголовок (title), текстовое описание (description). Мы можем передавать в компонент объект целиком. В верстке это может выглядеть следующим образом:
+
+```js
+<CoreConcept {...CORE_CONCEPT[0]} />
+```
+
+В приведённом выше примере CORE_CONCEPT является массивом объектов и все элементы этого объекта будут переданы в компонент в виде отдельных свойств (_props_). Это возможно благодаря использованию _spread/rest operator_.
+
+При определении компонента мы можем использовать _destructuring_ для излечения этих props по имени, например:
+
+```js
+function CoreConcept({image, title, description}) {  
+
+}
+```
