@@ -636,3 +636,53 @@ function CoreConcept({image, title, description}) {
 
 }
 ```
+
+## Обработка событий в JSX
+
+Примеры вызова обработчиков событий при нажатии на экранную кнопку:
+
+```tsx
+import React, { useState } from 'react';
+
+function ButtonExample() {
+  const [count, setCount] = useState(0);
+
+  const handleClick = () => {
+    setCount(count + 1);
+    console.log('Button was clicked!');
+  };
+
+  const handleSpecificClick = (message) => {
+    alert(message);
+  };
+
+  return (
+    <div>
+      <button onClick={handleClick}>
+        Clicked {count} times
+      </button>
+
+      <button onClick={() => handleSpecificClick('Hello, World!')}>
+        Click me with a message
+      </button>
+
+      <button onClick={(e) => {
+        console.log('Inline click handler');
+        console.log('Event object:', e);
+      }}>
+        Inline Handler
+      </button>
+    </div>
+  );
+}
+
+export default ButtonExample;
+```
+
+В типовой ситуации мы просто передаём через атрибут JSX-объекта указатель на функцию: `<button onClick={handleClick}>`. Важно помнить о том, что внутри фигурных скобок мы указываем JavaScript-код. Если мы указываем `handleClick`, то эта синтаксическая конструкция возвращает указатель на функцию, а если указываем `handleClick()` (и это синтаксически корректно), то возвращаем результат вызова функции **handleClick**().
+
+Если при возникновении события нам нужно передать какую-то информацию в обработчик события, то в типовом случае следует использовать анонимную функцию:
+
+```tsx
+<button onClick={() => handleSpecificClick('Hello, World!')}>
+```
