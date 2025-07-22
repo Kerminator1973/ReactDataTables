@@ -124,3 +124,46 @@ const WindowSize = (props) => {
 ```
 
 В данном примере верстка полностью отделена от логики и её можно повторно использовать для разных компонентов, реализующих именно верстку. Ценность подхода состоит в том, что мы не дублируем useEffect() множество раз в коде.
+
+## Передача параметров в компонент с помощью spread-оператор
+
+Предположим, что у нас есть React-компонент, который ожидает несколько параметров: name, age, email, isActive. Мы могли бы определить такой компонент следующим образом:
+
+```js
+function ChildComponent({ name, age, email, isActive }) {
+  return (
+    <div>
+      <h1>User Profile</h1>
+      <p>Name: {name}</p>
+      <p>Age: {age}</p>
+      <p>Email: {email}</p>
+      <p>Active Status: {isActive ? 'Yes' : 'No'}</p>
+    </div>
+  );
+}
+```
+
+Однако такой вариант не очень гибкий и он может перегружать код. Вместо этого мы можем использовать _spread operator_:
+
+```js
+function ChildComponent({ ...props }) {
+  return (
+    <div>
+      <h1>User Details</h1>
+      {Object.entries(props).map(([key, value]) => (
+        <p key={key}>{key}: {value.toString()}</p>
+      ))}
+    </div>
+  );
+}
+```
+
+Мы можем извлекать некоторые параметры явным образом, а оставшиеся помещать в список (otherProps):
+
+```js
+function ChildComponent({ name, ...otherProps }) {
+  return ( {/*...*/} );
+}
+```
+
+Этот список можно прокидывать другим дочерним элементам.
