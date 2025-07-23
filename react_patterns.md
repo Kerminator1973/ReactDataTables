@@ -166,4 +166,16 @@ function ChildComponent({ name, ...otherProps }) {
 }
 ```
 
-Этот список можно прокидывать другим дочерним элементам.
+Этот список можно прокидывать другим дочерним элементам:
+
+```js
+function ChildComponent({ name, ...otherProps }) {
+  return ( 
+    <>
+        <Section {...otherProps}>
+            <p>{name}</p>
+        <Section />
+    </>
+   );
+}
+```
