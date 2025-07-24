@@ -189,21 +189,22 @@ function ChildComponent({ name, ...otherProps }) {
 ```tsx
 import React from 'react';
 
-// Define a component
+// Определяем дочерний компонент
 const ChildComponent = ({ component: Component }) => {
   return <Component />;
 };
 
-// Define a parent component
+// В родительском компоненте передаём какой-то другой компонент через свойство
 const ParentComponent = () => {
-  // Pass the component as a prop
   return <ChildComponent component={SomeComponent} />;
 };
 
-// Define the component to be passed
+// Какой-то другой компонент, который нужно встроить в верстку дочернего компонента
 const SomeComponent = () => {
   return <div>Hello World!</div>;
 };
 ```
 
 JSX поймёт, что `component={SomeComponent}` это именно передача JSX-компонента в дочерний компонент по первой букве в имени SomeComponent.
+
+Привычно, когда в дочерний компонент передаётся верстка определённая в родительском компоненте между тэгами открытия и закрытия дочернего компонента (через встроенное свойство **content**), но иногда возникает потребность передать дополнительные элементы верстки, или компонент, посредством которого выполняется некоторая кастомизация (например, рекламный ролик).
