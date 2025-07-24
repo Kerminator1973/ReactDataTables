@@ -183,3 +183,27 @@ function ChildComponent({ name, ...otherProps }) {
 ## Почему первая буква после символа "<" важна
 
 Движок JSX анализирует, является ли первая буква после символа "<" заглавной, или строчной. Если первая буква заглавная, то React считает элемент компонентом JSX, а есть строчная, то DOM-элементом. В зависимости от этого движок JSX может выполнять внутренние преобразования типа элемента.
+
+Например, мы можем передать имя компонента (SomeComponent) из родительского компонента в дочерний и использовать это имя в верстке:
+
+```tsx
+import React from 'react';
+
+// Define a component
+const ChildComponent = ({ component: Component }) => {
+  return <Component />;
+};
+
+// Define a parent component
+const ParentComponent = () => {
+  // Pass the component as a prop
+  return <ChildComponent component={SomeComponent} />;
+};
+
+// Define the component to be passed
+const SomeComponent = () => {
+  return <div>Hello World!</div>;
+};
+```
+
+JSX поймёт, что `component={SomeComponent}` это именно передача JSX-компонента в дочерний компонент по первой букве в имени SomeComponent.
