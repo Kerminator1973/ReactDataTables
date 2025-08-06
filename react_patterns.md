@@ -250,3 +250,17 @@ export default function GameBoard() {
   </ol>;
 }
 ```
+
+Стоит заметить, что если мы будем изменять состояние двухмерного массива, то в соответствии с рекомендациями для React, нас следует создать новый массив, используя spread-оператор следующим образом:
+
+```js
+function handleSelecSquare(rowIndex, colIndex) {
+  setGameBoard((prevGameBoard) => {
+    const updatedBoard = [...prevGameBoard.map(innerArray => [...innerArray])];
+    updatedBoard[rowIndex][colIndex] = 'X';
+    return updatedBoard;
+  });
+}
+```
+
+Подобный способ обновления (_immutable way to update_) необходим из-за асинхронного характера обновления состояния. Если бы мы не создавали новый массив, а использовали уже существующий - prevGameBoard, то мы меняли бы этот объект в памяти сразу, а не тогда, когда React осуществляет re-rendering. Если бы несколько мест в коде меняли prevGameBoard, то эти изменения могли бы приводить к трудно-находимым ошибкам в коде, поскольку несколько разным мест меняли бы объект prevGameBoard в памяти хаотичным образом.
