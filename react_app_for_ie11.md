@@ -192,11 +192,11 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Serve static files from the build directory
+// Статические файлы находятся в папке "build"
 app.use(express.static(path.join(__dirname, 'build')));
 
-// Handle all requests by sending the index.html file
-app.get('*', (req, res) => {
+// Если имя файла не будет указано, то будет возвращён файл "index.html"
+app.get(/(.*)/, (req, res) => {
     res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
@@ -206,6 +206,18 @@ app.listen(PORT, () => {
 ```
 
 Файлы React-приложения следует скопировать в папку "build".
+
+Следует заметить, что Express 5.0.0 использует router 2.0.0, который использует path-to-regexp 8.0.0, что драматически изменяет правила указания масок файлов в app.get() и других командах. Теперь это не просто маска, а регулярное выражение. Т.е. если раньше мы писали:
+
+```js
+app.get('*', (req, res) => {
+```
+
+то теперь необходимо явно указывать, что используется регулярное выражение:
+
+```js
+app.get(/(.*)/, (req, res) => {
+```
 
 Запуск приложения осуществляется командой:
 
