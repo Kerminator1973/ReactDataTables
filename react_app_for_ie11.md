@@ -158,3 +158,57 @@ npm run build
 ```
 
 Как результат, в папке "dist" должны появиться файл "index.html", а также папка "assets" с ".css" и ".js" файлами.
+
+Если попытаться загрузить эти файлы статически с локального диска, браузер выведет сообщение об ошибке (приблизительно):
+
+```
+Access to script at 'file:///D:/assets/index-LvPpn8IH.js' from origin 'null' has been blocked by CORS policy: Cross origin requests are only supported for protocol schemes: chrome, chrome-extension, chrome-untrusted, data, http, https, isolated-app.
+```
+
+Это означает, что для запуска приложения необходимо настроить CORS, что проще всего сделать используя сервер статических сайтов, например, Node.js.
+
+## Запуск статического сайта с React-приложением
+
+Создание базового Node.js-приложения с Express.js:
+
+```shell
+npm init
+```
+
+```shell
+npm install express
+```
+
+```shell
+npm install
+```
+
+Далее следует создать файл "server.js", в который следует добавить логику обработки запросов статических файлов:
+
+```js
+const express = require('express');
+const path = require('path');
+
+const app = express();
+const PORT = process.env.PORT || 3000;
+
+// Serve static files from the build directory
+app.use(express.static(path.join(__dirname, 'build')));
+
+// Handle all requests by sending the index.html file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
+app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
+});
+```
+
+Файлы React-приложения следует скопировать в папку "build".
+
+Запуск приложения осуществляется командой:
+
+```shell
+node server.js
+```
