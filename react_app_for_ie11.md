@@ -260,3 +260,33 @@ npm install express@4.16.x
 
 Однако, при попытке запуска приложения в Internet Explorer 11 в Windows 7, браузер отображает чёрный экран без ошибок в Developer Console. При этом, в браузере Chrome версии 109.0.5414.120 приложение работает вполне корректно.
 
+Vite does not natively support Internet Explorer 11
+
+Необходимо установить специализированный модуль совместимости с legacy-браузерами:
+
+```shell
+npm install @vitejs/plugin-legacy -D
+```
+
+Затем нужно изменить настройки компиляции для Vite. Для этого необходимо в файле "vite.config.js" указать параметры сборки проекта:
+
+```js
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import legacy from '@vitejs/plugin-legacy';
+
+export default defineConfig({
+  plugins: [
+    react(),
+    legacy({
+      targets: ['ie >= 11'],
+      additionalLegacyPolyfills: [
+        'core-js/stable',
+        'regenerator-runtime/runtime'
+      ]
+    })
+  ]
+})
+```
+
+В процессе сборки будут транспилированы используемые библиотеки, 
