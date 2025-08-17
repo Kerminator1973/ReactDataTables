@@ -228,3 +228,35 @@ app.get(/(.*)/, (req, res) => {
 ```shell
 node server.js
 ```
+
+## Запуск приложения на машине с Windows 7
+
+Последняя версия Node.js, которая может быть запущена на Windows 7 - Node.js 12.
+
+Последняя совместимая с Windows 7 версия Express.js - 4.16. Добавить её в проект можно командой:
+
+```shell
+npm install express@4.16.x
+```
+
+Файл "package.json" в это случае выглядит следующим образом:
+
+```json
+{
+  "name": "statserv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
+```
+
+Однако, при попытке запуска приложения в Internet Explorer 11 в Windows 7, браузер отображает чёрный экран без ошибок в Developer Console. При этом, в браузере Chrome версии 109.0.5414.120 приложение работает вполне корректно.
+
