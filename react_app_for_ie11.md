@@ -291,4 +291,17 @@ export default defineConfig({
 
 В процессе сборки выполняется транспиляция используемых библиотек.
 
-Приложение успешно успешно работает как в Internet Explorer 11, так и в ПроАТМ, который использует компонент Microsoft.WebBrowser из состава IE11 для рендеринга собственных экранов.
+Приложение успешно работает как в Internet Explorer 11, так и в ПроАТМ, который использует компонент Microsoft.WebBrowser из состава IE11 для рендеринга собственных экранов.
+
+## Особые ситуации (использование ActiveX)
+
+Транспайлер TypeScript и компилятор JSX не всегда могут понять синтаксис вызовов ActiveX-компонентов. Чтобы использовать устаревшую технологию ActiveX требуется использовать специальные директивы, такие как `@ts-ignore`. Например:
+
+```ts
+setInterval(function() {
+    // @ts-ignore (TypeScript)
+    // eslint-disable-next-line
+    const EventCatcher = new window.ActiveXObject('{7B3F9FA2-7B20-4F58-BA17-2782DC37E376}');
+    EventCatcher.GenerateEvent('UserActionSubsystems', 1);
+}, 1000);
+```
