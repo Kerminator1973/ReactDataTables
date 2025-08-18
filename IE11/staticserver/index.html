@@ -1,0 +1,23 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pony Web App</title>
+</head>
+<body>
+    <!-- Объект RedLabel позволяет писать данные в систему логирования -->
+    <object id='RedLabel' classid='CLSID:EA6753FC-2EC6-4ADB-8332-1CFC61C2C369' width='0' height='0'></object>
+    <!-- Объект EventCatcher позволяет обмениваться с ПроАТМ данными через общую шину -->
+    <object id='EventCatcher' classid='CLSID:7B3F9FA2-7B20-4F58-BA17-2782DC37E376' width='0' height='0'></object>
+    <h1>Welcome to My Web App</h1>
+
+    <button onclick="navigateToPage()">Go to The React Page</button>
+
+    <script>
+        function navigateToPage() {
+            RedLabel.Trace(55, 'Осуществляется переход в React-приложение');
+            window.location.href = "http://localhost:3000/";
+        }
+    </script>
+</body>
+</html>
