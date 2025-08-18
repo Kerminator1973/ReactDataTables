@@ -305,3 +305,11 @@ setInterval(function() {
     EventCatcher.GenerateEvent('UserActionSubsystems', 1);
 }, 1000);
 ```
+
+Однако, при эксплуатации кода, в логах системы систематически появляется сообщение об ошибке в legacy-коде:
+
+```output
+Невозможно создание объекта сервером программирования объектов
+URL: http://localhost:3000/assets/index-legacy-CVWLKQLG.js
+строка: 12
+```
