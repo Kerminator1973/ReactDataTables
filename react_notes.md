@@ -98,6 +98,8 @@ const MyComponent = () =>
 
 В качестве метрик эксперты предлагают использовать FPS в Dashboard (60+ является отличным результатов) , а также Lighthouse Performance (значение должно быть 85+).
 
+>В 2025 году представлен инструмент [React Compiler](https://react.dev/learn/react-compiler), который осуществляется автоматическую оптимизацию React-приложений, устраняя необходимость в ручном написании `useMemo`, `useCallback` и `React.memo`.
+
 ## Популярные UI библиотеки для React
 
 Рекомендуется для ознакомления статья [Библиотеки UI-компонентов для React в 2025 году](https://habr.com/ru/companies/otus/articles/927846/) by _Luke Stahl_.
