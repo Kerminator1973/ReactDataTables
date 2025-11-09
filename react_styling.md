@@ -11,3 +11,55 @@ import './index.css'
 При этом система сборки (в частности - Vite) встроит стилистическое оформление (_inject_) в js-файл, используя тэги `<Style>...</Style>`. Кажется, что такой подход может приводить к избыточному размеры bundle-ов React-приложения.
 
 Ключевая особенность использования Vanilla CSS в React состоит в том, что этот подход не обеспечивает инкапсуляцию стилей внутри компонента, т.е. они не попадают в scope-компонента когда используется директива import. По всей видимости, причина состоит в том, что при выполнении bundling-а, React объединяет css в отдельный файл/файлы. Т.е. не смотря на то, что Vanilla CSS очень удобен для программистов которые недавно перешли на CSS, этот подход провоцирует возникновении ошибок пересечения стилистического оформления.
+
+## Inline Styling
+
+Для решения части проблем Vanilla CSS можно было бы использовать React Inline Styling, например:
+
+```js
+<p style={{
+    backgroundColor: '#f0f0f0',
+    textAlign: 'left',
+}}>This is an example of inline styling in React.</p>
+```
+
+В приведённом выше примере есть две особенности:
+
+1. Двойные фигурные скобки не являются каким-то специфическим синтаксисом. Первая пара скобок указывает, что внутри находится не строка, а JavaScript-выражение. Вторая пара - что используется JSON-объект
+2. Поскольку мы не можем использовать традиционные имена CSS-атрибутов (background-color и text-align) в JavaScript-коде, мы должны заменить их на CamelCase-имена, соответственно на backgroundColor и textAlign
+
+Однако такой способ использования inline styling создаёт больше проблем, чем решений, т.к. стилистическое оформление встраивается прямо в код, что нарушает базовые принципы разделение семантики, оформления и кода в web-разработке.
+
+Чуть лучший вариант - вынести стилистическое оформление в отдельную переменную `style`, в которой можно создать отдельные разделы для разных стилей:
+
+```js
+import React from 'react';
+
+const InlineStyleExample = () => {
+  const style = {
+    container: {
+      backgroundColor: '#f0f0f0',
+      padding: '20px',
+      borderRadius: '8px',
+      textAlign: 'center',
+    },
+    heading: {
+      color: '#333',
+      fontSize: '24px',
+    },
+    paragraph: {
+      color: '#555',
+      fontSize: '16px',
+    },
+  };
+
+  return (
+    <div style={style.container}>
+      <h1 style={style.heading}>Hello, World!</h1>
+      <p style={style.paragraph}>This is an example of inline styling in React.</p>
+    </div>
+  );
+};
+
+export default InlineStyleExample;
+```
