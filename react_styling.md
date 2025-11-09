@@ -63,3 +63,48 @@ const InlineStyleExample = () => {
 
 export default InlineStyleExample;
 ```
+
+### Выполненное тестовое задание в курсе "React - The Complete Guide 2025 (incl. Next.js, Redux)" на Udemy.com
+
+В рамках задачи нужно было поменять стилистическое оформление h1 в момент нажатия одной из кнопок. При этом при нажатие кнопки должно было установливать определённый цвет h1:
+
+```js
+import React from 'react';
+import { useState } from 'react';
+import './index.css'
+
+function App() {
+    
+    const [currColor, setCurrColor] = useState({
+        color: "white"
+    });
+    
+    const setGreenColor = () => {
+        setCurrColor({
+            color: "green"
+        });
+    };    
+    
+    const setRedColor = () => {
+        setCurrColor({
+            color: "red"
+        });
+    };    
+
+    return (
+    <div id="app">
+      <h1 style={currColor}>CSS is great!</h1>
+      <menu>
+        <li>
+          <button onClick={setGreenColor}>Yes</button>
+        </li>
+        <li>
+          <button onClick={setRedColor}>No</button>
+        </li>
+      </menu>
+    </div>
+  );
+}
+
+export default App;
+```
