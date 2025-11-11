@@ -108,3 +108,35 @@ function App() {
 
 export default App;
 ```
+
+Ниже приведён оптимизированное решение схожей задачи с изменением стиля элемента:
+
+```js
+import React from 'react';
+import { useState } from 'react';
+import './index.css'
+
+function App() {
+  const [highlight, setHighlight] = useState('');
+
+  const handleClick = (color) => {
+    setHighlight(color);
+  };
+
+  return (
+    <div id="app">
+      <h1 className={highlight}>CSS is great!</h1>
+      <menu>
+        <li>
+          <button onClick={() => handleClick("highlight-green")}>Yes</button>
+        </li>
+        <li>
+          <button onClick={() => handleClick("highlight-red")}>No</button>
+        </li>
+      </menu>
+    </div>
+  );
+}
+
+export default App;
+```
