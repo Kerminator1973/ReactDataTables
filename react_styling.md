@@ -170,3 +170,45 @@ import classes from './Header.module.css';
 ```js
 <p className={`${classes.paragraph}`}>
 ```
+
+## Styled Components
+
+Достаточно популярным решением при разработке React-приложений является использование библиотеки [Styled Components](https://styled-components.com/).
+
+Добавить библиотеку в проект можно командой:
+
+```shell
+npm install styled-components
+```
+
+Для использования Styled Components нам достаточно импортировать библиотеку в нашем компоненте и создать стиль, используя испортированное имя `styled`:
+
+```js
+import styled from 'styled-components'
+
+const ControlContainer = styled.button``
+```
+
+Приведённая выше конструкция `styled.button` с парой апострофов называется **Tagged Templates** и является стандартной конструкцией JavaScript.
+
+Внутри пары обратных апострофов мы можем использовать любое стандартное стилистическое оформление, например:
+
+```js
+const ControlContainer = styled.button`
+  background: transparent;
+  border-radius: 3px;
+  border: 2px solid #BF4F74;
+  color: #BF4F74;
+  margin: 0 1em;
+  padding: 0.25em 1em;
+`
+```
+
+Приведённая выше конструкция создаст React-компонент, который будет применять определённые внутри него стили к своим дочерним элементам:
+
+```js
+<ControlContainer>
+    <Button>Normal Button</Button>
+    <p>Some text</p>
+</ControlContainer>
+```
