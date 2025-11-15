@@ -191,6 +191,8 @@ const ControlContainer = styled.button``
 
 Приведённая выше конструкция `styled.button` с парой апострофов называется **Tagged Templates** и является стандартной конструкцией JavaScript.
 
+>важно помнить, что после слова _styled_ должно идти html-тэг: label, button, div, и т.д.
+
 Внутри пары обратных апострофов мы можем использовать любое стандартное стилистическое оформление, например:
 
 ```js
@@ -211,4 +213,88 @@ const ControlContainer = styled.button`
     <Button>Normal Button</Button>
     <p>Some text</p>
 </ControlContainer>
+```
+
+Мы так же можем использовать различные атрибуты в компоненте-обёртке и они будут прекрасно работать:
+
+```js
+<Button Click={onClick}>Press Me</Button>
+```
+
+Однако этот подход не будет работать для className в привычном стиле, т.к. используемые нами стили определяются и изменяются непосредственно в компоненте-обёртке, а не в стандартном html-тэге. Чтобы решить проблему, необходимо определить динамически изменяемое свойство компонента:
+
+```js
+const emailNotValid = submitted && !enteredEmail.includes('@');
+...
+<Button invalid={emailNotValid}>Email</Button>
+```
+
+А также добавить динамически генерируемые стили в определение styled-компонента:
+
+```js
+const Button = styled.button`
+  background: transparent;
+  border-radius: 3px;
+  border: 2px solid #BF4F74;
+  color: ${(props) => ... };
+`
+```
+
+Внутри taggeg templates мы можем использовать props:
+
+```js
+${(props) => props.invalid ? '#f87171' : '#6b7280'}
+```
+
+Или мы можем использовать destructuring:
+
+```js
+${({invalid}) => invalid ? '#f87171' : '#6b7280'}
+```
+
+Важно помнить о том, что можно непреднамеренно попасть в конфликтную ситуацию из-за совпадения имени динамически изменяемого свойства с именем стандартного атрибута HTML-элемента. Например, в приведённом выше примере, возникнет ошибка из-за имени свойства _invalid_, которое совпадает со стандартным атрибутом _invalid_. Чтобы избежать проблемы, нам достаточно добавить специальный символ к имени динамического свойства, например, заменить его на `$invalid`.
+
+## Использование вложенных стилей (nested rules), @media, псевдо-стилей (pseudo selectors)
+
+Это тоже можно сделать в Styled Components.
+
+Например, нам нужно использовать правила 'header', 'header img' и 'header h1'. В действительности нам достаточно добавить амперсанд перед определением вложенных (nested) стилей, например:
+
+```css
+const StyledHeader = styled.header`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+
+  & img {
+    object-fit: contain;
+    margin-bottom: 2rem;
+    width: 11rem;
+    height: 11rem;
+  }
+
+  & h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    letter-spacing: 0.4em;
+    text-align: center;
+    text-transform: uppercase;
+    ...
+  }
+`
+```
+
+С `@media` мы можем сделать следующую вещь:
+
+```css
+@media (min-width: 768px) {
+  margin-bottom: 4rem;
+
+  & h1 {
+    font-size: 2.25rem;
+  }
+}
 ```
