@@ -341,3 +341,28 @@ Blazor автоматически управляет областью видим
 К недостаткам Tailwind CSS можно отнести то, что строки с описанием стилей могут быть очень большими и часто - избыточно большими. Однако если совмещать Tailwind CSS с Vanilla CSS можно достичь некоторого баланса, т.к. эти технологии вполне нормально работают вместе. Также рекомендуется выделять повторно используемые органы управления в отдельные компоненты - это так же позволяет уменьшить длину строк "className" в коде.
 
 Ещё один недостаток - Tailwind CSS имеет свои собственные правила сборки (необходимо настроить plugins), которые могут выглядеть достаточно инородно, например, в случае если нужно включить в проект шрифт из состава Google Font. В определении имени шрифта в конфигурационном файле потребуется указать имя шрифта не только в одинарные ковычки, но ещё и двойные кавычки внутри одинарных. Подобные особенности нужно знать.
+
+В Tailwind CSS также можно использовать условные стили. Так, например, мы можем определить элемент для ввода информации следующим образом:
+
+```js
+export default function Input({label, invalid, ...props}) {
+
+  let labelClasses = "block mb-2 text-xs font-bold tracking-wide uppercase ";
+  let inputClasses = "w-full px-3 py-2 leading-tight border rounded shadow ";
+
+  if (invalid) {
+    labelClasses += "text-red-400";
+    inputClasses += "text-gray-500 bg-red-100 border-red-300";
+  } else {
+    labelClasses += "text-stone-300";
+    inputClasses += "text-gray-700 bg-stone-300";
+  }
+
+  return (
+    <p>
+      <label className={labelClasses}>{label}</label>
+      <input className={inputClasses} {...props} />
+    </p>
+  );
+}
+```
