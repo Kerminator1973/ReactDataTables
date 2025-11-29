@@ -366,3 +366,26 @@ export default function Input({label, invalid, ...props}) {
   );
 }
 ```
+
+В отличие от Styled Components, верстка с Tailwind CSS больше похожа на традиционный html, но с большим количеством стилей в атрибуте className**.
+
+### Совет по выравниванию по правому краю в Tailwind CSS
+
+Пример использования Flex в Tailwind:
+
+```html
+<div className="flex justify-end gap-4">
+  <button type="button" className="text-amber-400 hover:text-amber-500">
+    Create a new account
+  </button>
+  <Button onClick={handleLogin}>Sign In</Button>
+</div>
+```
+
+На мой скромный взгляд, использование Flex и hover гораздо более понятно в Tailwind CSS, чем в Vanilla CSS.
+
+К ключевым недостаткам Tailwind CSS я бы отнёс:
+
+- длинный список значений в className
+- любое изменение стиля требует редактирования JSX
+- в конце концов, ваш проект будет состоять из большого количества мелких wrapper-конпонентов со стилями, или в коде будет очень много дублируемого кода со стилями
