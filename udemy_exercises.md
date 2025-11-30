@@ -53,3 +53,39 @@ setEditing(!isEditing);
 ```
 
 Причина состоит в том, что операция выполняемая функцией, возвращаемой useState() не исполняется сразу, а планируется к выполнению. Более "очевидный" вариант может приводить к различным негативным side-effect-ам.
+
+## Результирующий тест по серкции "Dynamic Styles"
+
+Мой тест, успешно прошедший проверку unit-тестами:
+
+```js
+import React from 'react';
+import { useState } from 'react';
+
+export default function App() {
+    
+    const [currColor, setCurrColor] = useState({
+        color: "white"
+    });
+    
+    const toggleColor = () => {
+            setCurrColor({
+                color: currColor.color === "white" ? "red" : "white"
+            });
+    };    
+
+    return (
+        <div>
+            <p style={currColor}>Style me!</p>
+            <button onClick={toggleColor}>Toggle style</button>
+        </div>
+    );
+}
+```
+
+Потребовалась отладка кода в offline-проекте на моей машине. Для запуска теста нужно было загрузить зависимости и скомпилировать приложение:
+
+```shell
+npm install
+npm run dev
+```
