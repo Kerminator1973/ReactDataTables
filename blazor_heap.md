@@ -117,3 +117,20 @@ builder.Services.AddScoped<MemoryService>();
     }
 }
 ```
+
+## Посмотреть размер Heap-а Wasm
+
+Получить размер Wasm-heap-а можно следующим JavaScript-кодом:
+
+```js
+const runtime = globalThis.getDotnetRuntime(0);
+runtime.Module.HEAP8.buffer.byteLength
+```
+
+В Wasm-heap-е находятся:
+
+- код и данные Blazor WASM Application
+- структуры .NET runtime (.NET Runtime)
+- объекты C# скомпилированные в WASM
+
+Ограничение Wasm-Heap: ~2-4GB

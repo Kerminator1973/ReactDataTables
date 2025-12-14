@@ -56,7 +56,14 @@ Console.WriteLine($"Managed memory: {memoryUsed / 1024 / 1024} MB");
 
 Для автоматически сгенерированного изображения, стартовый размер занятой памяти будет равен 4 МБ.
 
+Получить общий размер доступной памяти можно используя вызов:
 
+```csharp
+var gcInfo = GC.GetGCMemoryInfo();
+long totalAvailableBytes = gcInfo.TotalAvailableMemoryBytes;
+```
+
+В общем случае, браузер ограничивает максимальный размер Heap-а 2 ГБ на один TAB в браузере.
 
 ## Резюмируя, чем отличаются React и Blazor
 
