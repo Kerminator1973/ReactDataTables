@@ -54,7 +54,7 @@ setEditing(!isEditing);
 
 Причина состоит в том, что операция выполняемая функцией, возвращаемой useState() не исполняется сразу, а планируется к выполнению. Более "очевидный" вариант может приводить к различным негативным side-effect-ам.
 
-## Результирующий тест по серкции "Dynamic Styles"
+## Результирующий тест по секции "Dynamic Styles"
 
 Мой тест, успешно прошедший проверку unit-тестами:
 
@@ -88,4 +88,31 @@ export default function App() {
 ```shell
 npm install
 npm run dev
+```
+
+## Управжнение по использованию Refs
+
+В упражнении необходимо запустить операцию загрузки файла по нажатию некоторой кнопки формы. Мой зачтённый вариант решения:
+
+```js
+import { useRef } from 'react';
+
+function App() {
+    
+  const inputFile = useRef();
+  
+  const handleClick = () => {inputFile.current.click()};
+    
+  return (
+    <div id="app">
+      <p>Please select an image</p>
+      <p>
+        <input ref={inputFile} data-testid="file-picker" type="file" accept="image/*" />
+        <button onClick={handleClick}>Pick Image</button>
+      </p>
+    </div>
+  );
+}
+
+export default App;
 ```
