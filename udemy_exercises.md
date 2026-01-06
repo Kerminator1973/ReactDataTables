@@ -90,7 +90,7 @@ npm install
 npm run dev
 ```
 
-## Управжнение по использованию Refs
+## Упражнения по использованию Refs
 
 В упражнении необходимо запустить операцию загрузки файла по нажатию некоторой кнопки формы. Мой зачтённый вариант решения:
 
@@ -115,4 +115,37 @@ function App() {
 }
 
 export default App;
+```
+
+В следующем упражнении Refs используется для работы с таймерами - запуску таймеру и его остановки посреством вызова функции `clearTimeout()`:
+
+```js
+import { useRef } from 'react';
+
+export default function Workout({ title, description, time, onComplete }) {
+  const timer = useRef();  
+    
+  function handleStartWorkout() {
+    timer.current = setTimeout(() => {
+        onComplete();
+    }, time);
+  }
+
+  function handleStopWorkout() {
+    clearTimeout(timer.current);
+    onComplete();
+  }
+
+  return (
+    <article className="workout">
+      <h3>{title}</h3>
+      <p>{description}</p>
+      <p>{time}</p>
+      <p>
+        <button onClick={handleStartWorkout}>Start</button>
+        <button onClick={handleStopWorkout}>Stop</button>
+      </p>
+    </article>
+  );
+}
 ```
