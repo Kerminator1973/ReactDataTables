@@ -845,7 +845,7 @@ playerName.current.value = '';
 
 Фундаментальная проблема, связанная с таймерами состоит в том, что при re-render-е компонента (если возникнет любое обновление компонента, изменяющее его state), он повторно запускается и значение переменных, определённых внутри компонента будут потеряны.
 
-Напрмиер, мы можем запустить таймер используя обычный JavaScript-код, например:
+Например, мы можем запустить таймер используя обычный JavaScript-код, например:
 
 ```js
 const [timerExpired, setTimerExpired] = useSate(false);
@@ -904,3 +904,41 @@ export default function ResultModal({result, targetTime}) {
 ```
 
 По факту, мы должны управлять этим модальным диалогом вручную в императивном режиме. И в этом случае, Refs - наилучшее решение.
+
+В коде, который использует модальный диалог мы добавляем атрибут "ref":
+
+```js
+const dialog = useRef();
+...
+<ResultModal ref={dialog} targetTime={targetTime} result="lost" />
+```
+
+А в реализации компонента инициализируем ref через обычный DOM-элемент:
+
+```js
+export default function ResultModal({ref, result, targetTime}) {
+    return <dialog ref={ref} className="result-modal" open>
+```
+
+После этого мы можем использовать в JavaScript-коде управляющем компонентом традиционные операции императивного JavaScript:
+
+```js
+dialog.current.showModal();
+```
+
+`showModal`() - это функция DOM-элемента [dialog](https://developer.mozilla.org/en-US/docs/Web/API/HTMLDialogElement/showModal).
+
+Эта техника называется _Forwarding Refs to Custom Components_.
+
+Это работает начиная с React 19. Для более старых версий React следует использовать _wrapper_ **forwardRef**:
+
+```js
+import { forwardRef } from 'react';
+
+const ResultModal = forwardRef(function ResultModal({result, targetTime}, ref) {
+...
+
+export default ResultModal;
+```
+
+Полные примеры приведены в [решениях задачи на Udemy](https://github.com/Kerminator1973/ReactDataTables/blob/main/udemy_exercises.md).

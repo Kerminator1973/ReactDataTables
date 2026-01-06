@@ -149,3 +149,57 @@ export default function Workout({ title, description, time, onComplete }) {
   );
 }
 ```
+
+### Упражнения с использованием forwardRef 
+
+Код компонента Input:
+
+```js
+import { forwardRef } from 'react';
+
+const Input = forwardRef(function Input({label, ...props}, ref) {
+  return (
+    <p className="control">
+      <label>{label}</label>
+      <input ref={ref} {...props} />
+    </p>
+  );
+});
+
+export default Input;
+```
+
+Код формы, на которой используется два компонента Input:
+
+```js
+import Input from './Input';
+import { useRef } from 'react';
+
+export const userData = {
+  name: '',
+  email: '',
+};
+
+export function App() {
+    
+    const _name = useRef();
+    const _email = useRef();
+    
+  function handleSaveData() {
+    userData.name = _name.current.value;
+    userData.email = _email.current.value;
+
+    console.log(userData);
+  }
+
+  return (
+    <div id="app">
+      <Input ref={_name} type="text" label="Your Name" />
+      <Input ref={_email} type="email" label="Your E-Mail" />
+      <p id="actions">
+        <button onClick={handleSaveData}>Save Data</button>
+      </p>
+    </div>
+  );
+}
+```
