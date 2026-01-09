@@ -203,3 +203,68 @@ export function App() {
   );
 }
 ```
+
+## Упражнение Exposing Component APIs
+
+Главный экран "App.js":
+
+```js
+import { useRef } from 'react';
+import Form from './Form';
+
+// Don't change the name of the 'App' 
+// function and keep it a named export
+
+export function App() {
+    
+  const frm = useRef();
+    
+  function handleRestart() {
+    frm.current.clear();
+  }
+
+  return (
+    <div id="app">
+      <button onClick={handleRestart}>Restart</button>
+      <Form ref={frm} />
+    </div>
+  );
+}
+```
+
+Реализация компонента "Form.js":
+
+```js
+import { forwardRef, useImperativeHandle, useRef } from 'react';
+
+const Form = forwardRef(function Form({}, ref) {
+  const frm = useRef();
+
+  useImperativeHandle(ref, () => {
+    return {
+      clear() {
+        frm.current.reset();
+      }
+    }
+  });
+
+  return (
+    <form ref={frm}>
+      <p>
+        <label>Name</label>
+        <input type="text" />
+      </p>
+
+      <p>
+        <label>Email</label>
+        <input type="email" />
+      </p>
+      <p id="actions">
+        <button>Save</button>
+      </p>
+    </form>
+  );
+});
+
+export default Form;
+```

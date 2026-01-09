@@ -942,3 +942,44 @@ export default ResultModal;
 ```
 
 Полные примеры приведены в [решениях задачи на Udemy](https://github.com/Kerminator1973/ReactDataTables/blob/main/udemy_exercises.md).
+
+### Альтернативные способ использования императивного кода
+
+В приведённом выше примере, мы вынуждены вызывать императивный код для элементов, определённых внутри компонента снаружи этого компонента. Мы определили DOM-элемент dialog внутри компонента ResultModal, а используем его снаружи: `dialog.current.showModal();`. Что устранить это неудобство используется другой hook - useImperativeHandle.
+
+Основная идея состоит в том, что мы можем определить API, который будет передаваться во внешний код для императивного использования. Этот API, как раз, и определяется посредством в useImperativeHandle():
+
+```js
+import { forwardRef, useImperativeHandle, useRef } from 'react';
+
+const ResultModal = forwardRef(function ResultModal({result, targetTime}, ref) {
+    const dialog = userRef();
+
+    useImperativeHandle(ref, () => {
+        return {
+            open() {
+                dialog.current.showModal();
+            }
+        }
+    });
+
+    return (
+        <dialog ref={dialog} className="result-modal">
+            ...
+    )
+```
+
+Как толко мы использовали useImperativeHandle() параметр ref во внешнем коде будет указывать на API, а не на DOM-элемент. Соответственно, во внешнем коде мы теперь можем написать так:
+
+```js
+function handleStart() {
+    timer.current = setTimeout(() => {
+        setTimerExpired(true);
+        dialog.current.open();  // <-- Вот здесь осуществляется вызов метода API
+    }, targetTime * 1000);
+
+    setTimerStarted(true);
+}
+```
+
+Этот подход гораздо больше напоминает компонентный и лучше подходит для групповой разработки ПО.
