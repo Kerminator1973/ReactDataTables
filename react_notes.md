@@ -969,7 +969,7 @@ const ResultModal = forwardRef(function ResultModal({result, targetTime}, ref) {
     )
 ```
 
-Как толко мы использовали useImperativeHandle() параметр ref во внешнем коде будет указывать на API, а не на DOM-элемент. Соответственно, во внешнем коде мы теперь можем написать так:
+Как только мы использовали `useImperativeHandle()`, параметр **ref** во внешнем коде будет указывать на API, а не на DOM-элемент. Соответственно, во внешнем коде мы теперь можем написать так:
 
 ```js
 function handleStart() {
