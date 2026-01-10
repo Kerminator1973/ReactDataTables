@@ -983,3 +983,36 @@ function handleStart() {
 ```
 
 Этот подход гораздо больше напоминает компонентный и лучше подходит для групповой разработки ПО.
+
+## Portals
+
+Когда мы работаем с модальными диалогами в web-приложениях, может быть целесообразно работать с ними на уровне вложенных компонентов, а верстку размещать в начале HTML-документа. Например, все модальные диалоги должны быть размещены на уровне App, в начале HTML-документа.
+
+Для того, чтобы делать подобные вещи, в React есть специальный механизм, который называется **Portal** и обеспечивает телепортацию сформированной верстки в любое место документа.
+
+Для того, чтобы использовать портал, необходимо загрузить специальный wrapper - createPortal. Компонент, верстка которого телепортируется должен быть обёрную в createPortal:
+
+```js
+import React, { useState } from "react";
+import {createPortal} from "react-dom";
+
+function Modal({ children, onClose }) {
+  // Портал рендерит содержимое в #modal‑root,
+  // а не в обычный DOM‑дерево компонента
+  return createPortal(
+    <div className="overlay" onClick={onClose}>
+      <div className="content" onClick={e => e.stopPropagation()}>
+        {children}
+        <button onClick={onClose}>Close</button>
+      </div>
+    </div>,
+    document.getElementById("modal-root")
+  );
+}
+```
+
+Второй параметр функции `createPortal()` - это DOM-элемент в App.js (обычно в "App.js"), в который следует телепортировать верстку. В приведённом выше примере, для получения DOM-элементы мы используем `document.getElementById("modal-root")`. Соответственно, в "App.js" должен быть определён контейнер для этой трансформации:
+
+```html
+<div id="modal-root"></div>
+```
