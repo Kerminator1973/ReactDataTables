@@ -269,3 +269,59 @@ const Form = forwardRef(function Form({}, ref) {
 export default Form;
 ```
 
+## Упражнение Working with Portals
+
+Реализация файла "App.js":
+
+```js
+import React from 'react';
+import Toast from './Toast';
+
+function App() {
+    
+  const [isVisible, setVisible] = React.useState(false);
+    
+  function handleEnrol() {
+    // При нажатии кнопки показываем Toast
+    setVisible(true);
+
+    setTimeout(() => {
+      // Через три секунды скрываем Toast
+      setVisible(false);
+    }, 3000);
+  }
+
+  return (
+    <div id="app">
+      { /* Отображаем компонент <Toast /> по заданному условию */
+        isVisible && <Toast />
+      }
+      <article>
+        <h2>React Course</h2>
+        <p>
+          A course that teaches you React from the ground up and in great depth!
+        </p>
+        <button onClick={handleEnrol}>Enrol</button>
+      </article>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Реализация компонента "Toast.js":
+
+```js
+import ReactDOM from 'react-dom';
+
+export default function Toast({ message }) {
+  /* Генерируемое сообщение будет отображатся в начале body */
+  return ReactDOM.createPortal(
+    <aside className="toast" data-testid="toast">
+      <p>{message}</p>
+    </aside>,
+    document.querySelector('body')
+  );
+}
+```
