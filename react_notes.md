@@ -1038,3 +1038,77 @@ function Modal({ children, onClose }) {
 ```html
 <div id="modal-root"></div>
 ```
+
+## Использование Refs для работы с формами
+
+Раньше для сохранения введённых значений в формах часто использовалось событие `onChange` и соответствующий обработчик:
+
+```js
+import React, { useState } from 'react';
+
+function EditForm() {
+  
+  const [inputValue, setInputValue] = useState(''); // Состояние для хранения значения поля ввода
+  
+  const handleChange = (event) => {     // Обработчик изменения поля ввода
+    setInputValue(event.target.value);
+  };
+
+  return (
+    <div>
+      <h2>Форма редактирования</h2>
+      <input
+        type="text"
+        value={inputValue}
+        onChange={handleChange}
+        placeholder="Введите текст..."
+      />
+      <p>Текущее значение: <strong>{inputValue}</strong></p>
+    </div>
+  );
+}
+
+export default EditForm;
+```
+
+Однако этот код кажется избыточным, т.к. необходимо определить состояние для каждого поля ввода, callback-функцию, а также использовать функцию изменения состояния setInputValue(). При этом callback вызывается при каждом изменении редактируемого параметра и может приводить к re-rendering-у, т.к. меняется состояние (useState).
+
+В современном стиле разработки приложений гораздо чаще используется Refs и сборка значений всех органов управления в одном месте, например:
+
+```js
+import React, { useRef } from 'react';
+
+function EditFormWithRef() {
+  const inputRef = useRef(null);    // Создаём ref для поля ввода
+
+  // Обработчик отправки формы
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    const finalValue = inputRef.current.value;
+    console.log('Сохранено значение:', finalValue);
+    // Здесь можно отправить данные на сервер
+  };
+
+  return (
+    <div>
+      <h2>Форма редактирования (с использованием Ref)</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          ref={inputRef}
+          placeholder="Введите текст..."
+        />
+        <button type="submit">Сохранить</button>
+      </form>
+    </div>
+  );
+}
+
+export default EditFormWithRef;
+```
+
+Этот код расходует меньше вычислительных ресурсов, не создаёт лишние re-rendering и он проще в сопровождении.
+
+Важно помнить, что при использовании Refs, всегда нужно использовать `inputRef.current`.
+
+Заметим, что это уже больше похоже на императивный код, чем на декларативный.
