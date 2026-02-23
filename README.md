@@ -531,6 +531,8 @@ const ExperimentalDataTable = forwardRef(
 )
 ```
 
+Заметим, что forwardRef необходимо использовать в версиях React до 18. В современных версиях React достаточно использовать атрибут `ref`.
+
 ## Блокировка дальнейшей обработки событий
 
 Для этих целей используются функции stopPropagation() и preventDefault():
