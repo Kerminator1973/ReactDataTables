@@ -71,6 +71,17 @@ import { CardContext } from './store/shopping-cart-context.jsx';
 ```
 
 >В действительности, установка параметра value - это полноценная инициализация, а определение полей в CartContext = creatContext() это подсказка для autoCompletion.
+>
+>В корректно написанном коде нужно передавать не пустые данные, а состояние:
+>
+>```js
+>function App() {
+>   const [shoppingCart, setShoppingCart] = useState({ items: [] });
+>```
+>
+>```js
+><CartContext.Provider value={shoppingCart}>
+>```
 
 ### Использование контекста (Consuming the Context)
 
