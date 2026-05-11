@@ -193,9 +193,23 @@ npm create vite@latest contextTest -- --template react-ts
 
 В отличие от задачи из курса, я принял решение использовать TypeScript, т.к. в 2026 году он упоминается кратно чаще, чем Vanilla JavaScript.
 
-Стартовое приложение без стилей light и dark добавлено в репозитарий кода. Запустить его можно из папки "\exercises\context_api\started ":
+Стартовое приложение без стилей light и dark добавлено в репозитарий кода. Запустить его можно из папки "\exercises\context_api\started":
 
 ```shell
 npm install
 npm run dev
+```
+
+Решение тестовой задачи приведено в папке "\exercises\context_api\final".
+
+Важным дополнением в решении является вспомогательный hook в файле "ThemeContext.tsx", простой и удобный в использовании в классах потребителях:
+
+```ts
+export function useTheme(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeContextProvider");
+  }
+  return context;
+}
 ```
