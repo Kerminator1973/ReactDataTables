@@ -1,26 +1,26 @@
 import React, { createContext, useContext } from "react";
 
-// --- Типы ---
-type Theme = "light" | "dark";
+type Theme = "light" | "dark";  // Определяем тип Theme
 
-interface ThemeContextValue {
+interface ThemeContextValue {   // Определяем интерфейс контекста
   theme: Theme;
   toggleTheme: () => void;
 }
 
-// --- Создание контекста ---
+// Создаём контекста
 const ThemeContext = createContext<ThemeContextValue | null>(null);
 
-// --- Провайдер ---
+// При определении провайдера, описываем интерфейс Props, поскольку
+// через него передаются дочерние компоненты, а также тема интерфейса
+// "по умолчанию"
 interface ThemeContextProviderProps {
   children: React.ReactNode;
   defaultTheme?: Theme;
 }
 
-export class ThemeContextProvider extends React.Component<
-  ThemeContextProviderProps,
-  { theme: Theme }
-> {
+export class ThemeContextProvider 
+  extends React.Component<ThemeContextProviderProps, { theme: Theme }>
+{
   constructor(props: ThemeContextProviderProps) {
     super(props);
     this.state = {
@@ -49,7 +49,7 @@ export class ThemeContextProvider extends React.Component<
   }
 }
 
-// --- Хук для удобного доступа к контексту ---
+// Опционально: hook для удобного доступа к контексту
 export function useTheme(): ThemeContextValue {
   const context = useContext(ThemeContext);
   if (!context) {
@@ -57,6 +57,3 @@ export function useTheme(): ThemeContextValue {
   }
   return context;
 }
-
-// --- Экспорт контекста (если нужен прямой доступ) ---
-export { ThemeContext };
