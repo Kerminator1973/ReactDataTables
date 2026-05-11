@@ -202,7 +202,156 @@ npm run dev
 
 Решение тестовой задачи приведено в папке "\exercises\context_api\final".
 
-Важным дополнением в решении является вспомогательный hook в файле "ThemeContext.tsx", простой и удобный в использовании в классах потребителях:
+Действия, выполненные в решении:
+
+- в каскадных таблицах добавлены стили light и dark
+- добавлена папка "contexts" и в этой папке создан класс ThemeContextProvider
+- в файле "App.tsx" вокруг компонента "страница" добавлен объект ThemeContextProvider
+- Page получат состояние из контекста, используя свойство theme
+- Header изменяет состояние, используя метод toggleTheme()
+
+Оборачивание дерева компонентов в **провайдер контекста** выполняетс следующим образом:
+
+```tsx
+import './App.css'
+import Page from './components/Page'
+import { ThemeContextProvider } from './contexts/ThemeContext'
+
+function App() {
+  return (
+    <>
+      <ThemeContextProvider defaultTheme="light">
+        <Page />
+      </ThemeContextProvider>
+    </>
+  )
+}
+
+export default App
+```
+
+Установка класса (см. `className={theme}`) для вложенных компонентов в компоненте "Pages.tsx":
+
+```tsx
+import React from 'react';
+import Header from './Header';
+import { useTheme } from '../contexts/ThemeContext';
+
+interface PageProps {
+  // При необходимости можно добавить пропсы для компонента
+}
+
+const Page: React.FC<PageProps> = () => {
+
+  const { theme } = useTheme();
+
+  return (
+    <div id="app" className={theme}>
+      <Header />
+      <article>
+        <h2>React Course</h2>
+        <p>
+          A course that teaches you React from the ground up and in great depth!
+        </p>
+      </article>
+    </div>
+  );
+};
+
+export default Page;
+```
+
+Переключение темы осуществляется посредством вызова метода `toggleTheme`() в файле "Header.tsx":
+
+```tsx
+import React from 'react';
+import { useTheme } from '../contexts/ThemeContext';
+
+const Header: React.FC = () => {
+
+  const { toggleTheme } = useTheme();
+
+  const handleThemeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    toggleTheme();
+    console.log('Кнопка Theme нажата');
+  };
+
+  return (
+    <button onClick={handleThemeClick} type="button">
+      Поменять тему
+    </button>
+  );
+};
+
+export default Header;
+```
+
+Реализация "ThemeContext.tsx" может выглядеть следующим образом:
+
+```tsx
+import React, { createContext, useContext } from "react";
+
+type Theme = "light" | "dark";  // Определяем тип Theme
+
+interface ThemeContextValue {   // Определяем интерфейс контекста
+  theme: Theme;
+  toggleTheme: () => void;
+}
+
+// Создаём контекста
+const ThemeContext = createContext<ThemeContextValue | null>(null);
+
+// При определении провайдера, описываем интерфейс Props, поскольку
+// через него передаются дочерние компоненты, а также тема интерфейса
+// "по умолчанию"
+interface ThemeContextProviderProps {
+  children: React.ReactNode;
+  defaultTheme?: Theme;
+}
+
+export class ThemeContextProvider 
+  extends React.Component<ThemeContextProviderProps, { theme: Theme }>
+{
+  constructor(props: ThemeContextProviderProps) {
+    super(props);
+    this.state = {
+      theme: props.defaultTheme ?? "light",
+    };
+  }
+
+  toggleTheme = () => {
+    this.setState((prev) => ({
+      theme: prev.theme === "light" ? "dark" : "light",
+    }));
+  };
+
+  render() {
+    // Значение оборачивается в объект вручную, без useMemo (класс-компонент)
+    const contextValue: ThemeContextValue = {
+      theme: this.state.theme,
+      toggleTheme: this.toggleTheme,
+    };
+
+    return (
+      <ThemeContext.Provider value={contextValue}>
+        {this.props.children}
+      </ThemeContext.Provider>
+    );
+  }
+}
+
+// Опционально: hook для удобного доступа к контексту
+export function useTheme(): ThemeContextValue {
+  const context = useContext(ThemeContext);
+  if (!context) {
+    throw new Error("useTheme must be used within a ThemeContextProvider");
+  }
+  return context;
+}
+```
+
+В реализации импорт useContext нужен только для hook-а useTheme, который является важным дополнением в файле "ThemeContext.tsx". Он простой и удобный в использовании в классах потребителях:
 
 ```ts
 export function useTheme(): ThemeContextValue {
@@ -213,3 +362,11 @@ export function useTheme(): ThemeContextValue {
   return context;
 }
 ```
+
+Опционально мы моглиы бы экспортировать ещё и контекст, если бы где-то в коде был нужен прямой доступ к нему:
+
+```tsx
+export { ThemeContext };
+```
+
+По коду решения в целом, следует заменить, что у нас есть класс ThemeContextProvider, который реализует провайдера контекста в приложении. Этот компонент используется в "App.tsx" для формирования области видимости контекста. Одновременно с этим, в реализации ThemeContextProvider у нас встречается строка ThemeContext.Provider, которая использует компонент Provider, являющийся частью объекта ThemeContext, полученного на фабрике контекстов `createContext<>`. Различие в написании - буквально один дополнительный символ, но это два абсолютно разных компонента/класса.
