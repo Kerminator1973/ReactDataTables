@@ -1,5 +1,7 @@
 import React from 'react';
 import ProductCard from '../components/ProductCard';
+import PageHeader from '../components/PageHeader';
+import PageFooter from '../components/PageFooter';
 
 interface Product {
   id: string;
@@ -19,10 +21,7 @@ const products: Product[] = [
 const ProductCatalog: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
-      <header className='text-center py-16 mb-8'>
-        <h1 className="text-5xl font-extrabold text-gray-900 mb-4">Vibe Product Catalog</h1>
-        <p className="text-lg text-gray-600">Explore our range of industrial equipment.</p>
-      </header>
+      <PageHeader />
     
       <main className='container mx-auto'>
         <h2 className="text-3xl font-bold mb-8 border-b pb-2">Product Lineup</h2>
@@ -37,10 +36,8 @@ const ProductCatalog: React.FC = () => {
           ))}
         </div >
       </main>
-    
-      <footer className='py-8 mt-12 border-t bg-gray-100 text-center'>
-        © {new Date().getFullYear()} Vibe Corporation. All rights reserved.
-      </footer>
+
+      <PageFooter />
     </div>
   );
 }
