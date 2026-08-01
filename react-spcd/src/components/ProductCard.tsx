@@ -4,7 +4,6 @@ import React from 'react';
 interface Product {
     id: string;
     name: string;
-    description: string;
     imageSrc: string; // Placeholder URL or local asset path
 }
 
@@ -26,8 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
       </div>
       {/* Text content underneath image */}
       <div className="product-info">
-        <h3 className="product-title">{product.name}</h3>
-        <p className="product-description">{product.description}</p>
+        <h3 className="text-2xl font-bold text-center">{product.name}</h3>
       </div>
     </div>
   );

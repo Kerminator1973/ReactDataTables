@@ -4,12 +4,12 @@ function App() {
 
   // Fix 2: Correctly define products as an Array of objects
     const products = [
-      { id: '1', name: 'Viewing Detector', imageSrc: './src/assets/ViewingDetector.jpg', description: 'Advanced viewing detection system.' },
-      { id: '2', name: 'Vacuum Packer', imageSrc: './src/assets/VacuumPacker.jpg', description: 'Industrial vacuum packaging machinery.' },
-      { id: '3', name: 'Deposit Machine', imageSrc: './src/assets/DepositMachine.jpg', description: 'Automated deposit processing and counting equipment.' },
-      { id: '4', name: 'Counter Sorter', imageSrc: './src/assets/CounterSorter.jpg', description: 'High-speed item counting and sorting solution.' },
-      { id: '5', name: 'Counter', imageSrc: './src/assets/Counter.jpg', description: 'Versatile product counter for various goods.' },
-      { id: '6', name: 'Automatic Detector', imageSrc: './src/assets/AutomaticDetector.jpg', description: 'Precision detection of foreign or required objects.' },
+      { id: '1', name: 'Viewing Detector', imageSrc: './src/assets/ViewingDetector.jpg' },
+      { id: '2', name: 'Vacuum Packer', imageSrc: './src/assets/VacuumPacker.jpg' },
+      { id: '3', name: 'Deposit Machine', imageSrc: './src/assets/DepositMachine.jpg' },
+      { id: '4', name: 'Counter Sorter', imageSrc: './src/assets/CounterSorter.jpg' },
+      { id: '5', name: 'Counter', imageSrc: './src/assets/Counter.jpg' },
+      { id: '6', name: 'Automatic Detector', imageSrc: './src/assets/AutomaticDetector.jpg' },
     ];
 
   return (
