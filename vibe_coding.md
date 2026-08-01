@@ -111,3 +111,7 @@ export default ProductCard;
 
 Однако он не смог изменить главную страницу: "_Edit src\App.tsx 
 Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings_".
+
+## Проверка размера контекса
+
+При достижении некоторого ощутимого результата рекомендуется сохранять его в репозитарии и сжимать контекст LLM командой `/compact`.
