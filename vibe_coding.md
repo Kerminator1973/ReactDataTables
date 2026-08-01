@@ -386,3 +386,57 @@ const ProductCard = ({ src, title }: { src: string; title: string }) => (
 npm install react-router-dom
 ```
 
+В файле "main.tsx" необходимо включить в структуру корневого элемента **BrowserRouter**:
+
+```tsx
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+import './index.css'
+import App from './App.tsx'
+
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  </StrictMode>,
+)
+```
+
+Каталог следует выделить из "App.tsx" в отдельную страницу. Также нужно создать ещё одну страницу - ProductInfo, в параметром id продукта.
+
+Вот как может выглядеть таблица Routing-а в новой реализации "App.tsx":
+
+```tsx
+import { Routes, Route } from 'react-router-dom';
+import ProductCatalog from './Pages/ProductCatalog';
+import ProductInfo from './Pages/ProductInfo';
+
+function App() {
+  return (
+    <div>
+      <Routes>
+        <Route path="/" element={<ProductCatalog />} />
+        <Route path="/info/:id" element={<ProductInfo />} />
+      </Routes>
+    </div>
+  );
+}
+
+export default App;
+```
+
+По умолчанию открывается ProductCatalog, а при переходе по адресу "/info/:id" осуществляется переход на ProductInfo.
+
+Чтобы переход при click-е на карточку товара состоялся, следует обернуть компонент во тэг **Link**, который является частью **react-router-dom**:
+
+```tsx
+const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  return (
+    <Link to={`/info/${product.id}`} className="block cursor-pointer">
+      .. ...
+    </Link>
+  );
+};
+```
