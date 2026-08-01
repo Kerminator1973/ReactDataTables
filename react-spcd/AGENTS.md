@@ -11,6 +11,9 @@
 - **Shell:** When running commands on Windows, always use **Command Prompt (cmd.exe)**, not PowerShell.  
   This ensures consistent behaviour with the project's script runners and avoids compatibility issues with PowerShell‑specific syntax or execution policies.
 
+- Before each edit of the file, re—read it (or the desired fragment) with the Read tool - do not rely on the old content from the context. Copy the oldString from the fresh Read output verbatim, with all the indentation. Use a minimal unique fragment (3-10 lines), rather than large blocks.
+If Edit returns the error "Could not find oldString", reread the file and repeat with the current contents, do not try to guess.
+
 ---
 
 ### 🎨 Styling
