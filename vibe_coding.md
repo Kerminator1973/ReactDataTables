@@ -62,6 +62,8 @@ Gemma 4 не очень хорошо работает с иностранным�
 
 Gemma 4 не смогла обработать картинку: "_I cannot analyze visual information directly for dynamic layout updates like adding a new product catalog. Please provide the list of products (e.g., as JSON or component code structure) so I can update the main screen accordingly_".
 
+>Практически наверняка Claude Code в связке с Sonnet 4.8/5 эту задачу смог бы решить.
+
 Переписал промпт: "_Analyze the document at the following link: https://dors-service.ru/DeviceCatalogPage/Default. This document contains a product catalog from an online store. Products are arranged in rows of three. There can be many rows. Each product listing includes an image and text underneath it. Update the app by adding a catalog of six products to the main screen_".
 
 Gemma 4 всё равно не хочет выполнить задачу: "_Please provide the product catalog document by copying its contents or linking to an accessible file path so I can analyze it and update the application_".
@@ -115,3 +117,172 @@ Could not find oldString in the file. It must match exactly, including whitespac
 ## Проверка размера контекса
 
 При достижении некоторого ощутимого результата рекомендуется сохранять его в репозитарии и сжимать контекст LLM командой `/compact`.
+
+## Генерация каталога
+
+Перенёс шесть картинок из проекта SPCD в папку "src/assets".
+
+Стартовый промпт: "_Измени файл ./src/App.tsx. Удали контент между React fragment <> и </>. Добавить в освободившуюся область каталог товаров, используя компонент ProductCard. Необходимо разместить шесть товаров по три в ряд. Картинки для отображения товара возьми из папки ./src/assets - используй только файлы с расширением jpg. Текст под картинкой возьми из имени файла с картинкой_".
+
+Термин React fragment означает тэги между `<>` и `</>`
+
+Gemma 4 не смогла выполнить задачу:
+
+```
+Edit src\App.tsx [replaceAll=true]
+Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+```
+
+Причина состоит в том, структура файла App.tsx отличается от той, которую ожидает Gemma.
+
+>Как оказалось, Gemma 4 вполне понимает русский язык, но генерацию осуществляет на английском. Claude Code с подпиской выполняет генерацию на языке запроса.
+
+Новый промпт: "_Создай новый файл ./src/App.tsx, полностью заменив предыдущий вариант. Создай каталог товаров, используя компонент ProductCard. Необходимо разместить шесть товаров по три в ряд. Картинки для отображения товара возьми из папки ./src/assets - используй только файлы с расширением jpg. Текст под картинкой возьми из имени файла с картинкой_".
+
+Задачу Gemma 4 не выполнила, но в Thinking новую страницу она сформировала:
+
+```tsx
+import { useState } from 'react';
+
+// Assuming other imports like reactLogo, viteLogo, etc., are needed but omitting for brevity if not used in the new structure.
+// If needed, they should be imported here or kept from original file content.
+
+// Mock ProductCard component definition based on usage (assuming it exists elsewhere)
+const ProductCard = ({ src, title }) => (
+  <div className="border p-4 rounded shadow-sm max-w-[200px] transition duration-300 hover:shadow-lg">
+    <img src={src} alt={title} className="w-full h-48 object-cover mb-3" />
+    <h3 className="text-xl font-semibold text-center">{title}</h3>
+  </div>
+);
+
+function App() {
+  const count, setCount = useState(0);
+
+  // Product data derived from assets/jpg files and filename extraction logic
+  const products = 
+    { src: './src/assets/ViewingDetector.jpg', title: 'Viewing Detector' },
+    { src: './src/assets/VacuumPacker.jpg', title: 'Vacuum Packer' },
+    { src: './src/assets/DepositMachine.jpg', title: 'Deposit Machine' },
+    { src: './src/assets/CounterSorter.jpg', title: 'Counter Sorter' },
+    { src: './src/assets/Counter.jpg', title: 'Counter' },
+    { src: './src/assets/AutomaticDetector.jpg', title: 'Automatic Detector' },
+  ;
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-8">
+      <header className='text-center py-16 mb-8'>
+        <h1 className="text-5xl font-extrabold text-gray-900 mb-4">Vibe Product Catalog</h1>
+        <p className="text-lg text-gray-600">Explore our range of industrial equipment.</p>
+      </header>
+
+      <main className='container mx-auto'>
+        <h2 className="text-3xl font-bold mb-8 border-b pb-2">Product Lineup</h2>
+        
+        {/* Product Grid */}
+        <div style={{ 
+            display: 'flex', 
+            flexWrap: 'wrap', 
+            gap: '25px', 
+            justifyContent: 'space-around' 
+            // Targeting 6 items in (approx.) 3 wide x 2 high layout
+        }}>
+          {products.map((product, index) => (
+            <div key={index} className="w-full sm:w-[calc(33%-15px)]">
+              <ProductCard src={product.src} title={product.title} />
+            </div>
+          ))}
+        </div>
+
+        {/* Other content (kept for structural integrity) */}
+        <div className='mt-20 p-6 bg-white shadow rounded-lg text-center'>
+             <h3 className="text-xl font-semibold">Need assistance?</h3>
+             <p>Contact us via the footer details.</p>
+        </div>
+      </main>
+
+      {/* Mock Footer */}
+      <footer className='py-8 mt-12 border-t bg-gray-100 text-center'>
+          © {new Date().getFullYear()} Vibe Corporation. All rights reserved.
+      </footer>
+    </div>
+  );
+}
+
+export default App;
+```
+
+Приложение не скомпилировалось из-за ошибок:
+
+```
+    ╭─[ src/App.tsx:15:9 ]
+    │
+ 15 │   const count, setCount = useState(0);
+    │         ──┬──
+    │           ╰────
+    │
+    │ Help: Add an initializer (e.g. ` = undefined`) here
+────╯
+
+[PARSE_ERROR] Unexpected token
+    ╭─[ src/App.tsx:20:12 ]
+    │
+ 20 │     { src: './src/assets/VacuumPacker.jpg', title: 'Vacuum Packer' },
+    │            ───────────────┬───────────────
+    │                           ╰─────────────────
+────╯
+
+  Plugin: vite:oxc
+  File: d:/Sources/Playground/Vibe/sources/src/App.tsx
+      at transformWithOxc (file:///d:/Sources/Playground/Vibe/sources/node_modules/vite/dist/node/chunks/node.js:4090:19)
+      at TransformPluginContext.transform (file:///d:/Sources/Playground/Vibe/sources/node_modules/vite/dist/node/chunks/node.js:4161:26)
+      at EnvironmentPluginContainer.transform (file:///d:/Sources/Playground/Vibe/sources/node_modules/vite/dist/node/chunks/node.js:30796:51)
+      at async loadAndTransform (file:///d:/Sources/Playground/Vibe/sources/node_modules/vite/dist/node/chunks/node.js:20594:26)
+      at async viteTransformMiddleware (file:///d:/Sources/Playground/Vibe/sources/node_modules/vite/dist/node/chunks/node.js:25092:20)
+```
+
+Следующим шагом я скопировал ошибки в OpenCode и дал команду исправить ошибки. Ошибки были исправлены.
+
+Первый вариант приложения:
+
+![Первый вариант каталога устройств](./vibe_spcd_first_screenshot.png)
+
+Однако верстка не такая, какой она должна быть по требованиям.
+
+Следующий промпт: "_исправь HTML верстку таким образом, чтобы все jpg-файлы имели одинаковую ширину и отображались по три в ряд_".
+
+И OpenCode добавил стили Tailwind, но этого пакета в моём проекте нет.
+
+Установить Tailwind можно командой (об этом OpenCode написал):
+
+```shell
+npm install -D tailwindcss postcss autoprefixer
+```
+
+Gemma 4 понимает, как подключать TailwindCSS:
+
+```shell
+npx tailwindcss init -p
+```
+
+Однако проблемами могут являться:
+
+- Нет прав Администратора у процесса OpenCode (нужно запускать от имени Администратора)
+- OpenCode не понимает, для какой операционной системы давать команды (нужно явно указать в "AGENTS.md")
+- Пытается выполнить комманды "Command Prompt" в "PowerShell" (нужно явно указать в "AGENTS.md")
+
+После внесения изменений, Gemma потребовала пересобрать проект командой:
+
+```
+npm run build
+```
+
+Пересборка выявила смешения стилей JavaScript/TypeScript - сборка была неуспешной.
+
+Череда исправлений привела к решению часть проблем, но подключить Tailwind корректно не удалось, т.к. редактор OpenCode не мог выполнить задачу:
+
+```
+Edit src\App.tsx [replaceAll=true]
+Could not find oldString in the file. It must match exactly, including whitespace, indentation, and line endings.
+```
+
+Первый этап признан неуспешным. Требуется этап подготовки к использованию OpenCode.
