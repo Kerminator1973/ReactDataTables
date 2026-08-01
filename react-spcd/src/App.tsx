@@ -1,29 +1,16 @@
-// Component to display a product card
-
-/**
- * Component to display a product card.
- * @param {object} props 
- * @param {string} props.src - The image source URL.
- * @param {string} props.title - The name of the product.
- */
-const ProductCard = ({ src, title }: { src: string; title: string }) => (
-  <div className="border p-4 rounded shadow-md max-w-[250px] transition duration-300 hover:shadow-xl bg-white flex flex-col items-center">
-    <img src={src} alt={title} className="w-full mb-3" />
-    <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
-  </div >
-);
+import ProductCard from './components/ProductCard';
 
 function App() {
 
   // Fix 2: Correctly define products as an Array of objects
-  const products = [
-    { src: './src/assets/ViewingDetector.jpg', title: 'Viewing Detector' },
-    { src: './src/assets/VacuumPacker.jpg', title: 'Vacuum Packer' },
-    { src: './src/assets/DepositMachine.jpg', title: 'Deposit Machine' },
-    { src: './src/assets/CounterSorter.jpg', title: 'Counter Sorter' },
-    { src: './src/assets/Counter.jpg', title: 'Counter' },
-    { src: './src/assets/AutomaticDetector.jpg', title: 'Automatic Detector' },
-  ];
+    const products = [
+      { id: '1', name: 'Viewing Detector', imageSrc: './src/assets/ViewingDetector.jpg', description: 'Advanced viewing detection system.' },
+      { id: '2', name: 'Vacuum Packer', imageSrc: './src/assets/VacuumPacker.jpg', description: 'Industrial vacuum packaging machinery.' },
+      { id: '3', name: 'Deposit Machine', imageSrc: './src/assets/DepositMachine.jpg', description: 'Automated deposit processing and counting equipment.' },
+      { id: '4', name: 'Counter Sorter', imageSrc: './src/assets/CounterSorter.jpg', description: 'High-speed item counting and sorting solution.' },
+      { id: '5', name: 'Counter', imageSrc: './src/assets/Counter.jpg', description: 'Versatile product counter for various goods.' },
+      { id: '6', name: 'Automatic Detector', imageSrc: './src/assets/AutomaticDetector.jpg', description: 'Precision detection of foreign or required objects.' },
+    ];
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -36,11 +23,11 @@ function App() {
         <h2 className="text-3xl font-bold mb-8 border-b pb-2">Product Lineup</h2>
         
         {/* Grid layout for 6 products (approximately 3 wide x 2 high) */}
-        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', justifyContent: 'space-around' }}>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '25px', justifyContent: 'flex-start', alignContent: 'stretch' }}>
           {products.map((product, index) => (
             // Calculate width to ensure three items fit well on wider screens minus gaps
             <div key={index} className="w-full sm:w-[calc(33%-16px)]"> 
-              <ProductCard src={product.src} title={product.title} />
+              <ProductCard product={product} />
             </div>
           ))}
         </div >

@@ -330,3 +330,25 @@ Please refer to `package.json` for all standard commands and `README.md` for dee
 ```
 
 Его однозначно нужно дорабатывать, т.к. в текущем варианте не указано ни как нужно выполнять команды (команды PowerShell выполняются в Command Prompt), ни указания на то, что следует использовать Tailwind для организации пользовательского интерфейса.
+
+## Попытка оптимизации верстки
+
+Обнаружил удивительную вещь в коде - не смотря на то, что в проекте был реализован отдельный компонент ProductCard.tsx, в App.tsx был определён его одноименный аналог:
+
+```tsx
+/**
+ * Component to display a product card.
+ * @param {object} props 
+ * @param {string} props.src - The image source URL.
+ * @param {string} props.title - The name of the product.
+ */
+
+const ProductCard = ({ src, title }: { src: string; title: string }) => (
+  <div className="border p-4 rounded shadow-md max-w-[250px] transition duration-300 hover:shadow-xl bg-white flex flex-col items-center">
+    <img src={src} alt={title} className="w-full mb-3" />
+    <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
+  </div >
+);
+```
+
+По этой причине, когда я указывал на необходимость внести правки в файл "ProductCard.tsx", оно вносились, но использовался другой компонент, который не изменялся.
