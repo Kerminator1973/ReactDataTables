@@ -8,6 +8,18 @@
     Note that TypeScript compilation (`tsc -b`) must complete before Vite bundling can occur.
   - **Linting:** Linting is executed with `npm run lint` (using `oxlint`).
 
+- **Shell:** When running commands on Windows, always use **Command Prompt (cmd.exe)**, not PowerShell.  
+  This ensures consistent behaviour with the project's script runners and avoids compatibility issues with PowerShell‑specific syntax or execution policies.
+
+---
+
+### 🎨 Styling
+
+- **Tailwind CSS** is the designated utility‑first framework for all styling within the application.  
+  - Use Tailwind utility classes for layout, spacing, typography, colours, and responsive design.  
+  - Avoid inline styles or custom CSS files unless absolutely necessary and approved.  
+  - Follow the project's Tailwind configuration (see `tailwind.config` if present) for theme tokens, custom breakpoints, and any extended utilities.
+
 ---
 
 ### ⚙️ Linter / Type Checking Quirks
