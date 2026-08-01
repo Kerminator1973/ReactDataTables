@@ -21,7 +21,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <img 
           src={product.imageSrc} 
           alt={`Image of ${product.name}`} 
-          style={{ width: '100%', height: '200px', objectFit: 'cover' }} 
+          style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
         />
       </div>
       {/* Text content underneath image */}

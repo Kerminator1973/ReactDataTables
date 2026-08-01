@@ -8,7 +8,7 @@
  */
 const ProductCard = ({ src, title }: { src: string; title: string }) => (
   <div className="border p-4 rounded shadow-md max-w-[250px] transition duration-300 hover:shadow-xl bg-white flex flex-col items-center">
-    <img src={src} alt={title} className="w-full h-48 object-cover mb-3" />
+    <img src={src} alt={title} className="w-full mb-3" />
     <h3 className="text-xl font-semibold text-gray-800">{title}</h3>
   </div >
 );
