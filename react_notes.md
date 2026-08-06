@@ -45,6 +45,10 @@ React решает приведённые выше проблемы, добав�
 >
 >**Isomorphic JavaScript**: The Future of Web Apps. Frontend и Backend будут заменены на Application Framework, который позволяет разрабатывать приложение не специализируясь на Frontend, или Backend. Идея изначально была реализована в Meteor в 2012 году.
 
+## React Update Lifecycle
+
+Рекомендуется к прочтению статья [React Update Lifecycle: что происходит при обновлении компонента](https://habr.com/ru/articles/1066970/) by SqwozBug.
+
 ## Проверка кода. Контроль качества
 
 Эко-система React содержит огромное количество инструментов для контроля качества кода, включая:
