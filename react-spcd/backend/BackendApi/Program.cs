@@ -27,12 +27,23 @@ app.MapGet("/api/products", async (AppDbContext db) =>
     return await db.Products.ToListAsync();
 }).WithName("GetAllProducts");
 
-app.MapGet("/api/products/{id}", async (AppDbContext db, int id) => 
+app.MapGet("/api/products/{id}", async (AppDbContext db, int id) =>
 {
-    var product = await db.Products.Include(p => p.Documents).FirstOrDefaultAsync(p => p.Id == id);
-    if (product == null) return Results.NotFound("Product not found.");
-    return Results.Ok(product);
-}).WithName("GetProductById");
+    // Проектируем Product и его документы в анонимный тип или DTO
+    var productDto = await db.Products
+        .Where(p => p.Id == id)
+        .Select(p => new {
+            p.Id,
+            p.Name, // Только нужное поле
+            Documents = p.Documents.Select(d => new { d.Id, d.Name }) // Проецируем только нужные поля в документах
+        })
+        .ToListAsync();
+
+    if (productDto == null || productDto.Count == 0) return Results.NotFound("Product not found.");
+
+    // Возвращаем первый элемент и передаем его как DTO
+    return Results.Ok(productDto[0]);
+});
 
 app.MapPost("/api/products", async (AppDbContext db, Product product) => 
 {
