@@ -482,4 +482,15 @@ dotnet ef migrations add InitialMigration
 dotnet ef database update
 ```
 
+Gemma 4 некорректно реализовала запрос для получения "/api/products/{id}" - возникала циклическая зависимость. Однако LLM смогла, впоследствии, переписать с использованием DTO, избегая циклической зависимости.
+
+Обратил внимание, что Gemma 4 добавляет мета-данные для Swagger в каждом Endpoint:
+
+```csharp
+app.MapGet("/api/products", async (AppDbContext db) => 
+{
+    return await db.Products.ToListAsync();
+}).WithName("GetAllProducts");
+```
+
 Для запуска консоли Swagger, следует добавить после базового URL "/swagger", например: `https://localhost:7248/swagger`
