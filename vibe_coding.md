@@ -494,3 +494,49 @@ app.MapGet("/api/products", async (AppDbContext db) =>
 ```
 
 Для запуска консоли Swagger, следует добавить после базового URL "/swagger", например: `https://localhost:7248/swagger`
+
+## Интеграция React-приложения с backend
+
+Ключевая проблема - CORS. В режиме отладки, чтобы разрешить возможность работать React-приложению с backend-ом из другого домена, потребуется отключить CORS на Backend. В "Program.cs" нужно разрешить источник React-приложения:
+
+```csharp
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("ReactClient", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+app.UseCors("ReactClient");
+```
+
+Для выполнения http-запросов можно использовать встроенный Fetch API, библиотеку Axios.
+
+```ts
+// types.ts — зеркало DTO с сервера
+export interface WeatherForecast {
+  date: string;
+  temperatureC: number;
+  summary: string;
+}
+
+// api.ts
+const BASE_URL = "https://localhost:5001/api";
+
+export async function getForecasts(): Promise<WeatherForecast[]> {
+  const response = await fetch(`${BASE_URL}/weather`);
+  if (!response.ok) {
+    throw new Error(`Ошибка HTTP: ${response.status}`);
+  }
+  return response.json() as Promise<WeatherForecast[]>;
+}
+```
+
+**Axios** предоставляет дополнительные возможности, такие как **interceptors**, **отмену запросов** и управление заголовками MIME-запросов. В ASP.NET Core 10 это работает "из коробки" — контроллеры ожидают JSON, и защита через [Authorize] принимает Bearer-токены без дополнительной настройки.
+
+Для промышленных решений рекомендуется использовать **TanStack Query** (React Query), который является полноценным менеджером серверного состояния. Он выполняет такие задачи, как: кэширование, фоновая ревалидация, pagination и оптимистичные обновления. Фактически, это стандарт в React-экосистеме.
+
+Если в проекте используется Redux Toolkit, то разумным выбором может являться RTK Query. Если глобальное состояние уже управляется через Redux, RTK Query даёт аналогичный React Query опыт, но с бесшовной интеграцией в Redux-store. Описываются Endpoints и RTK Query автоматически генерируются хуки.
