@@ -540,3 +540,36 @@ export async function getForecasts(): Promise<WeatherForecast[]> {
 Для промышленных решений рекомендуется использовать **TanStack Query** (React Query), который является полноценным менеджером серверного состояния. Он выполняет такие задачи, как: кэширование, фоновая ревалидация, pagination и оптимистичные обновления. Фактически, это стандарт в React-экосистеме.
 
 Если в проекте используется Redux Toolkit, то разумным выбором может являться RTK Query. Если глобальное состояние уже управляется через Redux, RTK Query даёт аналогичный React Query опыт, но с бесшовной интеграцией в Redux-store. Описываются Endpoints и RTK Query автоматически генерируются хуки.
+
+### Генерация кода интеграционной части
+
+Gemma 4 успешно сгенерировал функционал для отправки http-запросов из React-приложения на сервер. На сервере был вручную добавлен код, разрещающий CORS-запрос с локальной машины, из React-приложения:
+
+```csharp
+builder.Services
+    .AddDbContext<AppDbContext>(options =>
+        options.UseSqlite("DataSource=product_documents.db"))
+    .AddEndpointsApiExplorer()
+    .AddSwaggerGen()
+    .AddCors(options =>
+    {
+        options.AddPolicy("ReactClient", policy =>
+        {
+            policy.WithOrigins("http://localhost:5173") // <-- Порт имеет смысл проверять систематически
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+    });
+```
+
+Однако приложение нуждается в доработке:
+
+- имеет смысл объединить код клиента и сервера в один домен, чтобы избежать CORS, а также что-бы избежать настройки портов в клиенте и backend-е
+- вместо типа any необходимо сгенерировать DTO для получаемых от сервера данных
+
+В качестве заглушки, для успешного экспериментального подключения, в React-приложении был добавлен следующий fetch:
+
+```tsx
+fetch(`https://localhost:7248/api/products/${id}`)
+    .then((res) => res.json())
+```
