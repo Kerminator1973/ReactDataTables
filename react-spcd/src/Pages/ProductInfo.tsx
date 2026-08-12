@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
+
+interface DocumentDTO {
+    id: number;
+    name: string;
+    productId: number;
+}
+
 export const ProductInfo: React.FC = () => {
     const { id } = useParams<{ id: string }>();
     // documents теперь содержит только массив документов
-    const [documents, setDocuments] = useState<any[]>([]); 
+    const [documents, setDocuments] = useState<DocumentDTO[]>([]); 
     const [loading, setLoading] = useState(true);
+// ... (rest of the component content)
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -17,8 +25,8 @@ export const ProductInfo: React.FC = () => {
         fetch(`https://localhost:7248/api/products/${id}`)
             .then((res) => res.json())
             // Ожидаем объект с полем 'documents' внутри
-            .then((backendData: { documents: any[] }) => { 
-                setDocuments(backendData.documents); // Извлекаем нужный массив
+            .then((backendData: { documents: DocumentDTO[] }) => { 
+                setDocuments(backendData.documents);
             })
             .catch((e) => {
                 setError("Не удалось загрузить документы: " + e.message);
@@ -53,9 +61,9 @@ export const ProductInfo: React.FC = () => {
                     )}
                     {!loading && !error && documents.length > 0 && (
                        <ul className="list-disc pl-4 space-y-1">
-                           {documents.map((doc: any, index: number) => (
-                                <li key={index} className="text-gray-700">{doc.name || `Документ ${index + 1}`}</li>
-                           ))}
+                                {documents.map((doc: DocumentDTO, index: number) => (
+                                     <li key={index} className="text-gray-700">{doc.name || `Документ ${index + 1}`}</li>
+                                 ))}
                        </ul>
                     )}
                 </div>
