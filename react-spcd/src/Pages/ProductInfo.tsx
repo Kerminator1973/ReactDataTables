@@ -6,7 +6,6 @@ import { useParams, Link } from 'react-router-dom';
 interface DocumentDTO {
     id: number;
     name: string;       // Название документа
-    productId: number;  // TODO: избыточно!
 }
 
 export const ProductInfo: React.FC = () => {
