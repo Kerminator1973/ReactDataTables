@@ -15,7 +15,6 @@ export const ProductInfo: React.FC = () => {
     // Backend передаёт массив документов типа DocumentDTO
     const [documents, setDocuments] = useState<DocumentDTO[]>([]); 
     const [loading, setLoading] = useState(true);
-// ... (rest of the component content)
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
