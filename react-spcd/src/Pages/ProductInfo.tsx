@@ -2,15 +2,17 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 
 
+// Описание DTO - структуры объекта, который Backend возвращает на запрос клиента
 interface DocumentDTO {
     id: number;
-    name: string;
-    productId: number;
+    name: string;       // Название документа
+    productId: number;  // TODO: избыточно!
 }
 
 export const ProductInfo: React.FC = () => {
+    // Извлекаем параметр id из URL навигационной системы
     const { id } = useParams<{ id: string }>();
-    // documents теперь содержит только массив документов
+    // Backend передаёт массив документов типа DocumentDTO
     const [documents, setDocuments] = useState<DocumentDTO[]>([]); 
     const [loading, setLoading] = useState(true);
 // ... (rest of the component content)
