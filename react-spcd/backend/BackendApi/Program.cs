@@ -7,18 +7,7 @@ builder.Services
     .AddDbContext<AppDbContext>(options =>
         options.UseSqlite("DataSource=product_documents.db"))   // Sqlite
     .AddEndpointsApiExplorer()                                  // Swagger
-    .AddSwaggerGen()
-    .AddCors(options =>
-    {
-        // Определяем Policy, которая позволяет серверу обрабатывать запросы, которые
-        // придут от клиента, загруженного из http://localhost:5173
-        options.AddPolicy("ReactClient", policy =>
-        {
-            policy.WithOrigins("http://localhost:5173")
-                  .AllowAnyHeader()
-                  .AllowAnyMethod();
-        });
-    });
+    .AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -28,8 +17,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-app.UseCors("ReactClient");
 
 app.UseHttpsRedirection(); // Автоматически переводим протокол с http на https
 

@@ -22,7 +22,7 @@ export const ProductInfo: React.FC = () => {
         setError(null);
 
         // Обращаемся к Backend-у для получения списка документов        
-        fetch(`https://localhost:7248/api/products/${id}`)
+        fetch(`/api/products/${id}`)
             .then((res) => res.json())
             // Ожидаем объект с полем 'documents' внутри
             .then((backendData: { documents: DocumentDTO[] }) => { 
