@@ -11,8 +11,67 @@
 - **Shell:** When running commands on Windows, always use **Command Prompt (cmd.exe)**, not PowerShell.  
   This ensures consistent behaviour with the project's script runners and avoids compatibility issues with PowerShell‑specific syntax or execution policies.
 
-- Before each edit of the file, re—read it (or the desired fragment) with the Read tool - do not rely on the old content from the context. Copy the oldString from the fresh Read output verbatim, with all the indentation. Use a minimal unique fragment (3-10 lines), rather than large blocks.
-If Edit returns the error "Could not find oldString", reread the file and repeat with the current contents, do not try to guess.
+---
+
+### 🏢 Backend Architecture
+
+The backend is implemented in C# using **ASP.NET Core 10** with **Minimal API** pattern and **SQLite** database.
+
+#### Project Structure
+
+- **Backend Folder:** Located in the `backend` directory
+- **API Layer:** Uses Minimal API approach for lightweight and efficient endpoints
+- **Database:** SQLite for local development and testing
+
+---
+
+### 🔌 Backend Setup
+
+#### Prerequisites
+
+- **Dotnet SDK:** Ensure .NET SDK 10.x is installed
+- **SQLite:** Install SQLite tools if needed for database management
+
+#### Running Backend
+
+1. Navigate to the backend directory:
+```bash
+cd backend
+```
+
+2. Restore dependencies:
+```bash
+dotnet restore
+```
+
+3. Start the development server:
+```bash
+dotnet run
+```
+
+---
+
+### 🗄️ Database Configuration
+
+- **SQLite Usage:** The backend uses SQLite for local development
+- **Migrations:** Database schema is managed via code-first approach
+- **Connection String:** Configured in `appsettings.json`
+
+---
+
+### 🔗 API Documentation
+
+- **Endpoint Documentation:** Refer to `backend/Endpoints.md` for detailed API descriptions
+- **Versioning:** API follows semantic versioning conventions
+- **Error Handling:** Standardized error responses with HTTP status codes
+
+---
+
+### 🛠️ Testing Backend
+
+- **Unit Tests:** Located in `backend/Tests` directory
+- **Test Coverage:** Use `dotnet test` to run tests
+- **Environment:** Ensure `appsettings.Test.json` is configured for testing
 
 ---
 
