@@ -655,3 +655,146 @@ interface DocumentDTO {
 ```
 
 >Важный нюанс: при использовании разных языков программирования на Front-End и Backend требуется определять DTO дважды. Дублирование DTO чревато ошибками из-за рассинхронизации DTO.
+
+## Как обрабатывать оба проекта на одном порту
+
+Объединить Backend и Frontend на одном порту для промышленной эксплуатации проще всего так: **собрать React в статические файлы и раздавать их из ASP.NET Core**. Тогда ASP.NET Core будет отдавать и API, и сам SPA-интерфейс.
+
+## Вариант A — один порт, одна команда (рекомендуемый)
+
+### 1. Настройте Vite, чтобы сборка попадала в `backend/wwwroot`
+
+Создайте или дополните `vite.config.ts`:
+
+```ts
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  build: {
+    outDir: 'backend/wwwroot',
+    emptyOutDir: true
+  }
+})
+```
+
+Если у вас используется `@vitejs/plugin-react-swc`, оставьте текущий плагин — менять нужно только секцию `build`.
+
+### 2. Замените абсолютный URL API на относительный
+
+В `ProductInfo.tsx`:
+
+```ts
+fetch(`https://localhost:7248/api/products/${id}`)
+```
+
+замените на:
+
+```ts
+fetch(`/api/products/${id}`)
+```
+
+Это же нужно сделать во всех остальных местах, где вызывается API.
+
+### 3. Научите ASP.NET Core раздавать статику
+
+В `Program.cs` после `app.UseHttpsRedirection()` добавьте:
+
+```csharp
+app.UseHttpsRedirection();
+
+// Раздаём собранный React (файлы из wwwroot)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+```
+
+А в самом конце, после всех `app.MapGet(...)` и `app.MapPost(...)`, добавьте fallback для React Router:
+
+```csharp
+app.MapFallbackToFile("index.html");
+
+app.Run();
+```
+
+То есть в конец `Program.cs` перед `app.Run()` добавьте строку:
+
+```csharp
+app.MapFallbackToFile("index.html");
+```
+
+Это нужно, чтобы маршруты вроде `/products/5` отдавали `index.html`, а не возвращали 404.
+
+### 4. Уберите CORS
+
+Так как теперь Frontend и Backend находятся на одном origin, CORS больше не нужен. Можно удалить или закомментировать:
+
+```csharp
+// builder.Services.AddCors(...)
+// app.UseCors("ReactClient");
+```
+
+Это не обязательно, но упрощает конфигурацию.
+
+### 5. Добавьте команду запуска в `package.json`
+
+```json
+"scripts": {
+  "dev": "vite",
+  "build": "tsc -b && vite build",
+  "lint": "oxlint",
+  "preview": "vite preview",
+  "start": "npm run build && dotnet run --project backend"
+}
+```
+
+### 6. Запуск одной командой
+
+Теперь из корня проекта в командной строке:
+
+```cmd
+npm start
+```
+
+Что произойдёт:
+
+1. `npm run build` соберёт React и положит файлы в `backend/wwwroot`.
+2. `dotnet run --project backend` запустит ASP.NET Core.
+3. Приложение будет доступно на одном порту, например `https://localhost:7248`.
+4. API будет на `https://localhost:7248/api/...`, а интерфейс — на `https://localhost:7248/`.
+
+---
+
+## Вариант B — для разработки с горячей перезагрузкой React
+
+Если важно сохранить `npm run dev` с HMR, можно настроить проксирование API через Vite. Тогда браузер тоже будет обращаться к одному адресу, но физически процессов будет два.
+
+В `vite.config.ts`:
+
+```ts
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://localhost:7248',
+        secure: false,
+        changeOrigin: true
+      }
+    }
+  }
+})
+```
+
+После этого в коде Frontend тоже используйте относительный путь:
+
+```ts
+fetch(`/api/products/${id}`)
+```
+
+Запускать нужно будет Backend и Frontend отдельно, но для браузера всё будет выглядеть как один порт `5173`.
+
+---
+
+Для production-режима и требования "один порт + одна команда" лучше всего подходит **Вариант A**.
