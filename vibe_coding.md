@@ -804,3 +804,45 @@ fetch(`/api/products/${id}`)
 ```
 
 Важно, что в этой схеме будет полноценно работать Hot-Reload для React-приложения.
+
+## Добавление Endpoint для загрузки изображений с сервера
+
+Предположим, что мы хотим загружать картинки из подкаталога "assets" относительно папки, содержащей .csproj
+
+Указываем, что `wwwroot` будет находится в подпапке "assets":
+
+```csharp
+var options = new WebApplicationOptions
+{
+    Args = args,
+    WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "assets")
+};
+
+var builder = WebApplication.CreateBuilder(options);
+```
+
+Endpoint для загрузки может выглядеть так:
+
+```csharp
+app.MapGet("/api/files/{fileName}", async (string fileName, HttpContext httpContext) =>
+{
+    var webRootPath = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().WebRootPath;
+    var imagePath = Path.Combine(webRootPath, fileName);
+
+    if (!File.Exists(imagePath))
+    {
+        return Results.NotFound("Image file not found.");
+    }
+    
+    var fileExtension = Path.GetExtension(fileName).ToLower();
+    var contentType = GetContentType(fileExtension);
+
+    return Results.File(imagePath, contentType, Path.GetExtension(imagePath));
+});
+```
+
+React-приложение сможет получить графический файл используя `/api/files/`:
+
+```html
+<img src="/api/files/04-bc63-7a6a714d188d.png" />
+```
