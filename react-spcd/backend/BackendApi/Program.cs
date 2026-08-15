@@ -62,21 +62,20 @@ static string GetContentType(string extension)
     };
 }
 
-app.MapGet("/api/products/{id}", async (AppDbContext db, int id) =>
+app.MapGet("/api/products/{id}/documents", async (AppDbContext db, int id) =>
 {
-    var productDto = await db.Products
-        .Where(p => p.Id == id)
-        .Select(p => new {
-            p.Id,
-            p.Name,
-            Documents = p.Documents.Select(d => new { d.Id, d.Name }) // Проецируем только нужные поля в документах
+    var documentsDto = await db.Documents
+        .Where(d => d.ProductId == id)
+        .Select(d => new {
+            d.Id,
+            d.Name,
         })
         .ToListAsync();
 
-    if (productDto == null || productDto.Count == 0) return Results.NotFound("Product not found.");
+    if (documentsDto == null || documentsDto.Count == 0)
+        return Results.Ok(new List<object>());
 
-    // Возвращаем первый элемент и передаем его как DTO
-    return Results.Ok(productDto[0]);
+    return Results.Ok(documentsDto);
 });
 
 // Инициализация и заполнение базы данных при её создании

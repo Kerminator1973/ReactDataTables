@@ -846,3 +846,70 @@ React-приложение сможет получить графический 
 ```html
 <img src="/api/files/04-bc63-7a6a714d188d.png" />
 ```
+
+## Рефакторинг - лечение проблем в коде, сгенерированного Gemma 4
+
+Сначала следует заняться рефакторингом - мне показался очень подозрительным код Endpoint, который загружает список документов:
+
+```csharp
+app.MapGet("/api/products/{id}/documents", async (AppDbContext db, int id) =>
+{
+    var productDto = await db.Products
+        .Where(p => p.Id == id)
+        .Select(p => new {
+            p.Id,
+            p.Name,
+            Documents = p.Documents.Select(d => new { d.Id, d.Name }) // Проецируем только нужные поля в документах
+        })
+        .ToListAsync();
+
+    if (productDto == null || productDto.Count == 0) return Results.NotFound("Product not found.");
+
+    // Возвращаем первый элемент и передаем его как DTO
+    return Results.Ok(productDto[0]);
+});
+```
+
+Этот код формирует следующий запрос к базе данных:
+
+```sql
+SELECT "p"."Id", "p"."Name", "d"."Id", "d"."Name"
+FROM "Products" AS "p"
+LEFT JOIN "Documents" AS "d" ON "p"."Id" = "d"."ProductId"
+WHERE "p"."Id" = @id
+ORDER BY "p"."Id"
+```
+
+Запрос выполняется корректно, т.е. он возвращает правильное количество данных. Однако он возвращает массив из одного элемента, в котором содержится три элемента. Кроме того, SQL-запрос содержит LEFT JOIN, который не кажется оправданным.
+
+Переработанный вариант кода:
+
+```csharp
+app.MapGet("/api/products/{id}/documents", async (AppDbContext db, int id) =>
+{
+    var documentsDto = await db.Documents
+        .Where(d => d.ProductId == id)
+        .Select(d => new {
+            d.Id,
+            d.Name,
+        })
+        .ToListAsync();
+
+    if (documentsDto == null || documentsDto.Count == 0)
+        return Results.Ok(new List<object>());
+
+    return Results.Ok(documentsDto);
+});
+```
+
+Этот код генерирует более простой SQL:
+
+```sql
+SELECT "d"."Id", "d"."Name"
+FROM "Documents" AS "d"
+WHERE "d"."ProductId" = @id
+```
+
+К тому же, новый код решает проблему с ошибкой рендеринга в React-приложении при отсутствии документов в базе данных.
+
+## Добавление таблицы моделей устройств (Devices)

@@ -16,23 +16,21 @@ export const ProductInfo: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    useEffect(() => {
-        if (!id) return; 
-        setLoading(true);
-        setError(null);
+	useEffect(() => {
+		if (!id) return;
+		setLoading(true);
+		setError(null);
 
-        // Обращаемся к Backend-у для получения списка документов        
-        fetch(`/api/products/${id}`)
-            .then((res) => res.json())
-            // Ожидаем объект с полем 'documents' внутри
-            .then((backendData: { documents: DocumentDTO[] }) => { 
-                setDocuments(backendData.documents);
-            })
-            .catch((e) => {
-                setError("Не удалось загрузить документы: " + e.message);
-            })
-            .finally(() => setLoading(false));
-    }, [id]); 
+		fetch(`/api/products/${id}/documents`)
+			.then((res) => res.json())
+			.then((backendData: DocumentDTO[]) => {
+				setDocuments(backendData);
+			})
+			.catch((e) => {
+				setError("Не удалось загрузить документы: " + e.message);
+			})
+			.finally(() => setLoading(false));
+	}, [id]);
 
     return (
         <div className="p-8 max-w-4xl mx-auto">
@@ -61,9 +59,11 @@ export const ProductInfo: React.FC = () => {
                     )}
                     {!loading && !error && documents.length > 0 && (
                        <ul className="list-disc pl-4 space-y-1">
-                                {documents.map((doc: DocumentDTO, index: number) => (
-                                     <li key={index} className="text-gray-700">{doc.name || `Документ ${index + 1}`}</li>
-                                 ))}
+						{documents.map((doc: DocumentDTO) => (
+							<li key={doc.id} className="text-gray-700">
+								{doc.name || `Документ ${doc.id}`}
+							</li>
+						))}					   
                        </ul>
                     )}
                 </div>
