@@ -78,6 +78,23 @@ app.MapGet("/api/products/{id}/documents", async (AppDbContext db, int id) =>
     return Results.Ok(documentsDto);
 });
 
+app.MapGet("/api/products/{id}/devices", async (AppDbContext db, int id) =>
+{
+    var devicesDto = await db.Devices
+        .Where(d => d.ProductId == id)
+        .Select(d => new {
+            d.Id,
+            d.DeviceName,
+            d.ImageName
+        })
+        .ToListAsync();
+
+    if (devicesDto == null || devicesDto.Count == 0)
+        return Results.Ok(new List<object>());
+
+    return Results.Ok(devicesDto);
+});
+
 // Инициализация и заполнение базы данных при её создании
 using (var scopeScope = app.Services.CreateScope())
 {
