@@ -83,9 +83,9 @@ app.MapGet("/api/products/{id}/devices", async (AppDbContext db, int id) =>
     var devicesDto = await db.Devices
         .Where(d => d.ProductId == id)
         .Select(d => new {
-            d.Id,
-            d.DeviceName,
-            d.ImageName
+            id = d.Id,
+            name = d.DeviceName,
+            image = d.ImageName
         })
         .ToListAsync();
 

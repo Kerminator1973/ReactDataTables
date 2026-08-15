@@ -465,7 +465,17 @@ export const ProductInfo: React.FC = () => {
     const { id } = useParams<{ id: string }>();
 ```
 
-Совместными усилиями (человек + LLM) добавили кнопку возврата из описания продукта на страницу каталога, а также выделили Header и Footer в отдельные компоненты.
+Имя параметра `id` появляется из атрибута `path`. Ключевой пример:
+
+```js
+<Route path="/devices/:productId" element={<ProductDevices />} />
+<Route path="/info/:id" element={<ProductInfo />} />
+```
+
+На страницу "ProductDevices.tsx" будет отправлен параметр `productId`, а на страницу "ProductInfo.tsx" - параметр `id`.
+
+
+>Совместными усилиями (человек + LLM) добавили кнопку возврата из описания продукта на страницу каталога, а также выделили Header и Footer в отдельные компоненты.
 
 ## Добавление Backend
 
@@ -913,3 +923,48 @@ WHERE "d"."ProductId" = @id
 К тому же, новый код решает проблему с ошибкой рендеринга в React-приложении при отсутствии документов в базе данных.
 
 ## Добавление таблицы моделей устройств (Devices)
+
+Страница "ProductDevices.tsx" была сгенерировано Gemma 4.
+
+Временно, в компоненте "ProductCard.tsx" я заменил строку переход с info на devices:
+
+```js
+<Link to={`/devices/${product.id}`} className="block cursor-pointer">
+```
+
+После ручной правки Endpoints (в соответствии с REST API) функционал заработал. Однако реализация "ProductDevices.tsx" и "ProductInfo.tsx" имеют фундаментальные различия. Страница "ProductInfo.tsx" была сгенерирована первой и в ней активно используются Promises:
+
+```tsx
+fetch(`/api/products/${id}/documents`)
+  .then((res) => res.json())
+  .then((backendData: DocumentDTO[]) => {
+    setDocuments(backendData);
+  })
+  .catch((e) => {
+    setError("Не удалось загрузить документы: " + e.message);
+  })
+  .finally(() => setLoading(false));
+```
+
+В "ProductDevices.tsx" используется более современный синтаксис - async/await и исключения:
+
+```tsx
+const fetchDevices = async () => {
+  try {
+    // Simulate API call to get devices list by product ID
+    // Replace /api/devices/ endpoint with the actual backend endpoint
+    const apiUrl = `/api/products/${productId}/devices`;
+    const response = await fetch(apiUrl);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    const data: DeviceDTO[] = await response.json();
+    setDevices(data);
+  } catch (err) {
+    console.error(err);
+    setError("Failed to load devices. Please check the product ID and backend service.");
+  } finally {
+    setLoading(false);
+  }
+};
+```

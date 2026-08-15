@@ -11,6 +11,7 @@ interface DocumentDTO {
 export const ProductInfo: React.FC = () => {
     // Извлекаем параметр id из URL навигационной системы
     const { id } = useParams<{ id: string }>();
+    
     // Backend передаёт массив документов типа DocumentDTO
     const [documents, setDocuments] = useState<DocumentDTO[]>([]); 
     const [loading, setLoading] = useState(true);

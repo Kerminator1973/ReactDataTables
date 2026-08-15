@@ -15,7 +15,7 @@ interface ProductCardProps {
 // Note: Changed return type to allow JSX wrapping in a component that uses Link
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   return (
-    <Link to={`/info/${product.id}`} className="block cursor-pointer"> {/* Wrap body and add styling for click area */}
+    <Link to={`/devices/${product.id}`} className="block cursor-pointer"> {/* Wrap body and add styling for click area */}
       <div className="product-card">
         {/* Image container */}
         <div className="product-image">
