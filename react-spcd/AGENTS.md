@@ -13,6 +13,46 @@
 
 ---
 
+### 🔄 Asynchronous Code Standards
+
+**Async/Await Preference:** In the client-side TypeScript code, **async/await** should be the primary method for handling asynchronous operations. This approach provides:
+
+* More readable and maintainable code
+* Clearer error handling with try/catch blocks
+* Better stack traces for debugging
+* Consistent syntax across the codebase
+
+**Promises Usage:** While Promises are still valid in JavaScript/TypeScript, they should only be used in the following cases:
+
+* When integrating with legacy codebases
+* In very specific performance-critical scenarios
+* When chaining multiple asynchronous operations where `.then()` syntax is more appropriate
+
+**Code Examples:**
+
+```typescript
+// Recommended approach using async/await
+async function fetchData(): Promise<void> {
+  try {
+    const response = await fetch('api/data');
+    const data = await response.json();
+    // Process data
+  } catch (error) {
+    handleError(error);
+  }
+}
+
+// Avoid using Promise chains unless necessary
+function fetchData(): void {
+  fetch('api/data')
+    .then(response => response.json())
+    .then(data => processData(data))
+    .catch(error => handleError(error));
+}
+```
+
+---
+
 ### 🏢 Backend Architecture
 
 The backend is implemented in C# using **ASP.NET Core 10** with **Minimal API** pattern and **SQLite** database.
