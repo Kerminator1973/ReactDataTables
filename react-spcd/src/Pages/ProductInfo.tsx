@@ -39,10 +39,10 @@ export const ProductInfo: React.FC = () => {
 
             {/* Button/Link to Product Catalog */}
             <Link 
-                to="/" 
+                to={`/devices/${id}`}
                 className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm teks-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out mb-8"
             >
-                &larr; Вернуться в Каталог
+                &larr; Вернуться к устройствам
             </Link>
 
             {/* Product details and documents */}
