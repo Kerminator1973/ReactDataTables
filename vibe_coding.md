@@ -1047,5 +1047,3 @@ export type { AnnotatedPicture };
 ```
 
 Это действительно упростило код SPA-приложения.
-
-Осталось разобраться с разными id в DeviceCardProps: index, productid и id в device.

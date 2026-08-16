@@ -66,9 +66,8 @@ const ProductDevices = () => {
 
       <h2 className="text-2xl font-bold mb-6">Device Gallery for Product ID: {productId}</h2>
       <div className="grid grid-cols-4 gap-6">
-        {devices.map((device: AnnotatedPicture, index: number) => (
-          <DeviceCard key={device.id || index} 
-            index={index} productid={productIdAsNumber} device={device} />
+        {devices.map((device: AnnotatedPicture) => (
+          <DeviceCard key={device.id} productid={productIdAsNumber} device={device} />
         ))}
       </div>
     </div>

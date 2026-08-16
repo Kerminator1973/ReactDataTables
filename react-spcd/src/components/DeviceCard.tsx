@@ -2,16 +2,15 @@ import { Link } from 'react-router-dom';
 import type { AnnotatedPicture } from '../types/AnnotatedPicture';
 
 interface DeviceCardProps {
-    device: AnnotatedPicture;
-    index: number;      // Идентификатор конкретной модели в списке
-    productid: number;  // Идентификатор продукта
+    device: AnnotatedPicture;   // Идентификатор конкретной модели - device.id. Уникальный, из базы данных
+    productid: number;          // Идентификатор продукта
 }
 
-const DeviceCard = ({ device, index, productid }: DeviceCardProps) => {
+const DeviceCard = ({ device, productid }: DeviceCardProps) => {
     return (
         <Link to={`/info/${productid}`} className="block cursor-pointer">
             <div className="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col items-center text-center">
-                <p className="text-sm text-gray-600 mb-3">Device {index + 1}</p>
+                <p className="text-sm text-gray-600 mb-3">Device {device.id}</p>
                 <img 
                     src={`/api/files/${device.image}`}
                     alt={`${device.name} device image`} 
