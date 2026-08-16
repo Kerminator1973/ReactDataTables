@@ -67,8 +67,9 @@ const ProductDevices: React.FC = () => {
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Device Gallery for Product ID: {productId}</h2>
       <div className="grid grid-cols-4 gap-6">
-        {devices.map((device: any, index: number) => (
-          <DeviceCard key={device.id || index} device={device} index={index} productid={productIdAsNumber} />
+        {devices.map((device: DeviceDTO, index: number) => (
+          <DeviceCard key={device.id || index} 
+            index={index} productid={productIdAsNumber} name={device.name} image={device.image} />
         ))}
       </div>
     </div>

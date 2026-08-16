@@ -1,19 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-interface DeviceDTO {   // TODO: как-будто бы это лишний элемент и от него нужно ищбавиться
-    id: number;
+interface DeviceCardProps {
     name: string;
     image: string
-}
-
-interface DeviceCardProps {
-    device: DeviceDTO;
     index: number;      // Идентификатор конкретной модели в списке
     productid: number;  // Идентифкатор продукта
 }
 
-const DeviceCard: React.FC<DeviceCardProps> = ({ device, index, productid }) => {
+const DeviceCard: React.FC<DeviceCardProps> = ({ name, image, index, productid }) => {
     return (
         <Link to={`/info/${productid}`} className="block cursor-pointer"> {/* Wrap body and add styling for click area */}
             <div className="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col items-center text-center">
@@ -24,8 +19,8 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device, index, productid }) => 
                 The backend must serve these images statically or via a proxy endpoint.
                 */}
                 <img 
-                    src={`/api/files/${device.image}`} // Assuming an API endpoint for image serving
-                    alt={`${device.name} device image`} 
+                    src={`/api/files/${image}`} // Assuming an API endpoint for image serving
+                    alt={`${name} device image`} 
                     className="w-full h-auto object-contain max-h-64 mb-3 border border-gray-200 rounded" 
                     onError={(e) => {
                         // Fallback mechanism if image loading fails
@@ -35,7 +30,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device, index, productid }) => 
                     }}
                 />
                 <p className="text-sm font-medium truncate max-w-full">
-                    Name: {device.name || 'N/A'}
+                    Name: {name || 'N/A'}
                 </p>
             </div >
         </Link>
