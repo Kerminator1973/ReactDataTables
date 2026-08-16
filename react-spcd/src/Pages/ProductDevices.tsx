@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import DeviceCard from '../components/DeviceCard';
 import { useParams } from 'react-router-dom';
 
 interface DeviceDTO {
@@ -63,31 +64,9 @@ const ProductDevices: React.FC = () => {
   return (
     <div className="p-6">
       <h2 className="text-2xl font-bold mb-6">Device Gallery for Product ID: {productId}</h2>
-      
       <div className="grid grid-cols-4 gap-6">
         {devices.map((device: any, index: number) => (
-          <div key={device.id || index} className="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col items-center text-center">
-            <p className="text-sm text-gray-600 mb-3">Device {index + 1}</p>
-            {/* 
-              The backend requires ImageName to load the image. 
-              We assume the image names are directly accessible or need a specific path prefix. 
-              The backend must serve these images statically or via a proxy endpoint.
-            */}
-            <img 
-              src={`/api/files/${device.image}`} // Assuming an API endpoint for image serving
-              alt={`${device.name} device image`} 
-              className="w-full h-auto object-contain max-h-64 mb-3 border border-gray-200 rounded" 
-              onError={(e) => {
-                // Fallback mechanism if image loading fails
-                e.currentTarget.onerror = null; 
-                e.currentTarget.alt = "Image failed to load";
-                e.currentTarget.className = "w-full h-auto object-contain max-h-64 mb-3 border border-red-300 bg-red-50 flex items-center justify-center text-red-500 text-sm";
-              }}
-            />
-            <p className="text-sm font-medium truncate max-w-full">
-              Name: {device.name || 'N/A'}
-            </p>
-          </div>
+          <DeviceCard key={device.id || index} device={device} index={index} />
         ))}
       </div>
     </div>
