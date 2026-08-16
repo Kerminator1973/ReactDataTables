@@ -5,25 +5,20 @@ interface DeviceCardProps {
     name: string;
     image: string
     index: number;      // Идентификатор конкретной модели в списке
-    productid: number;  // Идентифкатор продукта
+    productid: number;  // Идентификатор продукта
 }
 
 const DeviceCard: React.FC<DeviceCardProps> = ({ name, image, index, productid }) => {
     return (
-        <Link to={`/info/${productid}`} className="block cursor-pointer"> {/* Wrap body and add styling for click area */}
+        <Link to={`/info/${productid}`} className="block cursor-pointer">
             <div className="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col items-center text-center">
                 <p className="text-sm text-gray-600 mb-3">Device {index + 1}</p>
-                {/* 
-                The backend requires ImageName to load the image. 
-                We assume the image names are directly accessible or need a specific path prefix. 
-                The backend must serve these images statically or via a proxy endpoint.
-                */}
                 <img 
-                    src={`/api/files/${image}`} // Assuming an API endpoint for image serving
+                    src={`/api/files/${image}`}
                     alt={`${name} device image`} 
                     className="w-full h-auto object-contain max-h-64 mb-3 border border-gray-200 rounded" 
                     onError={(e) => {
-                        // Fallback mechanism if image loading fails
+                        // Fallback-механизм на случай, если изображенгие не удаётся загрузить
                         e.currentTarget.onerror = null; 
                         e.currentTarget.alt = "Image failed to load";
                         e.currentTarget.className = "w-full h-auto object-contain max-h-64 mb-3 border border-red-300 bg-red-50 flex items-center justify-center text-red-500 text-sm";
