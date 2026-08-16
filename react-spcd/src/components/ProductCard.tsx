@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom'; // Import Link here
+import { Link } from 'react-router-dom';
 
 // Define TypeScript interface for product data
 interface Product {
