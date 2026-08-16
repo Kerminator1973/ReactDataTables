@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import DeviceCard from '../components/DeviceCard';
 import { useParams, Link } from 'react-router-dom';
-
-interface DeviceDTO {
-    id: number;
-    name: string;
-    image: string
-}
+import DeviceCard from '../components/DeviceCard';
+import type { DeviceDTO } from '../types/DeviceDTO';
 
 /**
  * Component to display a gallery of product devices.
@@ -28,8 +23,6 @@ const ProductDevices: React.FC = () => {
 
     const fetchDevices = async () => {
       try {
-        // Simulate API call to get devices list by product ID
-        // Replace /api/devices/ endpoint with the actual backend endpoint
         const apiUrl = `/api/products/${productId}/devices`;
         const response = await fetch(apiUrl);
         if (!response.ok) {
@@ -77,7 +70,7 @@ const ProductDevices: React.FC = () => {
       <div className="grid grid-cols-4 gap-6">
         {devices.map((device: DeviceDTO, index: number) => (
           <DeviceCard key={device.id || index} 
-            index={index} productid={productIdAsNumber} name={device.name} image={device.image} />
+            index={index} productid={productIdAsNumber} device={device} />
         ))}
       </div>
     </div>
