@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DeviceCard from '../components/DeviceCard';
 import type { AnnotatedPicture } from '../types/AnnotatedPicture';
@@ -8,7 +8,7 @@ import type { AnnotatedPicture } from '../types/AnnotatedPicture';
  * Fetches device list details using the provided product ID.
  * @param {object} props - Contains potential props if needed later.
  */
-const ProductDevices: React.FC = () => {
+const ProductDevices = () => {
   const { productId } = useParams<{ productId: string }>();
   const [devices, setDevices] = useState<AnnotatedPicture[]>([]);
   const [loading, setLoading] = useState<boolean>(true);

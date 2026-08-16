@@ -1,4 +1,3 @@
-import React from 'react';
 import ProductCard from '../components/ProductCard';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
@@ -13,7 +12,7 @@ const products: AnnotatedPicture[] = [
   { id: 6, name: 'Automatic Detector', image: './src/assets/AutomaticDetector.jpg' },
 ];
 
-const ProductCatalog: React.FC = () => {
+const ProductCatalog = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <PageHeader />

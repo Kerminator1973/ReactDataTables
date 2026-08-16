@@ -1033,3 +1033,19 @@ interface ProductCardProps {
 ```
 
 Т.е. Gemma 4 сгенерировала корректный код, который я сначала не понял и переписал.
+
+Я действительно заменил кучу DTO на один тип - AnnotatedPicture:
+
+```tsx
+interface AnnotatedPicture {
+    id: number;
+    name: string;
+    image: string
+}
+
+export type { AnnotatedPicture };
+```
+
+Это действительно упростило код SPA-приложения.
+
+Осталось разобраться с разными id в DeviceCardProps: index, productid и id в device.
