@@ -1,17 +1,12 @@
 import React from 'react';
 
-interface DeviceDTO {
-    id: number;
+interface DeviceCardProps {
+    index: number;
     name: string;
     image: string
 }
 
-interface DeviceCardProps {
-    device: DeviceDTO;
-    index: number;
-}
-
-const DeviceCard: React.FC<DeviceCardProps> = ({ device, index }) => {
+const DeviceCard: React.FC<DeviceCardProps> = ({ index, name, image }) => {
     return (
         <div className="bg-gray-50 p-4 rounded-lg shadow-md flex flex-col items-center text-center">
             <p className="text-sm text-gray-600 mb-3">Device {index + 1}</p>
@@ -21,8 +16,8 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device, index }) => {
               The backend must serve these images statically or via a proxy endpoint.
             */}
             <img 
-                src={`/api/files/${device.image}`} // Assuming an API endpoint for image serving
-                alt={`${device.name} device image`} 
+                src={`/api/files/${image}`} // Assuming an API endpoint for image serving
+                alt={`${name} device image`} 
                 className="w-full h-auto object-contain max-h-64 mb-3 border border-gray-200 rounded" 
                 onError={(e) => {
                     // Fallback mechanism if image loading fails
@@ -32,7 +27,7 @@ const DeviceCard: React.FC<DeviceCardProps> = ({ device, index }) => {
                 }}
             />
             <p className="text-sm font-medium truncate max-w-full">
-                Name: {device.name || 'N/A'}
+                Name: {name || 'N/A'}
             </p>
         </div >
     );
