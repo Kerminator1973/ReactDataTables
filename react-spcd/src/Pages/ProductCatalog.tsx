@@ -2,20 +2,15 @@ import React from 'react';
 import ProductCard from '../components/ProductCard';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
+import type { AnnotatedPicture } from '../types/AnnotatedPicture'
 
-interface Product {
-  id: string;
-  name: string;
-  imageSrc: string;
-}
-
-const products: Product[] = [
-  { id: '1', name: 'Viewing Detector', imageSrc: './src/assets/ViewingDetector.jpg' },
-  { id: '2', name: 'Vacuum Packer', imageSrc: './src/assets/VacuumPacker.jpg' },
-  { id: '3', name: 'Deposit Machine', imageSrc: './src/assets/DepositMachine.jpg' },
-  { id: '4', name: 'Counter Sorter', imageSrc: './src/assets/CounterSorter.jpg' },
-  { id: '5', name: 'Counter', imageSrc: './src/assets/Counter.jpg' },
-  { id: '6', name: 'Automatic Detector', imageSrc: './src/assets/AutomaticDetector.jpg' },
+const products: AnnotatedPicture[] = [
+  { id: 1, name: 'Viewing Detector', image: './src/assets/ViewingDetector.jpg' },
+  { id: 2, name: 'Vacuum Packer', image: './src/assets/VacuumPacker.jpg' },
+  { id: 3, name: 'Deposit Machine', image: './src/assets/DepositMachine.jpg' },
+  { id: 4, name: 'Counter Sorter', image: './src/assets/CounterSorter.jpg' },
+  { id: 5, name: 'Counter', image: './src/assets/Counter.jpg' },
+  { id: 6, name: 'Automatic Detector', image: './src/assets/AutomaticDetector.jpg' },
 ];
 
 const ProductCatalog: React.FC = () => {

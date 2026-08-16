@@ -1,9 +1,8 @@
 import { Link } from 'react-router-dom';
-import type { DeviceDTO } from '../types/DeviceDTO';
-
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
 
 interface DeviceCardProps {
-    device: DeviceDTO;
+    device: AnnotatedPicture;
     index: number;      // Идентификатор конкретной модели в списке
     productid: number;  // Идентификатор продукта
 }

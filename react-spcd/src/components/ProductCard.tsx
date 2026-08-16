@@ -1,11 +1,8 @@
 import { Link } from 'react-router-dom';
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
 
 interface ProductCardProps {
-    product: {
-        id: string;
-        name: string;
-        imageSrc: string;
-    };
+    product: AnnotatedPicture;
 }    
 
 const ProductCard = ({ product }: ProductCardProps) => {
@@ -14,7 +11,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
       <div className="product-card">
         <div className="product-image">
           <img 
-            src={product.imageSrc} 
+            src={product.image} 
             alt={`Image of ${product.name}`} 
             style={{ width: '100%', height: 'auto', objectFit: 'contain' }} 
           />

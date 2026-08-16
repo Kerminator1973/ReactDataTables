@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import DeviceCard from '../components/DeviceCard';
-import type { DeviceDTO } from '../types/DeviceDTO';
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
 
 /**
  * Component to display a gallery of product devices.
@@ -10,7 +10,7 @@ import type { DeviceDTO } from '../types/DeviceDTO';
  */
 const ProductDevices: React.FC = () => {
   const { productId } = useParams<{ productId: string }>();
-  const [devices, setDevices] = useState<DeviceDTO[]>([]);
+  const [devices, setDevices] = useState<AnnotatedPicture[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -28,7 +28,7 @@ const ProductDevices: React.FC = () => {
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        const data: DeviceDTO[] = await response.json();
+        const data: AnnotatedPicture[] = await response.json();
         setDevices(data);
       } catch (err) {
         console.error(err);
@@ -57,8 +57,6 @@ const ProductDevices: React.FC = () => {
 
   return (
     <div className="p-6">
-
-      {/* Button/Link to Product Catalog */}
       <Link 
           to="/"
           className="inline-flex items-center px-4 py-2 border border-transparent text-base font-medium rounded-md shadow-sm teks-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out mb-8"
@@ -68,7 +66,7 @@ const ProductDevices: React.FC = () => {
 
       <h2 className="text-2xl font-bold mb-6">Device Gallery for Product ID: {productId}</h2>
       <div className="grid grid-cols-4 gap-6">
-        {devices.map((device: DeviceDTO, index: number) => (
+        {devices.map((device: AnnotatedPicture, index: number) => (
           <DeviceCard key={device.id || index} 
             index={index} productid={productIdAsNumber} device={device} />
         ))}
