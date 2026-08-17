@@ -1,15 +1,26 @@
 import ProductCard from '../components/ProductCard';
 import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
-import type { AnnotatedPicture } from '../types/AnnotatedPicture'
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
+
+// Собираем все файлы из папки assets на этапе сборки
+const assetModules = import.meta.glob('../assets/*', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string>;
+
+// Ключи вида "../assets/ViewingDetector.jpg" приводим к имени файла
+const Assets: Record<string, string> = Object.fromEntries(
+  Object.entries(assetModules).map(([path, url]) => [path.split('/').pop()!, url])
+);
 
 const products: AnnotatedPicture[] = [
-  { id: 1, name: 'Viewing Detector', image: './src/assets/ViewingDetector.jpg' },
-  { id: 2, name: 'Vacuum Packer', image: './src/assets/VacuumPacker.jpg' },
-  { id: 3, name: 'Deposit Machine', image: './src/assets/DepositMachine.jpg' },
-  { id: 4, name: 'Counter Sorter', image: './src/assets/CounterSorter.jpg' },
-  { id: 5, name: 'Counter', image: './src/assets/Counter.jpg' },
-  { id: 6, name: 'Automatic Detector', image: './src/assets/AutomaticDetector.jpg' },
+  { id: 1, name: 'Viewing Detector', image: Assets['ViewingDetector.jpg'] },
+  { id: 2, name: 'Vacuum Packer', image: Assets['VacuumPacker.jpg'] },
+  { id: 3, name: 'Deposit Machine', image: Assets['DepositMachine.jpg'] },
+  { id: 4, name: 'Counter Sorter', image: Assets['CounterSorter.jpg'] },
+  { id: 5, name: 'Counter', image: Assets['Counter.jpg'] },
+  { id: 6, name: 'Automatic Detector', image: Assets['AutomaticDetector.jpg'] },
 ];
 
 const ProductCatalog = () => {

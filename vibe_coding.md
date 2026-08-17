@@ -1081,3 +1081,35 @@ PRAGMA journal_mode=DELETE;
 ```
 
 WAL даёт заметно лучшую производительность и устойчивость при конкурентном доступе, поэтому отключать его стоит только если это действительно нужно. Не стоит удалять db-wal и db-shm вручную — в WAL могут быть ещё не сброшенные изменения, и можно потерять данные.
+
+## Включение графических файлов в Bundle
+
+Gemma 4 с задачей на справилась, пришлось подключать DeepSeek V4 Pro.
+
+Проблема состоит в том, что для промышленного приложения может потребоваться включить в bundle несколько графических файлов. Чтобы bundler сделал это необходимо явным образом выполнить директиву **import**.
+
+Если мы хотим включить в bundle несколько файлов, то сделать это можно следующим кодом:
+
+```tsx
+// Собираем все файлы из папки assets на этапе сборки
+const assetModules = import.meta.glob('../assets/*', {
+  eager: true,
+  import: 'default',
+}) as Record<string, string>;
+
+// Ключи вида "../assets/ViewingDetector.jpg" приводим к имени файла
+const Assets: Record<string, string> = Object.fromEntries(
+  Object.entries(assetModules).map(([path, url]) => [path.split('/').pop()!, url])
+);
+
+const products: AnnotatedPicture[] = [
+  { id: 1, name: 'Viewing Detector', image: Assets['ViewingDetector.jpg'] },
+  { id: 2, name: 'Vacuum Packer', image: Assets['VacuumPacker.jpg'] },
+  { id: 3, name: 'Deposit Machine', image: Assets['DepositMachine.jpg'] },
+  { id: 4, name: 'Counter Sorter', image: Assets['CounterSorter.jpg'] },
+  { id: 5, name: 'Counter', image: Assets['Counter.jpg'] },
+  { id: 6, name: 'Automatic Detector', image: Assets['AutomaticDetector.jpg'] },
+];
+```
+
+TODO: проверить запуск приложения в production!
