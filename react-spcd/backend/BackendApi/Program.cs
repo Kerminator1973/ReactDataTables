@@ -29,6 +29,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection(); // Автоматически переводим протокол с http на https
 
+// Раздаём собранный React (файлы из wwwroot)
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 // Определяем Endpoint, по которому React-приложение сможет получить графический файл.
 // Фактически, файлы находятся в папке "assets", но получать картинку можно используя
 // путь /api/files. Пример верстки:
@@ -110,5 +114,8 @@ using (var scopeScope = app.Services.CreateScope())
         logger?.LogError(ex, "An error occurred while seeding the database.");
     }
 }
+
+// Добавляем fallback для React Router
+app.MapFallbackToFile("index.html");
 
 app.Run();

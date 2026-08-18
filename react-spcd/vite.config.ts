@@ -13,5 +13,9 @@ export default defineConfig({
         changeOrigin: true
       }
     }
+  },
+  build: {	// Компиляция приложения должна осуществляться в проект Backend-а
+    outDir: 'backend/BackendApi/wwwroot',
+    emptyOutDir: true
   }
 })
