@@ -51,7 +51,14 @@ app.MapGet("/api/files/{fileName}", async (string fileName, HttpContext httpCont
     {
         return Results.NotFound("Image file not found.");
     }
-    
+
+    var fileInfo = new FileInfo(imagePath);
+
+    // Устанавливаем HTTP-заголовки кеширования для обеспечения корректной работы как в Kestrel, так и в IIS
+    httpContext.Response.Headers["Cache-Control"] = "public, max-age=3600";
+    httpContext.Response.Headers["Expires"] = DateTime.UtcNow.AddHours(1).ToString("R");
+    httpContext.Response.Headers["Last-Modified"] = fileInfo.LastWriteTimeUtc.ToString("r");
+
     var fileExtension = Path.GetExtension(fileName).ToLower();
     var contentType = GetContentType(fileExtension);
 

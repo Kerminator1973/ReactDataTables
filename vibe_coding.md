@@ -1169,3 +1169,14 @@ server: {
 Также необходимо скопировать папку "assets" с изображениями приборов.
 
 Однако по каким-то причинам не работает кэширование, т.е. графические изображения скачиваются при каждом переходе на страницу с каталогом. При запуске приложения из-под Kestrel локально, работает кэширование как _disk cache_, так _memory cache_.
+
+По всей видимости, необходимо добавлять в MIME-заголовок параметры управления cache-м:
+
+```csharp
+var fileInfo = new FileInfo(imagePath);
+
+// Устанавливаем HTTP-заголовки кеширования для обеспечения корректной работы как в Kestrel, так и в IIS
+httpContext.Response.Headers["Cache-Control"] = "public, max-age=3600";
+httpContext.Response.Headers["Expires"] = DateTime.UtcNow.AddHours(1).ToString("R");
+httpContext.Response.Headers["Last-Modified"] = fileInfo.LastWriteTimeUtc.ToString("r");
+```
