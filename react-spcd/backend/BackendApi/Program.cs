@@ -1,13 +1,15 @@
-﻿using Microsoft.EntityFrameworkCore;
-using BackendApi.Data;
+﻿using BackendApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 
+// Поскольку данный проект является API, то у него нет по умолчанию папки wwwroot.
+// Однако папка wwwroot нужна для двух задач:
+// - в production в этой папке будет находится React-приложение
+// - на том же уровне, что и wwwroot расположена папка с картинками (assets)
 var options = new WebApplicationOptions
 {
     Args = args,
-    // Указываем, что wwwroot будет находится в подпапке "assets" проекта,
-    // относительно папки, в которой находится .csproj
-    WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "assets")
+    WebRootPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")
 };
 
 var builder = WebApplication.CreateBuilder(options);
@@ -39,8 +41,11 @@ app.UseStaticFiles();
 //      <img src="/api/files/04-bc63-7a6a714d188d.png" />
 app.MapGet("/api/files/{fileName}", async (string fileName, HttpContext httpContext) =>
 {
+    // Путь к изображению прибора находится на том же уровне, что и папка "wwwroot", а также
+    // файл проекта .csproj
     var webRootPath = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().WebRootPath;
-    var imagePath = Path.Combine(webRootPath, fileName);
+    string assetsPath = Path.GetFullPath(Path.Combine(webRootPath, "..", "assets"));
+    var imagePath = Path.Combine(assetsPath, fileName);
 
     if (!File.Exists(imagePath))
     {
