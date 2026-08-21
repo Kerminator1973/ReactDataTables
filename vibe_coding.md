@@ -1164,9 +1164,51 @@ server: {
 
 ## Публикация на сервере IIS
 
-Для публикации приложения на Microsoft IIS необходимо собрать React-приложение и скопировать вручную в папку wwwroot.
+Для публикации приложения на Microsoft IIS необходимо собрать React-приложение (`npm run build`) и скопировать вручную в папку wwwroot.
 
 Также необходимо скопировать папку "assets" с изображениями приборов.
+
+Вот как выглядит дерево проекта в части файлов в изображениями и React-приложения:
+
+```
+|   appsettings.json
+|   BackendApi.csproj
+|   product_documents.db
+|
++---assets
+|       00-b358-3a96bc431afe.png
+|       04-bc63-7a6a714d188d.png
+|       05-989b-a73c3537ceb9.png
+|       06-97e6-a00836ac414f.png
+|       07-87d0-f8e2d9363f55.png
+|       09-9e3c-55cd5c4a1660.png
+|       0c-bbe8-4d3d63e4e526.png
+|       18-9af7-82c72f032eed.png
+|       1a-a544-8007eec9e928.png
+|       1a-a66c-3c33de667f89.png
+|       1b-9f0a-e104f02d2234.png
+|       20-935a-8f0c33e48a00.png
+|       24-a72f-05c757d090b9.png
+|       24-bd3b-1a876546e63b.png
+|       25-9aba-20b2f813f562.png
+|
+\---wwwroot
+    |   favicon.svg
+    |   icons.svg
+    |   index.html
+    |
+    \---assets
+            AutomaticDetector-_PqZc06O.jpg
+            Counter-fW74R3ic.jpg
+            CounterSorter-DwQW2qli.jpg
+            DepositMachine-CwqBXdPO.jpg
+            index-BTPHtZ8x.js
+            index-C72wMkYy.css
+            VacuumPacker-e3I6qMt_.jpg
+            ViewingDetector-BD9bJ27I.jpg
+```
+
+>Для составления дерева файлов использовалась команда Microsoft Windows `tree . /F /A`
 
 Однако по каким-то причинам не работает кэширование, т.е. графические изображения скачиваются при каждом переходе на страницу с каталогом. При запуске приложения из-под Kestrel локально, работает кэширование как _disk cache_, так _memory cache_.
 
