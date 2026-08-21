@@ -39,31 +39,21 @@ app.UseStaticFiles();
 // Фактически, файлы находятся в папке "assets", но получать картинку можно используя
 // путь /api/files. Пример верстки:
 //      <img src="/api/files/04-bc63-7a6a714d188d.png" />
-app.MapGet("/api/files/{fileName}", async (string fileName, HttpContext httpContext) =>
+app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext) =>
 {
-    // Путь к изображению прибора находится на том же уровне, что и папка "wwwroot", а также
-    // файл проекта .csproj
-    var webRootPath = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>().WebRootPath;
-    string assetsPath = Path.GetFullPath(Path.Combine(webRootPath, "..", "assets"));
+    var environment = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+    var assetsPath = Path.GetFullPath(Path.Combine(environment.WebRootPath, "..", "assets"));
     var imagePath = Path.Combine(assetsPath, fileName);
 
     if (!File.Exists(imagePath))
-    {
-        return Results.NotFound("Image file not found.");
-    }
+        return Results.NotFound();
 
-    var fileInfo = new FileInfo(imagePath);
+    var contentType = GetContentType(Path.GetExtension(fileName));
 
-    // Устанавливаем HTTP-заголовки кеширования для обеспечения корректной работы как в Kestrel, так и в IIS
-    httpContext.Response.Headers["Cache-Control"] = "public, max-age=3600";
-    httpContext.Response.Headers["Expires"] = DateTime.UtcNow.AddHours(1).ToString("R");
-    httpContext.Response.Headers["Last-Modified"] = fileInfo.LastWriteTimeUtc.ToString("r");
-
-    var fileExtension = Path.GetExtension(fileName).ToLower();
-    var contentType = GetContentType(fileExtension);
+    httpContext.Response.Headers.CacheControl = "public, max-age=3600, immutable";
 
     // Используем FileStreamResult для потоковой передачи файла
-    return Results.File(imagePath, contentType, Path.GetExtension(imagePath));
+    return Results.File(imagePath, contentType);
 });
 
 static string GetContentType(string extension)

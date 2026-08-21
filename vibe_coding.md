@@ -1212,13 +1212,23 @@ server: {
 
 Однако по каким-то причинам не работает кэширование, т.е. графические изображения скачиваются при каждом переходе на страницу с каталогом. При запуске приложения из-под Kestrel локально, работает кэширование как _disk cache_, так _memory cache_.
 
-По всей видимости, необходимо добавлять в MIME-заголовок параметры управления cache-м:
+Решение проблемы: необходимо добавлять в MIME-заголовок параметры управления cache-м:
 
 ```csharp
-var fileInfo = new FileInfo(imagePath);
+app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext) =>
+{
+    var environment = httpContext.RequestServices.GetRequiredService<IWebHostEnvironment>();
+    var assetsPath = Path.GetFullPath(Path.Combine(environment.WebRootPath, "..", "assets"));
+    var imagePath = Path.Combine(assetsPath, fileName);
 
-// Устанавливаем HTTP-заголовки кеширования для обеспечения корректной работы как в Kestrel, так и в IIS
-httpContext.Response.Headers["Cache-Control"] = "public, max-age=3600";
-httpContext.Response.Headers["Expires"] = DateTime.UtcNow.AddHours(1).ToString("R");
-httpContext.Response.Headers["Last-Modified"] = fileInfo.LastWriteTimeUtc.ToString("r");
+    if (!File.Exists(imagePath))
+        return Results.NotFound();
+
+    var contentType = GetContentType(Path.GetExtension(fileName));
+
+    httpContext.Response.Headers.CacheControl = "public, max-age=3600, immutable";
+
+    // Используем FileStreamResult для потоковой передачи файла
+    return Results.File(imagePath, contentType);
+});
 ```
