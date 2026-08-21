@@ -4,12 +4,13 @@ import PageFooter from '../components/PageFooter';
 import type { AnnotatedPicture } from '../types/AnnotatedPicture';
 
 // Собираем все файлы из папки assets на этапе сборки
+// Собираем все файлы из папки assets в виде base64 Data URL (inline) на этапе сборки
 const assetModules = import.meta.glob('../assets/*', {
   eager: true,
   import: 'default',
+  query: '?inline',
 }) as Record<string, string>;
 
-// Ключи вида "../assets/ViewingDetector.jpg" приводим к имени файла
 const Assets: Record<string, string> = Object.fromEntries(
   Object.entries(assetModules).map(([path, url]) => [path.split('/').pop()!, url])
 );
