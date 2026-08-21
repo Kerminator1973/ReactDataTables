@@ -1251,7 +1251,7 @@ const Assets: Record<string, string> = Object.fromEntries(
 
 ### Загружать файлы не через API, в через обычный URI-запрос
 
-Для этого нужно подключиться физическую папку "assets" по пути "/api/files" в файле "Program.cs":
+Для этого нужно подключить физическую папку "assets" по пути "/api/files" в файле "Program.cs":
 
 ```csharp
 using Microsoft.Extensions.FileProviders;
