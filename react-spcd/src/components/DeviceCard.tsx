@@ -14,6 +14,8 @@ const DeviceCard = ({ device, productid }: DeviceCardProps) => {
                 <img 
                     src={`/api/files/${device.image}`}
                     alt={`${device.name} device image`} 
+                    loading="lazy" 
+                    decoding="async" 
                     className="w-full h-auto object-contain max-h-64 mb-3 border border-gray-200 rounded" 
                     onError={(e) => {
                         // Fallback-механизм на случай, если изображение не удаётся загрузить

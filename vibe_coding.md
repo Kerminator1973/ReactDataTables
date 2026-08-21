@@ -1248,3 +1248,42 @@ const Assets: Record<string, string> = Object.fromEntries(
 ```
 
 Однако включение в Bundle означает, что эти изображения будут передаваться внутри Bundle (JavaScript-код) **в кодировке base64**, что увеличит размер Bundle. Т.е. это скорее исключение, чем правило.
+
+### Загружать файлы не через API, в через обычный URI-запрос
+
+Для этого нужно подключиться физическую папку "assets" по пути "/api/files" в файле "Program.cs":
+
+```csharp
+using Microsoft.Extensions.FileProviders;
+using Microsoft.Net.Http.Headers;
+
+// 
+var assetsPath = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, "assets"));
+if (Directory.Exists(assetsPath))
+{
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        FileProvider = new PhysicalFileProvider(assetsPath),
+        RequestPath = "/api/files",
+        OnPrepareResponse = ctx =>
+        {
+            // Устанавливаем кэширование на длительный срок (или 1 час / 1 день)
+            ctx.Context.Response.Headers[HeaderNames.CacheControl] = "public,max-age=86400,immutable";
+        }
+    });
+}
+```
+
+Преимущества подхода:
+
+- Автоматически формируются заголовки ETag и Last-Modified
+- Поддерживаются статусы 304 Not Modified, HTTP Range запросы
+- Удаляется весь ручной код чтения файлов из MapGet("/api/files/...")
+
+Также были добавлены дополнительные атрибуты для оптимизации загрузки галереи, чтобы не перегружать сеть при первом рендере:
+
+```tsx
+<img 
+    loading="lazy" 
+    decoding="async"
+```
