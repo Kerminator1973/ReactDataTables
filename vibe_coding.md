@@ -1287,3 +1287,38 @@ if (Directory.Exists(assetsPath))
     loading="lazy" 
     decoding="async"
 ```
+
+### Файлы с картинками всё ещё не кэшируются
+
+Обязательное условие кэширования графический файлов является отправка сервером браузеру хэша в поле "ETAG", а также использование директивы управления cache-м:
+
+```csharp
+app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext, IWebHostEnvironment environment) =>
+{
+    var assetsPath = Path.GetFullPath(Path.Combine(environment.ContentRootPath, "assets"));
+    var imagePath = Path.Combine(assetsPath, fileName);
+
+    if (!File.Exists(imagePath))
+        return Results.NotFound();
+
+    //httpContext.Response.Headers.CacheControl = "public, max-age=0, must-revalidate";
+    httpContext.Response.Headers.CacheControl = "no-cache";
+
+    var fileInfo = new FileInfo(imagePath);
+    var contentType = GetContentType(fileInfo.Extension);
+    var lastModified = fileInfo.LastWriteTimeUtc;
+    var etag = new Microsoft.Net.Http.Headers.EntityTagHeaderValue($"\"{fileInfo.Length}-{lastModified.Ticks}\"");
+
+    return Results.File(
+        imagePath,
+        contentType: contentType,
+        lastModified: lastModified,
+        entityTag: etag,
+        enableRangeProcessing: true
+    );
+});
+```
+
+**no-cache** не означает "не кэшировать", а означает "кэшировать, но перед использованием обязательно проверить у сервера через **If-None-Match**".
+
+Через Developer Console я вижу, что Backend возвращает "ETAG" и "cache-control", но браузер не отправляет на сервер "If-None-Match".
