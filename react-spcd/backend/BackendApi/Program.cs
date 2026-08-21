@@ -39,13 +39,16 @@ app.UseStaticFiles();
 // Фактически, файлы находятся в папке "assets", но получать картинку можно используя
 // путь /api/files. Пример верстки:
 //      <img src="/api/files/04-bc63-7a6a714d188d.png" />
-app.MapGet("/api/files/{fileName}", (string fileName, IWebHostEnvironment environment) =>
+app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext, IWebHostEnvironment environment) =>
 {
     var assetsPath = Path.GetFullPath(Path.Combine(environment.ContentRootPath, "assets"));
     var imagePath = Path.Combine(assetsPath, fileName);
 
     if (!File.Exists(imagePath))
         return Results.NotFound();
+
+    //httpContext.Response.Headers.CacheControl = "public, max-age=0, must-revalidate";
+    httpContext.Response.Headers.CacheControl = "no-cache";
 
     var fileInfo = new FileInfo(imagePath);
     var contentType = GetContentType(fileInfo.Extension);
