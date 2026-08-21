@@ -3,7 +3,6 @@ import PageHeader from '../components/PageHeader';
 import PageFooter from '../components/PageFooter';
 import type { AnnotatedPicture } from '../types/AnnotatedPicture';
 
-// Собираем все файлы из папки assets на этапе сборки
 // Собираем все файлы из папки assets в виде base64 Data URL (inline) на этапе сборки
 const assetModules = import.meta.glob('../assets/*', {
   eager: true,

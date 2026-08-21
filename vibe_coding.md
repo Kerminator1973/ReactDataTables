@@ -1232,3 +1232,19 @@ app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext) =
     return Results.File(imagePath, contentType);
 });
 ```
+
+Для реального включения 6 картинок типов устройсв в Bundle потребовалось изменить 
+
+```tsx
+const assetModules = import.meta.glob('../assets/*', {
+  eager: true,
+  import: 'default',
+  query: '?inline',
+}) as Record<string, string>;
+
+const Assets: Record<string, string> = Object.fromEntries(
+  Object.entries(assetModules).map(([path, url]) => [path.split('/').pop()!, url])
+);
+```
+
+Однако включение в Bundle означает, что эти изображения будут передаваться внутри Bundle (JavaScript-код) **в кодировке base64**, что увеличит размер Bundle. Т.е. это скорее исключение, чем правило.
