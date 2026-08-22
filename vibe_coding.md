@@ -1325,6 +1325,32 @@ app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext, I
 
 Через Developer Console я вижу, что Backend возвращает "ETAG" и "cache-control", но браузер не отправляет на сервер "If-None-Match".
 
+### DeepSeek V4 Pro - рекомендации LLM по проблеме
+
+Обратите внимание на то, нет ли в ответе IIS двух заголовков Cache-Control, а также на Pragma, Expires и Vary. Если IIS добавляет второй Cache-Control: no-store, браузер вообще не сохраняет ответ в кэш и поэтому не отправляет If-None-Match. Если добавляется Vary: *, браузер тоже не кэширует ответ.
+
+Проверьте в IIS Manager: выберите сайт, откройте раздел HTTP Response Headers и посмотрите, нет ли там настроенных Cache-Control, Pragma или Expires. Также откройте "Set Common Headers..." и убедитесь, что параметр "Expire Web content" не установлен в значение "Immediately", иначе IIS сам добавит запрещающие кэш заголовки.
+
+Унаследованные от IIS заголовки можно убрать и через web.config:
+
+```xml
+<configuration>
+  <system.webServer>
+    <httpProtocol>
+      <customHeaders>
+        <remove name="Cache-Control" />
+        <remove name="Pragma" />
+        <remove name="Expires" />
+      </customHeaders>
+    </httpProtocol>
+  </system.webServer>
+</configuration>
+```
+
+После этого IIS перестанет добавлять свои заголовки, и в ответе останутся только Cache-Control и ETag, которые формирует ваше приложение.
+
+И ещё один важный нюанс: если ответ содержит Cache-Control: public, max-age=... и браузер берёт изображение из memory cache или disk cache, запроса с If-None-Match вообще не будет — это нормальная работа кэша, а не ошибка. If-None-Match появляется только при ревалидации: когда указан Cache-Control: no-cache, max-age=0, must-revalidate или когда срок max-age уже истёк.
+
 ### Запуск сервера на ARM-машине с Linux
 
 Установить .NET 10 SDK на машину с Armbian можно используя инструкцию для [Banana Pi BPI-M64](https://github.com/Kerminator1973/RPIDev/blob/main/bananapi_m64.md).
@@ -1359,4 +1385,4 @@ builder.WebHost.ConfigureKestrel(options =>
 
 Система работает корректно, при повторном запросе ресурса, сервер возвращает Http Status Code 304 и браузер использует ранее загруженный ресурс. Работа с сайтом комфортная.
 
-По всей видимости, проблемы с кэшированием, с которыми я столкнулся в корпоративной сети, скорее всего связаны либо c настройками IIS, либо с корпоративным прокси. Найти виновника будет не сложно, т.к. на работе у меня тоже есть одноплатный компьютер с Ambian и .NET Core 10.
+По всей видимости, проблемы с кэшированием, с которыми я столкнулся в корпоративной сети, скорее всего связаны либо c настройками IIS, либо с корпоративным прокси. Найти виновника будет не сложно, т.к. на работе у меня тоже есть одноплатный компьютер с Ambian и .NET Core 10. В запросе браузера указываются поля: `If-None-Match`, `If-Modified-Since`.
