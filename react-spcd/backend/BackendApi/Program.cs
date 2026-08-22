@@ -31,13 +31,18 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection(); // Автоматически переводим протокол с http на https
 
-// Раздаём собранный React (файлы из wwwroot)
-app.UseDefaultFiles();
+app.UseDefaultFiles();  // Раздаём React-приложение как статические файлы из папки wwwroot
 app.UseStaticFiles();
 
 // Определяем Endpoint, по которому React-приложение сможет получить графический файл.
 // Фактически, файлы находятся в папке "assets", но получать картинку можно используя
-// путь /api/files. Пример верстки:
+// путь /api/files.
+//
+// Причина, по которой не применяется загрузка файлов из публичной папки wwwroot,
+// состоит в том, что доступ к отдельным документам (картинки - это только первый шаг)
+// должен осуществляться с учётом прав пользователя
+//
+// Пример верстки:
 //      <img src="/api/files/04-bc63-7a6a714d188d.png" />
 app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext, IWebHostEnvironment environment) =>
 {
@@ -47,13 +52,18 @@ app.MapGet("/api/files/{fileName}", (string fileName, HttpContext httpContext, I
     if (!File.Exists(imagePath))
         return Results.NotFound();
 
-    //httpContext.Response.Headers.CacheControl = "public, max-age=0, must-revalidate";
-    httpContext.Response.Headers.CacheControl = "no-cache";
-
     var fileInfo = new FileInfo(imagePath);
     var contentType = GetContentType(fileInfo.Extension);
     var lastModified = fileInfo.LastWriteTimeUtc;
+
+    // ETAG необходимо передать браузеру, чтобы при повторной попытке он прислал заголовок "If-None-Match",
+    // используя который сервер может принять решение о том, что картинка не нуждается в загрузке и
+    // ответить кодом "304 Not Modified"
     var etag = new Microsoft.Net.Http.Headers.EntityTagHeaderValue($"\"{fileInfo.Length}-{lastModified.Ticks}\"");
+
+    // "no-cache" означает "кэшировать, но перед использованием обязательно проверить у сервера
+    // через If-None-Match".
+    httpContext.Response.Headers.CacheControl = "no-cache"; // Либо: "public, max-age=0, must-revalidate";
 
     return Results.File(
         imagePath,
