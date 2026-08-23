@@ -1396,3 +1396,114 @@ builder.WebHost.ConfigureKestrel(options =>
 Для анализа VirtualDOM от React используется plug-in **React Developer Tools** для Google Chrome. Plug-in добавляет два Tab-а в "Developer Console F12": Components и Profile. Закладки появляются только тогда, когда в текущем окне браузер работает React-приложение.
 
 Выполнять отладку приложения можно используя встроенный отладчик Google Chrome. Работать можно как с оригинальными tsx-файлами, так и с транспилированными.
+
+## Разработка тестов для React-компонентов
+
+Для разработки модульных тестов Gemma 4 предложила использовать vitest. Установить компоненты можно командой:
+
+```shell
+npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
+```
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, it, expect } from 'vitest';
+import ProductCard from './ProductCard';
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
+
+describe('ProductCard', () => {
+  const mockProduct: AnnotatedPicture = {
+    id: 1,
+    name: 'Тестовый прибор',
+    image: '/test-image.jpg',
+  };
+
+  it('рендерит карточку с корректным названием и изображением', () => {
+    render(
+      <MemoryRouter>
+        <ProductCard product={mockProduct} />
+      </MemoryRouter>
+    );
+
+    const titleElement = screen.getByRole('heading', { name: mockProduct.name, level: 3 });
+    expect(titleElement).toBeInTheDocument();
+
+    const imageElement = screen.getByRole('img', { name: `Image of ${mockProduct.name}` });
+    expect(imageElement).toBeInTheDocument();
+    expect(imageElement).toHaveAttribute('src', mockProduct.image);
+  });
+
+  it('содержит корректную ссылку перехода на страницу устройств', () => {
+    render(
+      <MemoryRouter>
+        <ProductCard product={mockProduct} />
+      </MemoryRouter>
+    );
+
+    const linkElement = screen.getByRole('link');
+    expect(linkElement).toBeInTheDocument();
+    expect(linkElement).toHaveAttribute('href', `/devices/${mockProduct.id}`);
+  });
+});
+```
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+import { describe, it, expect, vi } from 'vitest';
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
+
+
+// --- Mock react-router-dom, чтобы не тянуть весь роутер ---
+vi.mock('react-router-dom', () => ({
+  Link: ({ to, children, className }: { to: string; children: React.ReactNode; className?: string }) => (
+    <a href={to} className={className}>{children}</a>
+  ),
+}));
+
+// Импортируем компонент ПОСЛЕ mock'ов
+import ProductCard from './ProductCard';
+
+const mockProduct: AnnotatedPicture = {
+  id: 42,
+  name: 'Тестовое устройство',
+  image: 'https://example.com/image.png',
+};
+
+describe('ProductCard', () => {
+  it('рендерит имя продукта', () => {
+    render(<ProductCard product={mockProduct} />);
+
+    expect(screen.getByText('Тестовое устройство')).toBeInTheDocument();
+  });
+
+  it('рендерит изображение с корректным src и alt', () => {
+    render(<ProductCard product={mockProduct} />);
+
+    const img = screen.getByRole('img') as HTMLImageElement;
+    expect(img).toHaveAttribute('src', mockProduct.image);
+    expect(img).toHaveAttribute('alt', 'Image of Тестовое устройство');
+  });
+
+  it('оборачивает содержимое в ссылку с корректным маршрутом', () => {
+    render(<ProductCard product={mockProduct} />);
+
+    const link = screen.getByRole('link');
+    expect(link).toHaveAttribute('href', '/devices/42');
+  });
+
+  it('передаёт className для ссылки', () => {
+    render(<ProductCard product={mockProduct} />);
+
+    const link = screen.getByRole('link');
+    expect(link.className).toContain('block');
+    expect(link.className).toContain('cursor-pointer');
+  });
+
+  it('соответствует snapshot', () => {
+    const { container } = render(<ProductCard product={mockProduct} />);
+    expect(container.firstChild).toMatchSnapshot();
+  });
+});
+```
