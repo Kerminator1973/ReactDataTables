@@ -8,8 +8,23 @@
     Note that TypeScript compilation (`tsc -b`) must complete before Vite bundling can occur.
   - **Linting:** Linting is executed with `npm run lint` (using `oxlint`).
 
-- **Shell:** When running commands on Windows, always use **Command Prompt (cmd.exe)**, not PowerShell.  
+- **Shell:** Always use Microsoft Windows **Command Prompt (cmd.exe)**, not PowerShell.  
   This ensures consistent behaviour with the project's script runners and avoids compatibility issues with PowerShell‑specific syntax or execution policies.
+
+### Windows Command Line Usage Features
+
+**Usage Recommendations:**
+
+* When navigating through directories, use `cd` instead of `ls`
+* Always specify the full path or be in the required directory when executing scripts
+* When working with npm/dotnet, use single quotes for parameters
+
+**Additional Notes:**
+* Be mindful of case sensitivity in commands (though Windows is generally case-insensitive)
+* Use forward slashes (`/`) or backslashes (`\\`) consistently in paths
+* Avoid spaces in directory/file names to prevent path issues
+* Use quotes around paths containing spaces
+* Verify that all necessary permissions are granted before running commands
 
 ---
 
@@ -40,14 +55,6 @@ async function fetchData(): Promise<void> {
   } catch (error) {
     handleError(error);
   }
-}
-
-// Avoid using Promise chains unless necessary
-function fetchData(): void {
-  fetch('api/data')
-    .then(response => response.json())
-    .then(data => processData(data))
-    .catch(error => handleError(error));
 }
 ```
 
@@ -96,22 +103,6 @@ dotnet run
 - **SQLite Usage:** The backend uses SQLite for local development
 - **Migrations:** Database schema is managed via code-first approach
 - **Connection String:** Configured in `appsettings.json`
-
----
-
-### 🔗 API Documentation
-
-- **Endpoint Documentation:** Refer to `backend/Endpoints.md` for detailed API descriptions
-- **Versioning:** API follows semantic versioning conventions
-- **Error Handling:** Standardized error responses with HTTP status codes
-
----
-
-### 🛠️ Testing Backend
-
-- **Unit Tests:** Located in `backend/Tests` directory
-- **Test Coverage:** Use `dotnet test` to run tests
-- **Environment:** Ensure `appsettings.Test.json` is configured for testing
 
 ---
 
