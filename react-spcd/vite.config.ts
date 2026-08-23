@@ -17,5 +17,8 @@ export default defineConfig({
   build: {	// Компиляция приложения должна осуществляться в проект Backend-а
     outDir: 'backend/BackendApi/wwwroot',
     emptyOutDir: true
+  },
+  test: {
+    environment: 'jsdom'	// DOM-окружение для будущего рендера компонентов
   }
 })

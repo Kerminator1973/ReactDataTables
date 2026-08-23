@@ -1402,8 +1402,88 @@ builder.WebHost.ConfigureKestrel(options =>
 Для разработки модульных тестов Gemma 4 предложила использовать vitest. Установить компоненты можно командой:
 
 ```shell
-npm install -D vitest @testing-library/react @testing-library/jest-dom @testing-library/user-event jsdom
+npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
 ```
+
+Затем следует добавить в "package.json" команды тестирования:
+
+```json
+"scripts": {
+  "dev": "vite",
+  "build": "tsc -b && vite build",
+  "lint": "oxlint",
+  "preview": "vite preview",
+  "test": "vitest run",
+  "test:watch": "vitest"
+}
+```
+
+В "vite.config.ts" — необходимо добавить секцию test:
+
+```json
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+// https://vite.dev/config/
+export default defineConfig({
+  plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://localhost:7248',	// В настройках запуска проекта .NET 10, см. "App URL"
+        secure: false,
+        changeOrigin: true
+      }
+    }
+  },
+  build: {	// Компиляция приложения должна осуществляться в проект Backend-а
+    outDir: 'backend/BackendApi/wwwroot',
+    emptyOutDir: true
+  },
+  test: {
+    environment: 'jsdom'	// DOM-окружение для будущего рендера компонентов
+  }
+})
+```
+
+Заглушка с тестами "ProductCard.test.tsx":
+
+```tsx
+import { describe, it } from 'vitest';
+
+describe('ProductCard', () => {
+  it('заглушка', () => {
+    // Пустой тест: тело отсутствует, поэтому он всегда проходит успешно
+  });
+});
+```
+
+Первый реальный тест:
+
+```tsx
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import { describe, expect, it } from 'vitest';
+import ProductCard from './ProductCard';
+import type { AnnotatedPicture } from '../types/AnnotatedPicture';
+
+describe('ProductCard', () => {
+  it('отображает название товара', () => {
+    const product = { id: 1, name: 'Тестовый товар', image: '/img.png' } as AnnotatedPicture;
+
+    render(
+      <MemoryRouter>
+        <ProductCard product={product} />
+      </MemoryRouter>
+    );
+
+    expect(screen.getByText('Тестовый товар')).toBeTruthy();
+  });
+});
+```
+
+Альтернативные тесты:
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -1507,3 +1587,13 @@ describe('ProductCard', () => {
   });
 });
 ```
+
+Однако даже пустой тест у меня не запустился из-за какой-то проблемы с конфигурацией:
+
+```
+FAIL  src/components/ProductCard.test.tsx [ src/components/ProductCard.test.tsx ]
+TypeError: Cannot read properties of undefined (reading 'config')
+❯ src/components/ProductCard.test.tsx:3:1
+```
+
+Решить проблему ни мне, ни разным языковым моделям не удалось.
