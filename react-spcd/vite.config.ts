@@ -20,6 +20,7 @@ export default defineConfig({
     emptyOutDir: true
   },
   test: {
-    environment: 'jsdom'	// DOM-окружение для будущего рендера компонентов
+    environment: 'jsdom',	// DOM-окружение для будущего рендера компонентов
+    setupFiles: ['src/test/setup.ts']
   }
 })
