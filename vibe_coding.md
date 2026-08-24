@@ -1459,7 +1459,7 @@ describe('ProductCard', () => {
 });
 ```
 
-Первый реальный тест:
+Первый реальный тест, который проверяет, что на сформированном DOM будет находится текст "Тестовый товар":
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -1483,7 +1483,43 @@ describe('ProductCard', () => {
 });
 ```
 
-Альтернативные тесты:
+Первоначально этот тест у меня не запустился из-за проблемы с конфигурацией:
+
+```shell
+FAIL  src/components/ProductCard.test.tsx [ src/components/ProductCard.test.tsx ]
+TypeError: Cannot read properties of undefined (reading 'config')
+❯ src/components/ProductCard.test.tsx:3:1
+```
+
+В обсуждении Vitest на GitHub есть два топика:
+
+- Проблема встречается в Windows и [не воспроизводится на WSL2(https://github.com/vitest-dev/vitest/issues/10812). Рекомендация для Windows - использовать стабильный Vite 4.1.6 не помогает для Command Prompt
+- Описывает причину [ошибки в реализации Vitest в Windows](https://github.com/vitest-dev/vitest/issues/10692). Тесты не проходят из-за ошибки преобразования подкаталога с которым должен работать Excecutor тестов.
+
+Если запустить PowerShell в режиме администратора и выполнить следующую команду:
+
+```shell
+Set-ExecutionPolicy Bypass -Scope Process
+```
+
+То тесты успешно запустятся:
+
+```shell
+ RUN  v4.1.11 D:/Sources/ReactDataTables/react-spcd
+
+ ✓ src/components/ProductCard.test.tsx (1 test) 32ms
+   ✓ ProductCard (1)
+     ✓ отображает название товара 31ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  21:44:41
+   Duration  1.45s (transform 31ms, setup 0ms, import 232ms, tests 32ms, environment 1.02s)
+```
+
+Важно знать, что команда `Set-ExecutionPolicy Bypass -Scope Process` разрешает запуск скриптов только в текущем процессе. Как только окно терминала будет закрыто, запуск скриптов будет запрещён.
+
+### Альтернативные тесты:
 
 ```tsx
 import { render, screen } from '@testing-library/react';
@@ -1588,55 +1624,6 @@ describe('ProductCard', () => {
 });
 ```
 
-Однако даже пустой тест у меня не запустился из-за какой-то проблемы с конфигурацией:
-
-```
-FAIL  src/components/ProductCard.test.tsx [ src/components/ProductCard.test.tsx ]
-TypeError: Cannot read properties of undefined (reading 'config')
-❯ src/components/ProductCard.test.tsx:3:1
-```
-
-Решить проблему ни мне, ни разным языковым моделям не удалось.
-
-На GitHub есть обсуждение [проблемы](https://github.com/vitest-dev/vitest/issues/10812), в котором указывается, что проблема встречается в Windows и не воспроизводится на WSL2. Рекомендация для Windows - использовать стабильный Vite 4.1.6.
-
-Я попробовал, но это всё равно не работает:
-
-```shell
-RUN  v4.1.6 d:/Sources/ReactDataTables/react-spcd
-```
-
-Ещё одна ссылка [на туже тему](https://github.com/vitest-dev/vitest/issues/10692). И именно эта ссылка описывает причину ошибки в реализации Vitest в Windows. Тесты не проходят из-за ошибки преобразования подкаталога с которым должен работать Excecutor тестов. Если запустить PowerShell в режиме администратора и выполнить следующую команду:
-
-```shell
-Set-ExecutionPolicy Bypass -Scope Process
-```
-
-То тесты успешно запустятся:
-
-```shell
- RUN  v4.1.6 D:/Sources/ReactDataTables/react-spcd
-
- ✓ src/components/ProductCard.test.tsx (1 test) 2ms
-   ✓ ProductCard (1)
-     ✓ заглушка 1ms
-
- Test Files  1 passed (1)
-      Tests  1 passed (1)
-   Start at  22:37:59
-   Duration  969ms (transform 16ms, setup 0ms, import 32ms, tests 2ms, environment 800ms)
-```
-
-Важно знать, что команда `Set-ExecutionPolicy Bypass -Scope Process` разрешает запуск скриптов только в текущем процессе. Как только окно терминала будет закрыто, запуск скриптов будет запрещён.
-
-### Какие ещё был идеи (светлые)
-
-Идея состояла в том, чтобы создать проект с минимальными зависимостями, в надежде, что проблема с `TypeError: Cannot read properties of undefined (reading 'config')` будет решена автоматически.
-
-В генерации проекта участвовалв Gemma 4 и решить задачу не удалось. Всё равно возникла проблема с доступом к config.
-
-Также была выполнена проверка запуска максимально простого теста, который не работал с DOM.
-
 ### Выводы по результатам добавления модульных тестов
 
 По результатам попытки добавить модульные тесты для React-приложения можно говорить о том, что:
@@ -1645,5 +1632,3 @@ Set-ExecutionPolicy Bypass -Scope Process
 - Кажется вполне возможным разрабатывать модульные тексты для React-приложений постредством Vitest
 
 Также важный вывод: нелинейные задачи, такие как подбор версий конфигурации библиотек даются LLM очень тяжело. LLM опаздывают на полгода/год и это может быть критичным для запуска решения.
-
-Я сжёг несколько сотен рублей на LLM, используя: Gemma 4, Gemini 3.7 Flash, DeepSeek V4 PRO, GLM 5.2 и Kimi K3. Использовал преимущественно OpenCode с доступом к файлам проекта. Однако задача была решена "дедовскими методами" вручную.
