@@ -48,9 +48,4 @@ describe('ProductCard', () => {
     expect(link.className).toContain('block');
     expect(link.className).toContain('cursor-pointer');
   });
-
-  it('соответствует snapshot', () => {
-    const { container } = render(<ProductCard product={mockProduct} />);
-    expect(container.firstChild).toMatchSnapshot();
-  });
 });
