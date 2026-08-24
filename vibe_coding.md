@@ -1421,7 +1421,8 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
 В "vite.config.ts" — необходимо добавить секцию test:
 
 ```json
-import { defineConfig } from 'vitest/config'
+/// <reference types="vitest/config" />
+import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
@@ -1442,9 +1443,22 @@ export default defineConfig({
     emptyOutDir: true
   },
   test: {
-    environment: 'jsdom'	// DOM-окружение для будущего рендера компонентов
+    environment: 'jsdom',	// DOM-окружение для будущего рендера компонентов
+    setupFiles: ['src/test/setup.ts']
   }
 })
+```
+
+Необходимо также добавить файл "src\test\setup.ts", который содержит код приготовления к выполнению тестов:
+
+```tsx
+import { afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import '@testing-library/jest-dom/vitest';
+
+afterEach(() => {
+  cleanup();
+});
 ```
 
 Заглушка с тестами "ProductCard.test.tsx":
