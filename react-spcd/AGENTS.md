@@ -7,9 +7,21 @@
   - **Building:** The full build sequence is `tsc -b && vite build`.  
     Note that TypeScript compilation (`tsc -b`) must complete before Vite bundling can occur.
   - **Linting:** Linting is executed with `npm run lint` (using `oxlint`).
+  - **Testing:** Unit tests are written and executed using **Vitest**.
+    - Use `npm run test` to run all unit tests in watch mode during development.
+    - Use `npm run test:run` (or `vitest run`) to execute tests once in CI or non-interactive scenarios.
+    - Place test files alongside source files using the `.test.ts` / `.test.tsx` naming convention (co-located tests).
+    - Leverage Vitest's native compatibility with Vite configuration — no separate test configuration is required unless project-specific overrides are needed.
+    - Prefer Vitest's built-in assertion library, mocking utilities (`vi.mock`, `vi.fn`), and snapshot testing capabilities over external dependencies.
+    - Ensure that all new features and bug fixes are accompanied by corresponding unit tests before merging.
 
 - **Shell:** Always use Microsoft Windows **Command Prompt (cmd.exe)**, not PowerShell.  
   This ensures consistent behaviour with the project's script runners and avoids compatibility issues with PowerShell‑specific syntax or execution policies.
+  - **PowerShell Fallback:** If PowerShell must be used (e.g., due to environment constraints or CI runner defaults), always execute the following command **before** running any project scripts:
+    ```powershell
+    Set-ExecutionPolicy Bypass -Scope Process
+    ```
+    This temporarily relaxes the execution policy for the current PowerShell session only, allowing npm/dotnet scripts to run without being blocked by policy restrictions. **Never** set a system-wide or user-scoped bypass as a permanent solution.
 
 ### Windows Command Line Usage Features
 
