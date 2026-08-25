@@ -1420,7 +1420,7 @@ npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
 
 В "vite.config.ts" — необходимо добавить секцию test:
 
-```json
+```js
 /// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -1543,3 +1543,43 @@ Set-ExecutionPolicy Bypass -Scope Process
 - Кажется вполне возможным разрабатывать модульные тексты для React-приложений постредством Vitest
 
 Также важный вывод: нелинейные задачи, такие как подбор версий конфигурации библиотек даются LLM очень тяжело. LLM опаздывают на полгода/год и это может быть критичным для запуска решения.
+
+## Оценка покрытия
+
+Для добавления отчётов о покрытии кода модульными тестами необходимо установить соответствующий движок. Более точный - istambul, более быстрый - v8: 
+
+```shell
+npm i -D @vitest/coverage-istanbul
+```
+
+Далее следует добавить команду определения покрытия модульными тестами в "package.json":
+
+```shell
+{
+  "scripts": {
+    "test:coverage": "vitest run --coverage"
+  }
+}
+```
+
+А настройках "vitest.config.js" необходимо указать имя провайдера, осуществляющего сборку информации о покрытии, форматы отчётов и файлы, которые нужно исключить из анализа:
+
+```js
+import { defineConfig } from 'vite'
+
+export default defineConfig({
+  test: {
+    coverage: {
+      provider: 'istanbul', // или 'v8' - он быстрее, но менее точный
+      reporter: ['text', 'json', 'html'], // форматы отчетов
+      exclude: ['node_modules/', 'src/test/setup.ts'], // что исключить
+    },
+  },
+})
+```
+
+Запуск определения покрытия осуществляется командой: 
+
+```shell
+npm run test:coverage
+```

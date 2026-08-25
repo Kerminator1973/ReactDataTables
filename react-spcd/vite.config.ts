@@ -21,6 +21,11 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',	// DOM-окружение для будущего рендера компонентов
-    setupFiles: ['src/test/setup.ts']
+    setupFiles: ['src/test/setup.ts'],
+    coverage: {
+      provider: 'istanbul', // или 'v8' - он быстрее, но менее точный
+      reporter: ['text', 'json', 'html'], // форматы отчетов
+      exclude: ['node_modules/', 'src/test/setup.ts'], // что исключить
+    },
   }
 })
