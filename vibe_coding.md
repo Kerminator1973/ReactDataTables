@@ -1578,6 +1578,21 @@ export default defineConfig({
 })
 ```
 
+Примеры дополнительных настроек в файле "vitest.config.js":
+
+```js
+reportsDirectory: './coverage',
+reporter: ['text', 'lcov'],
+exclude: [
+  '**/*.test.tsx',
+  '**/*.spec.tsx',
+  'src/mocks/**',
+  'src/index.tsx',
+clean: true,  // очищать отчёт перед каждым запуском
+```
+
+Формат "lcov" используется для передачи информации о покрытии в CI/SonarQube и т.п.
+
 Запуск определения покрытия осуществляется командой: 
 
 ```shell
