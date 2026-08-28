@@ -1614,3 +1614,48 @@ npm run test:coverage
 С типовыми настройками сайт сразу заработал на локальной машине.
 
 Кэширование изображений прекрасно работает "из коробки". Никаких модификаций IIS, или приложения не требуется.
+
+### Логирование
+
+Содержимое файла "web.config" созданного компилятором:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<configuration>
+  <location path="." inheritInChildApplications="false">
+    <system.webServer>
+      <handlers>
+        <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModuleV2" resourceType="Unspecified" />
+      </handlers>
+      <aspNetCore processPath="dotnet" arguments=".\BackendApi.dll" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" hostingModel="inprocess" />
+    </system.webServer>
+  </location>
+</configuration>
+```
+
+Изменяем строку:
+
+```xml
+<aspNetCore processPath="dotnet" arguments=".\BackendApi.dll" 
+  stdoutLogEnabled="true" stdoutLogFile=".\logs\reactspcd\stdout" 
+  hostingModel="inprocess" />
+```
+
+Также может потребоваться в настройках сайта выбрать пункт "Ведение журнала" и явным образом указать имя папки с логами для сайта.
+
+Уровни логирования настраиваются в файле "appsettings.json". Типовые настройки:
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+Уровни (от минимального к максимальному по детализации): None, Critical, Error, Warning, Information, Debug, Trace.
