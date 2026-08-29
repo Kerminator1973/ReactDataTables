@@ -101,10 +101,7 @@ app.MapGet("/api/products/{id}/documents", async (AppDbContext db, int id) =>
 {
     var documentsDto = await db.Documents
         .Where(d => d.ProductId == id)
-        .Select(d => new {
-            d.Id,
-            d.Name,
-        })
+        .Select(d => new { d.Id, d.Name})
         .ToListAsync();
 
     if (documentsDto == null || documentsDto.Count == 0)
