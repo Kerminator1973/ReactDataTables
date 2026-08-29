@@ -1660,6 +1660,46 @@ npm run test:coverage
 
 Уровни (от минимального к максимальному по детализации): None, Critical, Error, Warning, Information, Debug, Trace.
 
+Если нам необходимо добавить логирование SQL-запросов, то необходимо добавить уровни логирования в файле "appsettings.json":
+
+```json
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Information",
+      "Microsoft.AspNetCore": "Warning",
+      "Microsoft.EntityFrameworkCore": "Debug"
+    }
+  },
+  "AllowedHosts": "*"
+}
+```
+
+А также настроить логирование в адаптере доступа к СУБД. Это можно сделать в файле "Program.cs":
+
+```csharp
+builder.Services
+    .AddDbContext<AppDbContext>(options => {                    // Sqlite
+        options.UseSqlite("DataSource=product_documents.db");
+        options.LogTo(
+                message => System.Diagnostics.Debug.WriteLine(message),
+                new[] { DbLoggerCategory.Database.Command.Name },
+                LogLevel.Information);
+    })
+```
+
+>TODO: в приведённом выше коде уровень логирования "забит гвоздями", а не считывается из "appsettings.json".
+
+Если необходимо логировать параметры используемые в SQL-запроса, то следует добавить настройки options:
+
+```csharp
+options.EnableSensitiveDataLogging();   // Логировать значения параметров
+options.EnableDetailedErrors();         // Включать более подробные сообщения об ошибках
+```
+
 ### Чистка системы от созданных артефактов IIS
 
 Идея пула приложений состоит в том, что действия сайта по работе с ресурсами осуществляются от имени некоторого пользователя. Указывая запись AppPool мы связываем приложение с пользователем системы. Этому пользователю мы можем назначить набор прав в системе, например, доступ к папкам файловой системы. Соответственно разные приложения могут действовать от имени некоторого общего пользователя, или каждое приложение может иметь своего собтсвенного пользователя.  Таким образом, "пользователь с именем сайта" в IIS чаще всего — это не реальный пользователь Windows, а идентичность пула приложений.

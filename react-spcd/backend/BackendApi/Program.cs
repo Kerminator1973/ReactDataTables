@@ -15,8 +15,19 @@ var options = new WebApplicationOptions
 var builder = WebApplication.CreateBuilder(options);
 
 builder.Services
-    .AddDbContext<AppDbContext>(options =>
-        options.UseSqlite("DataSource=product_documents.db"))   // Sqlite
+    .AddDbContext<AppDbContext>(options => {                    // Sqlite
+        options.UseSqlite("DataSource=product_documents.db");
+
+#if _VERY_DETAILED_OUTPUT
+        options.EnableSensitiveDataLogging();   // Логировать значения параметров
+        options.EnableDetailedErrors();         // Включать более подробные сообщения об ошибках
+#endif
+
+        options.LogTo(
+                message => System.Diagnostics.Debug.WriteLine(message),
+                new[] { DbLoggerCategory.Database.Command.Name },
+                LogLevel.Information);
+    })
     .AddEndpointsApiExplorer()                                  // Swagger
     .AddSwaggerGen();
 
