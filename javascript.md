@@ -96,6 +96,14 @@ const extendedObject = {
 console.log(extendedObject);
 ```
 
+## Optional chaining
+
+Пример, который всё объясняет:
+
+```js
+const elevation = hike?.summit?.elevation ?? "elevation unknown";
+```
+
 ## Основные отличия var и let
 
 Основное отличие в области видимости (_scope_):
